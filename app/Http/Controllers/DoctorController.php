@@ -13,6 +13,7 @@ class DoctorController extends Controller
     public function index()
     {
         $user = User::all();
+        // dd($user);
 
         return view("doctor.index", compact('user'));
     }

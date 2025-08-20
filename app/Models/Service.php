@@ -11,6 +11,10 @@ class Service extends Model
 
     protected $fillable = [
         'service_name',
+        'patient_id',
+        'service_date',
+        'notes',
+        'status'
     ];
 
     public function patient()

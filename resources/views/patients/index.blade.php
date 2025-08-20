@@ -4,25 +4,7 @@
             <div class="bg-white border-2 border-gray-200 border-dashed overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg">
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                        {{-- Flash Messages --}}
-                        @if (session('success'))
-                            <div id="success-alert"
-                                class="border-green-400 text-green-700 px-4 py-3 rounded mb-4 bg-green-50" role="alert">
-                                <span class="block sm:inline">{{ session('success') }}</span>
-                            </div>
-                        @endif
 
-                        @if ($errors->any())
-                            <div id="error-alert"
-                                class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
-                                role="alert">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
 
                         {{-- Header --}}
                         <div class="flex justify-between items-center mb-5">
@@ -34,9 +16,10 @@
                                 <form class="w-64" onsubmit="searchTable(event)">
                                     <label for="default-search" class="sr-only">Search</label>
                                     <div class="relative">
+                                        <!-- Search Icon -->
                                         <div
                                             class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                            <svg class="w-3 h-3 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                            <svg class="w-4 h-4 text-gray-400" aria-hidden="true"
                                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                                 <path stroke="currentColor" stroke-linecap="round"
                                                     stroke-linejoin="round" stroke-width="2"
@@ -44,12 +27,14 @@
                                             </svg>
                                         </div>
                                         <input type="text" id="default-search"
-                                            class="block w-full p-2 pl-8 pr-16 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            class="block w-full p-2 pl-8 pr-4 text-sm text-gray-700
+                                        placeholder-gray-400 bg-gray-100 border border-gray-200
+                                        rounded-lg focus:ring-blue-500 focus:border-blue-500"
                                             placeholder="Search Name..." oninput="searchTable()" />
                                     </div>
                                 </form>
 
-                                <button data-modal-target="default-modal" data-modal-toggle="default-modal"
+                                <button data-modal-target="add-service-modal" data-modal-toggle="add-service-modal"
                                     class="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 shadow">
                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
@@ -87,6 +72,7 @@
                                         <th scope="col" class="px-6 py-3">Date</th>
                                         <th scope="col" class="px-6 py-3">Address</th>
                                         <th scope="col" class="px-6 py-3">Gender</th>
+                                        <th scope="col" class="px-6 py-3">Services</th>
                                         <th scope="col" class="px-6 py-3">Actions</th>
                                     </tr>
                                 </thead>
@@ -95,18 +81,46 @@
                                         @foreach ($patients as $patient)
                                             <tr class="hover:bg-gray-50 transition duration-150">
                                                 <td class="px-6 py-4 text-center">{{ $loop->iteration }}</td>
-                                                <td class="px-6 py-4 text-center">{{ $patient->full_name }}</td>
+                                                <td class="px-6 py-4 text-center">{{ $patient->first_name }}
+                                                    {{ $patient->last_name }}</td>
                                                 <td class="px-6 py-4 text-center">{{ $patient->date_of_birth }}</td>
                                                 <td class="px-6 py-4 text-center">{{ $patient->phone }}</td>
                                                 <td class="px-6 py-4 text-center">{{ $patient->date }}</td>
                                                 <td class="px-6 py-4 text-center">{{ $patient->address }}</td>
                                                 <td class="px-6 py-4 text-center">{{ $patient->gender }}</td>
                                                 <td class="px-6 py-4 text-center">
+                                                    @if($patient->services->count() > 0)
+                                                        <div class="flex flex-wrap gap-1 justify-center">
+                                                            @foreach($patient->services->take(3) as $service)
+                                                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                                    {{ $service->service_name }}
+                                                                </span>
+                                                            @endforeach
+                                                            @if($patient->services->count() > 3)
+                                                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                                                                    +{{ $patient->services->count() - 3 }} more
+                                                                </span>
+                                                            @endif
+                                                        </div>
+                                                    @else
+                                                        <span class="text-gray-400 text-sm">No services</span>
+                                                    @endif
+                                                </td>
+                                                <td class="px-6 py-4 text-center">
                                                     <div class="flex justify-center items-center gap-3">
+                                                        {{-- View Services Button --}}
+                                                        <a href="{{ route('patients.services.index', $patient->_id) }}"
+                                                            class="text-green-600 hover:text-green-800 transition"
+                                                            title="View Services">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.639 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.639 0-8.573-3.007-9.963-7.178z" />
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                            </svg>
+                                                        </a>
+
                                                         {{-- Edit Button --}}
-                                                        <button
-                                                            data-modal-target="edit-modal-{{ $patient->patient_id }}"
-                                                            data-modal-toggle="edit-modal-{{ $patient->patient_id }}"
+                                                        <button data-modal-target="edit-modal-{{ $patient->_id }}"
+                                                            data-modal-toggle="edit-modal-{{ $patient->_id }}"
                                                             class="text-blue-600 hover:text-blue-800 transition">
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                 viewBox="0 0 24 24" stroke-width="1.5"
@@ -120,8 +134,8 @@
                                                         @include('patients.edit', ['patient' => $patient])
 
                                                         <button type="button"
-                                                            data-modal-target="deleteModal-{{ $patient->patient_id }}"
-                                                            data-modal-toggle="deleteModal-{{ $patient->patient_id }}"
+                                                            data-modal-target="deleteModal-{{ $patient->_id }}"
+                                                            data-modal-toggle="deleteModal-{{ $patient->_id }}"
                                                             class="text-red-600 hover:text-red-800 transition">
                                                             <svg class="w-5 h-5 text-red-600" fill="none"
                                                                 stroke="currentColor" stroke-width="1.5"
@@ -132,20 +146,21 @@
                                                         </button>
 
                                                         {{-- Delete Modal --}}
-                                                        {{-- <div id="deleteModal-{{ $patient->patient_id }}"
+                                                        <div id="deleteModal-{{ $patient->_id }}"
                                                             class="fixed inset-0 z-50 flex items-center justify-center hidden bg-gray-900 bg-opacity-50">
-                                                            <div
-                                                                class="bg-white p-6 rounded shadow-md w-full max-w-sm">
+                                                            <div class="bg-white p-6 rounded shadow-md w-full max-w-sm">
                                                                 <h2
-                                                                    class="text-lg text-center font-semibold text-gray-800">Confirm Delete</h2>
-                                                                <p class="text-sm text-center text-gray-600 mt-2">Are you sure you want to delete this patient?</p>
+                                                                    class="text-lg text-center font-semibold text-gray-800">
+                                                                    Confirm Delete</h2>
+                                                                <p class="text-sm text-center text-gray-600 mt-2">Are
+                                                                    you sure you want to delete this patient?</p>
                                                                 <div class="mt-4 flex justify-center space-x-4">
                                                                     <button
-                                                                        data-modal-target="deleteModal-{{ $patient->patient_id }}"
-                                                                        data-modal-toggle="deleteModal-{{ $patient->patient_id }}"
+                                                                        data-modal-target="deleteModal-{{ $patient->_id }}"
+                                                                        data-modal-toggle="deleteModal-{{ $patient->_id }}"
                                                                         class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
                                                                     <form
-                                                                        action="{{ route('patients.destroy', $patient->patient_id) }}"
+                                                                        action="{{ route('patients.destroy', $patient->_id) }}"
                                                                         method="POST">
                                                                         @csrf
                                                                         @method('DELETE')
@@ -154,7 +169,7 @@
                                                                     </form>
                                                                 </div>
                                                             </div>
-                                                        </div> --}}
+                                                        </div>
 
                                                     </div>
                                                 </td>
@@ -162,22 +177,46 @@
                                         @endforeach
                                     @else
                                         <tr id="no-results">
-                                            <td colspan="8" class="text-center py-4 text-gray-500">No patients
+                                            <td colspan="9" class="text-center py-4 text-gray-500">No patients
                                                 found.</td>
                                         </tr>
                                     @endif
 
                                 </tbody>
                             </table>
+
+
                         </div>
+
 
                     </div>
 
                 </div>
             </div>
         </div>
+
     </div>
 
+    {{-- Flash Messages --}}
+    @if (session('success'))
+        <div id="success-alert"
+            class="fixed bottom-6 right-6 z-50 border-green-400 text-green-700 px-4 py-3 rounded mb-4 bg-green-50 shadow-lg min-w-[250px] max-w-xs"
+            role="alert">
+            <span class="block sm:inline">{{ session('success') }}</span>
+        </div>
+    @endif
+
+    @if ($errors->any())
+        <div id="error-alert"
+            class="fixed bottom-6 right-6 z-50 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 shadow-lg min-w-[250px] max-w-xs"
+            role="alert">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     {{-- Search Script --}}
     <script>
         function searchTable(event) {

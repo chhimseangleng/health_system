@@ -35,6 +35,7 @@ class PatientController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -101,10 +102,35 @@ class PatientController extends Controller
 
     public function destroy($id)
     {
-
         $patient = Patient::findOrFail($id);
-
         $patient->delete();
-        return redirect()->route('patients.destroy')->with('success', 'Patient deleted successfully!');
+        return redirect()->route('patients.index')->with('success', 'Patient deleted successfully!');
+    }
+
+    public function storeService(Request $request)
+    {
+        $validated = $request->validate([
+            'service_name' => 'required|string|max:255',
+            'patient_id' => 'required|exists:patients,_id',
+            'service_date' => 'nullable|date',
+            'notes' => 'nullable|string',
+            'status' => 'nullable|string|in:pending,completed,cancelled'
+        ]);
+
+        Service::create([
+            'service_name' => $validated['service_name'],
+            'patient_id' => $validated['patient_id'],
+            'service_date' => $validated['service_date'] ?? now(),
+            'notes' => $validated['notes'] ?? '',
+            'status' => $validated['status'] ?? 'pending'
+        ]);
+
+        return redirect()->back()->with('success', 'Service added successfully!');
+    }
+
+    public function showServices($id)
+    {
+        $patient = Patient::with('services')->findOrFail($id);
+        return view('patients.services', compact('patient'));
     }
 }

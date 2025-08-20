@@ -10,7 +10,8 @@ class Patient extends Model
     protected $connection = 'mongodb';
 
     protected $fillable = [
-        'full_name',
+        'first_name',
+        'last_name',
         'carer',
         'carer_phone',
         'phone',
