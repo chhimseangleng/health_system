@@ -208,17 +208,21 @@
                                         @endforelse
                                     </tbody>
                                 </table>
-                            </div>
-                        </div>
+                                <!-- Pagination: bottom right of table -->
+                                {{-- @if ($vaccinesComeback->hasPages())
+                                    <div class="flex justify-end mt-4">
+                                        <div class="bg-white rounded-xl border border-gray-200 px-6 py-4 shadow-lg">
+                                            {{ $vaccinesComeback->links() }}
+                                        </div>
+                                    </div>
+                                @endif --}}
 
-                        <!-- Pagination -->
-                        @if ($vaccinesComeback->hasPages())
-                            <div class="mt-8 flex justify-center">
-                                <div class="bg-white rounded-xl border border-gray-200 px-6 py-4 shadow-lg">
-                                    {{ $vaccinesComeback->links() }}
-                                </div>
                             </div>
-                        @endif
+
+                        </div>
+                        <div class="mt-6">
+                            {{ $vaccinesComeback->links() }}
+                        </div>
 
                         <!-- Details Modal -->
                         <div x-show="isModalOpen" x-transition.opacity.duration.300ms
@@ -228,12 +232,15 @@
                                 class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full mx-4 sm:mx-0">
 
                                 <!-- Header -->
-                                <div class="bg-gradient-to-r from-blue-600 to-indigo-700 px-8 py-6 text-white rounded-t-2xl">
+                                <div
+                                    class="bg-gradient-to-r from-blue-600 to-indigo-700 px-8 py-6 text-white rounded-t-2xl">
                                     <div class="flex justify-between items-center">
-                                        <h3 class="flex items-center text-2xl font-bold text-gray-800" id="modal-title">
+                                        <h3 class="flex items-center text-2xl font-bold text-gray-800"
+                                            id="modal-title">
                                             <!-- Icon -->
-                                            <svg class="w-7 h-7 text-blue-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <svg class="w-7 h-7 text-blue-500 mr-2" xmlns="http://www.w3.org/2000/svg"
+                                                fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                                stroke-width="2">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M12 2a10 10 0 00-3.16 19.45c.5.09.68-.22.68-.48 0-.24-.01-.87-.01-1.7-2.78.61-3.37-1.33-3.37-1.33-.45-1.15-1.11-1.46-1.11-1.46-.91-.62.07-.61.07-.61 1.01.07 1.54 1.04 1.54 1.04.9 1.54 2.36 1.1 2.94.84.09-.65.35-1.1.64-1.35-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.26-.45-1.28.1-2.66 0 0 .84-.27 2.75 1.02A9.57 9.57 0 0112 6.8c.85 0 1.71.11 2.51.32 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.21 2.4.1 2.66.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85 0 1.33-.01 2.4-.01 2.72 0 .27.18.58.69.48A10.01 10.01 0 0012 2z" />
                                             </svg>
@@ -243,9 +250,11 @@
                                         <button @click="closeModal()" type="button"
                                             class="text-gray-400 bg-transparent hover:bg-gray-100 hover:text-gray-900 rounded-xl text-sm w-8 h-8 inline-flex justify-center items-center transition-colors"
                                             data-modal-toggle="default-modal">
-                                            <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                            <svg class="w-4 h-4" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" fill="none"
                                                 viewBox="0 0 14 14">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2"
                                                     d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                                             </svg>
                                             <span class="sr-only">Close modal</span>

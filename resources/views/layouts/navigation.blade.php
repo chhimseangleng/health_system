@@ -19,15 +19,11 @@
             <!-- Header with Logo -->
             <div class="p-6 border-b border-gray-100">
                 <div class="flex items-center space-x-3">
-                    <!-- Logo with red cross and purple background -->
+                    <!-- Logo -->
                     <div class="relative">
-                        <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                            <div class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
-                                <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                                </svg>
-                            </div>
-                        </div>
+                        <a href="{{ route('dashboard') }}" class="block">
+                            <img src="{{ asset('IMG/samaky.png') }}" alt="icon" class="w-10 h-10 rounded-full object-cover">
+                        </a>
                     </div>
                     <div>
                         <h1 class="text-lg font-semibold text-gray-800">Samaky Health</h1>
@@ -59,15 +55,6 @@
                     <span class="font-medium">Dashboard</span>
                 </a>
 
-                <!-- WorkSpace -->
-                <a href="{{ route('workspace.index') }}"
-                   class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors duration-200">
-                    <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    <span>WorkSpace</span>
-                </a>
-
                 <!-- Patients -->
                 <a href="{{ route('patients.index') }}"
                    class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors duration-200">
@@ -76,6 +63,15 @@
                     </svg>
                     <span>Patients</span>
                 </a>
+
+                  <!-- WorkSpace -->
+                  <a href="{{ route('workspace.index') }}"
+                  class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors duration-200">
+                   <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                   </svg>
+                   <span>WorkSpace</span>
+               </a>
 
                 <!-- Doctors -->
                 <a href="{{ route('doctors.index') }}"

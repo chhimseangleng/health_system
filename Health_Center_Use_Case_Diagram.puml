@@ -1,0 +1,191 @@
+@startuml Health_Center_Use_Case_Diagram
+!theme plain
+title Health Center Management System - Use Case Diagram
+
+' Actors
+:Admin/Manager: as Admin
+:Receptionist/Front Desk: as Receptionist
+:Vaccine Staff: as VaccineStaff
+:Common Disease Staff: as DiseaseStaff
+:Gynecology Staff: as GynecoStaff
+:Medicine/Pharmacy Staff: as PharmacyStaff
+
+' System boundary
+rectangle "Health Center Management System" {
+
+    ' Authentication Use Cases
+    package "Authentication" {
+        (Login) as Login
+        (Logout) as Logout
+        (Manage Profile) as Profile
+    }
+
+    ' Admin Use Cases
+    package "System Administration" {
+        (View Dashboard) as Dashboard
+        (Create User Account) as CreateUser
+        (Manage Users) as ManageUsers
+        (Generate System Reports) as SystemReports
+        (Export Data) as ExportData
+        (System Configuration) as SysConfig
+        (Language Management) as LangMgmt
+    }
+
+    ' Patient Management Use Cases
+    package "Patient Management" {
+        (Register New Patient) as RegisterPatient
+        (Search Patients) as SearchPatients
+        (Edit Patient Info) as EditPatient
+        (Assign Patient to Department) as AssignPatient
+        (Add Patient Services) as AddServices
+        (View Patient History) as ViewHistory
+    }
+
+    ' Vaccine Services Use Cases
+    package "Vaccine Services" {
+        (Access Vaccine Workspace) as VaccineWorkspace
+        (Manage Vaccine Categories) as VaccineCategories
+        (Process Vaccinations) as ProcessVaccination
+        (Record Vaccination Data) as RecordVaccination
+        (Schedule Comeback Visits) as ScheduleComeback
+        (Track Vaccination History) as TrackVaccination
+    }
+
+    ' Common Disease Services Use Cases
+    package "Common Disease Services" {
+        (Access Disease Workspace) as DiseaseWorkspace
+        (Diagnose Patient) as DiagnosePatient
+        (Record Medical Info) as RecordMedical
+        (Generate Medical Reports) as MedicalReports
+        (Search Patient Symptoms) as SearchSymptoms
+        (Export Diagnostic Data) as ExportDiagnostic
+        (Print Medical Certificate) as PrintCertificate
+    }
+
+    ' Gynecology Services Use Cases
+    package "Gynecology Services" {
+        (Access Gynecology Workspace) as GynecoWorkspace
+        (Conduct Examinations) as ConductExam
+        (Record Examination Results) as RecordExam
+        (Manage Reproductive Health) as ManageReproductive
+        (Generate Gynecology Reports) as GynecoReports
+    }
+
+    ' Pharmacy Services Use Cases
+    package "Pharmacy Services" {
+        (Access Pharmacy Workspace) as PharmacyWorkspace
+        (Manage Medicine Inventory) as ManageInventory
+        (Dispense Medications) as DispenseMedicine
+        (Update Stock Levels) as UpdateStock
+        (Bulk Medication Dispensing) as BulkDispense
+        (View Pharmacy Dashboard) as PharmacyDashboard
+        (Track Medicine Usage) as TrackMedicine
+    }
+
+    ' Assignment Management Use Cases
+    package "Assignment Management" {
+        (View Assigned Patients) as ViewAssignments
+        (Mark Assignment Read) as MarkRead
+        (Mark Assignment Processed) as MarkProcessed
+        (Update Patient Assignment Status) as UpdateAssignmentStatus
+    }
+}
+
+' Actor relationships with use cases
+' Admin relationships
+Admin --> Login
+Admin --> Logout
+Admin --> Profile
+Admin --> Dashboard
+Admin --> CreateUser
+Admin --> ManageUsers
+Admin --> SystemReports
+Admin --> ExportData
+Admin --> SysConfig
+Admin --> LangMgmt
+Admin --> RegisterPatient
+Admin --> SearchPatients
+Admin --> EditPatient
+Admin --> ViewHistory
+
+' Receptionist relationships
+Receptionist --> Login
+Receptionist --> Logout
+Receptionist --> Profile
+Receptionist --> RegisterPatient
+Receptionist --> SearchPatients
+Receptionist --> EditPatient
+Receptionist --> AssignPatient
+Receptionist --> AddServices
+Receptionist --> ViewHistory
+
+' Vaccine Staff relationships
+VaccineStaff --> Login
+VaccineStaff --> Logout
+VaccineStaff --> Profile
+VaccineStaff --> VaccineWorkspace
+VaccineStaff --> VaccineCategories
+VaccineStaff --> ProcessVaccination
+VaccineStaff --> RecordVaccination
+VaccineStaff --> ScheduleComeback
+VaccineStaff --> TrackVaccination
+VaccineStaff --> ViewAssignments
+VaccineStaff --> MarkRead
+VaccineStaff --> MarkProcessed
+
+' Common Disease Staff relationships
+DiseaseStaff --> Login
+DiseaseStaff --> Logout
+DiseaseStaff --> Profile
+DiseaseStaff --> DiseaseWorkspace
+DiseaseStaff --> DiagnosePatient
+DiseaseStaff --> RecordMedical
+DiseaseStaff --> MedicalReports
+DiseaseStaff --> SearchSymptoms
+DiseaseStaff --> ExportDiagnostic
+DiseaseStaff --> PrintCertificate
+DiseaseStaff --> ViewAssignments
+DiseaseStaff --> MarkRead
+DiseaseStaff --> MarkProcessed
+
+' Gynecology Staff relationships
+GynecoStaff --> Login
+GynecoStaff --> Logout
+GynecoStaff --> Profile
+GynecoStaff --> GynecoWorkspace
+GynecoStaff --> ConductExam
+GynecoStaff --> RecordExam
+GynecoStaff --> ManageReproductive
+GynecoStaff --> GynecoReports
+GynecoStaff --> ViewAssignments
+GynecoStaff --> MarkRead
+GynecoStaff --> MarkProcessed
+
+' Pharmacy Staff relationships
+PharmacyStaff --> Login
+PharmacyStaff --> Logout
+PharmacyStaff --> Profile
+PharmacyStaff --> PharmacyWorkspace
+PharmacyStaff --> ManageInventory
+PharmacyStaff --> DispenseMedicine
+PharmacyStaff --> UpdateStock
+PharmacyStaff --> BulkDispense
+PharmacyStaff --> PharmacyDashboard
+PharmacyStaff --> TrackMedicine
+PharmacyStaff --> ViewAssignments
+PharmacyStaff --> MarkRead
+PharmacyStaff --> MarkProcessed
+
+' Include relationships
+RegisterPatient .> SearchPatients : <<include>>
+ProcessVaccination .> RecordVaccination : <<include>>
+DiagnosePatient .> RecordMedical : <<include>>
+ConductExam .> RecordExam : <<include>>
+DispenseMedicine .> UpdateStock : <<include>>
+
+' Extend relationships
+ViewHistory <. ViewAssignments : <<extend>>
+SystemReports <. ExportData : <<extend>>
+MedicalReports <. PrintCertificate : <<extend>>
+
+@enduml

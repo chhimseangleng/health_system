@@ -46,6 +46,12 @@
                             <x-primary-button class="ms-3">
                                 {{ __('Log in') }}
                             </x-primary-button>
+                            @if ($errors->any())
+    <div class="mb-4 text-red-600 font-semibold text-center">
+        {{ $errors->first() }}
+    </div>
+@endif
+
                         </div>
                     </form>
                 </div>

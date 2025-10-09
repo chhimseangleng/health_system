@@ -41,13 +41,13 @@
                     </h4> --}}
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                            <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">First Name <span class="text-red-500">*</span></label>
                             <input type="text" name="first_name" id="first_name"
                                 class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
                                 placeholder="Enter first name" required>
                         </div>
                         <div>
-                            <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                            <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">Last Name <span class="text-red-500">*</span></label>
                             <input type="text" name="last_name" id="last_name"
                                 class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
                                 placeholder="Enter last name" required>
@@ -59,7 +59,7 @@
                                 required>
                         </div>
                         <div>
-                            <label for="gender" class="block text-sm font-medium text-gray-700 mb-2">Gender</label>
+                            <label for="gender" class="block text-sm font-medium text-gray-700 mb-2">Gender <span class="text-red-500">*</span></label>
                             <select id="gender" name="gender"
                                 class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
                                 required>
@@ -82,45 +82,16 @@
                     </h4> --}}
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                            <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number <span class="text-red-500">*</span></label>
                             <input type="tel" name="phone" id="phone"
                                 class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
                                 placeholder="Enter phone number" required>
                         </div>
                         <div>
-                            <label for="address" class="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                            <label for="address" class="block text-sm font-medium text-gray-700 mb-2">Address <span class="text-red-500">*</span></label>
                             <input type="text" name="address" id="address"
                                 class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
                                 placeholder="Enter address" required>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Service Information -->
-                <div class="mb-6">
-                    {{-- <h4 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                        <svg class="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                        Service Information
-                    </h4> --}}
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label for="service" class="block text-sm font-medium text-gray-700 mb-2">Service Type</label>
-                            <select id="service" name="service"
-                                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
-                                required>
-                                <option value="" disabled selected>Select service</option>
-                                <option value="vaccine">Vaccine</option>
-                                <option value="common_diseases">Common Diseases</option>
-                                <option value="gynecology">Gynecology</option>
-                                <option value="medicine">Medicine</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="date" class="block text-sm font-medium text-gray-700 mb-2">Service Date</label>
-                            <input type="date" name="date" id="date"
-                                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200">
                         </div>
                     </div>
                 </div>

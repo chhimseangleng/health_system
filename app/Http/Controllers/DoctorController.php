@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\Role;
 
 class DoctorController extends Controller
 {
@@ -47,7 +48,11 @@ class DoctorController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $doctor = User::findOrFail($id);
+
+        $roles = Role::all();
+
+        return view('doctor.edit', compact('doctor', 'roles'));
     }
 
     /**
@@ -55,7 +60,21 @@ class DoctorController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $doctor = User::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $id . ',_id',
+            'role' => 'required',
+        ]);
+
+        $doctor->update([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'role' => $validated['role'],
+        ]);
+
+        return redirect()->route('doctors.index')->with('success', 'Doctor updated successfully!');
     }
 
     /**

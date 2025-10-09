@@ -7,9 +7,8 @@
 
     <title>{{ config('app.name', 'Samaky Health') }}</title>
 
-    @isset($favicon)
-        <link rel="icon" href="{{ asset($favicon) }}" type="image/x-icon">
-    @endisset
+    <link rel="icon" href="{{ asset('IMG/samaky.png') }}" type="image/png">
+
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -20,7 +19,7 @@
     <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
     <!-- Alpine.js for dropdown and hamburger menu -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    
+
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 </head>
@@ -35,9 +34,7 @@
                     <div class="relative">
                         <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
                             <div class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
-                                <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                                </svg>
+                                <a href="{{ route('dashboard') }}"><img src="{{ asset('IMG/samaky.png') }}" alt="icon" class="w-6 h-6 rounded-full object-cover"></a>
                             </div>
                         </div>
                     </div>
@@ -71,6 +68,15 @@
                     <span class="font-medium">Dashboard</span>
                 </a>
 
+                 <!-- Patients -->
+                <a href="{{ route('patients.index') }}"
+                   class="flex items-center px-4 py-3 {{ request()->routeIs('patients.*') ? 'text-white bg-purple-500' : 'text-gray-700 hover:bg-gray-50' }} rounded-xl transition-colors duration-200">
+                    <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <span>Patients</span>
+                </a>
+
                 <!-- WorkSpace -->
                 <a href="{{ route('workspace.index') }}"
                    class="flex items-center px-4 py-3 {{ request()->routeIs('workspace.*') ? 'text-white bg-purple-500' : 'text-gray-700 hover:bg-gray-50' }} rounded-xl transition-colors duration-200">
@@ -78,15 +84,6 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
                     <span>WorkSpace</span>
-                </a>
-
-                <!-- Patients -->
-                <a href="{{ route('patients.index') }}"
-                   class="flex items-center px-4 py-3 {{ request()->routeIs('patients.*') ? 'text-white bg-purple-500' : 'text-gray-700 hover:bg-gray-50' }} rounded-xl transition-colors duration-200">
-                    <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                    </svg>
-                    <span>Patients</span>
                 </a>
 
                 <!-- Doctors -->

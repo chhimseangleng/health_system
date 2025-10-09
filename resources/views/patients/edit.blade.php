@@ -44,6 +44,7 @@
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
+
                     <div class="space-y-2">
                         <label for="last_name" class="block text-sm font-semibold text-gray-700 text-left">
                             Last Name <span class="text-red-500">*</span>
@@ -56,6 +57,37 @@
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
+
+                    <div class="space-y-2">
+                        <label for="date_of_birth" class="block text-sm font-semibold text-gray-700 text-left">
+                            Date of Birth <span class="text-red-500">*</span>
+                        </label>
+                        <input type="date" name="date_of_birth" id="date_of_birth"
+                            value="{{ old('date_of_birth', $patient->date_of_birth) }}"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white hover:bg-gray-50"
+                            required>
+                        @error('date_of_birth')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                     <div class="space-y-2">
+                        <label for="gender" class="block text-sm font-semibold text-gray-700 text-left">
+                            Gender <span class="text-red-500">*</span>
+                        </label>
+                        <select id="gender" name="gender"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white hover:bg-gray-50"
+                            required>
+                            <option value="" disabled {{ $patient->gender ? '' : 'selected' }}>Select gender</option>
+                            <option value="male" {{ old('gender', $patient->gender) == 'male' ? 'selected' : '' }}>Male</option>
+                            <option value="female" {{ old('gender', $patient->gender) == 'female' ? 'selected' : '' }}>Female</option>
+                            <option value="other" {{ old('gender', $patient->gender) == 'other' ? 'selected' : '' }}>Other</option>
+                        </select>
+                        @error('gender')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    
                     <div class="space-y-2">
                         <label for="phone" class="block text-sm font-semibold text-gray-700 text-left">
                             Phone Number <span class="text-red-500">*</span>
@@ -80,45 +112,26 @@
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
-                    <div class="space-y-2">
-                        <label for="date_of_birth" class="block text-sm font-semibold text-gray-700 text-left">
-                            Date of Birth <span class="text-red-500">*</span>
+
+
+
+                    {{-- <div class="space-y-2">
+                        <label for="role" class="block text-sm font-semibold text-gray-700 text-left">
+                            Patient Role <span class="text-red-500">*</span>
                         </label>
-                        <input type="date" name="date_of_birth" id="date_of_birth"
-                            value="{{ old('date_of_birth', $patient->date_of_birth) }}"
+                        <select id="role" name="role"
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white hover:bg-gray-50"
                             required>
-                        @error('date_of_birth')
-                            <span class="text-red-500 text-sm">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="space-y-2">
-                        <label for="gender" class="block text-sm font-semibold text-gray-700 text-left">
-                            Gender <span class="text-red-500">*</span>
-                        </label>
-                        <select id="gender" name="gender"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white hover:bg-gray-50"
-                            required>
-                            <option value="" disabled {{ $patient->gender ? '' : 'selected' }}>Select gender</option>
-                            <option value="male" {{ old('gender', $patient->gender) == 'male' ? 'selected' : '' }}>Male</option>
-                            <option value="female" {{ old('gender', $patient->gender) == 'female' ? 'selected' : '' }}>Female</option>
-                            <option value="other" {{ old('gender', $patient->gender) == 'other' ? 'selected' : '' }}>Other</option>
+                            <option value="" disabled {{ !$patient->role ? 'selected' : '' }}>Select role</option>
+                            <option value="vaccine" {{ old('role', $patient->role) == 'vaccine' ? 'selected' : '' }}>Vaccine</option>
+                            <option value="common disease" {{ old('role', $patient->role) == 'common disease' ? 'selected' : '' }}>Common Disease</option>
+                            <option value="gynecology" {{ old('role', $patient->role) == 'gynecology' ? 'selected' : '' }}>Gynecology</option>
+                            <option value="medicine" {{ old('role', $patient->role) == 'medicine' ? 'selected' : '' }}>Medicine</option>
                         </select>
-                        @error('gender')
+                        @error('role')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
-                    </div>
-                    <div class="space-y-2">
-                        <label for="date" class="block text-sm font-semibold text-gray-700 text-left">
-                            Visit Date <span class="text-red-500">*</span>
-                        </label>
-                        <input type="date" name="date" id="date"
-                            value="{{ old('date', $patient->date) }}"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white hover:bg-gray-50">
-                        @error('date')
-                            <span class="text-red-500 text-sm">{{ $message }}</span>
-                        @enderror
-                    </div>
+                    </div> --}}
                     </div>
                     <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
                         <button type="button"

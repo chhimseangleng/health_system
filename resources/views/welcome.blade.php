@@ -75,7 +75,7 @@
 
     <!-- Floating elements -->
     <div class="absolute bottom-8 left-8 text-gray-400 text-sm">
-        <p>© 2024 Samky Hospital. All rights reserved.</p>
+        <p>© 2025 Samky Hospital. All rights reserved.</p>
     </div>
 
     <style>
