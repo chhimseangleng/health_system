@@ -29,21 +29,21 @@
                     <div class="bg-purple-50 rounded-xl p-3 flex items-center justify-between">
                         <div class="flex items-center">
                             <span class="text-xl mr-2">🏥</span>
-                            <span class="text-sm font-medium">Patients</span>
+                            <span class="text-sm font-medium">{{ trans('lang.patients') }}</span>
                         </div>
                         <span class="text-purple-600 font-semibold text-sm">{{ $patient }}</span>
                     </div>
                     <div class="bg-purple-50 rounded-xl p-3 flex items-center justify-between">
                         <div class="flex items-center">
                             <span class="text-xl mr-2">👨‍⚕️</span>
-                            <span class="text-sm font-medium">Doctors</span>
+                            <span class="text-sm font-medium">{{ trans('lang.doctors') }}</span>
                         </div>
                         <span class="text-purple-600 font-semibold text-sm">{{ $doctors }}</span>
                     </div>
                     <div class="bg-purple-50 rounded-xl p-3 flex items-center justify-between">
                         <div class="flex items-center">
                             <span class="text-xl mr-2">👥</span>
-                            <span class="text-sm font-medium">Patient Assign</span>
+                            <span class="text-sm font-medium">{{ trans('lang.patient assigns') }}</span>
                         </div>
 
                         <span class="text-purple-600 font-semibold text-sm">{{ $ticket }}</span>
@@ -51,21 +51,21 @@
                     <div class="bg-purple-50 rounded-xl p-3 flex items-center justify-between">
                         <div class="flex items-center">
                             <span class="text-xl mr-2">💰</span>
-                            <span class="text-sm font-medium">Revenue</span>
+                            <span class="text-sm font-medium">{{ trans('lang.revenue') }}</span>
                         </div>
                         <span class="text-purple-600 font-semibold text-sm">${{ $totalPaySum }}</span>
                     </div>
                     <div class="bg-purple-50 rounded-xl p-3 flex items-center justify-between">
                         <div class="flex items-center">
                             <span class="text-xl mr-2">💊</span>
-                            <span class="text-sm font-medium">Medicine</span>
+                            <span class="text-sm font-medium">{{ trans('lang.medicines') }}</span>
                         </div>
                         <span class="text-purple-600 font-semibold text-sm">{{ $medicineCount }}</span>
                     </div>
                     <div class="bg-purple-50 rounded-xl p-3 flex items-center justify-between">
                         <div class="flex items-center">
                             <span class="text-xl mr-2">💉</span>
-                            <span class="text-sm font-medium">Vaccine</span>
+                            <span class="text-sm font-medium">{{ trans('lang.vaccine') }}</span>
                         </div>
                         <span class="text-purple-600 font-semibold text-sm">{{ $vaccineCount }}</span>
                     </div>
@@ -79,27 +79,27 @@
         <!-- Eno's Home -->
         <div class="lg:col-span-2">
             <div class="bg-white rounded-2xl shadow-lg p-6">
-                <h3 class="font-semibold text-gray-700 mb-4">Health Center Overview</h3>
+                <h3 class="font-semibold text-gray-700 mb-4">{{ trans('lang.health center overview') }}</h3>
                 <div class="grid grid-cols-4 gap-4">
                     <div class="bg-purple-50 rounded-xl p-4 flex flex-col items-center">
                         <span class="text-2xl mb-2">🏥</span>
-                        <span class="text-sm text-gray-700 text-center">Patient Care</span>
-                        <span class="mt-1 text-purple-600 font-semibold text-sm">Active</span>
+                        <span class="text-sm text-gray-700 text-center">{{ trans('lang.patient care') }}</span>
+                        <span class="mt-1 text-purple-600 font-semibold text-sm">{{ trans('lang.active') }}</span>
                     </div>
                     <div class="bg-purple-50 rounded-xl p-4 flex flex-col items-center">
                         <span class="text-2xl mb-2">👨‍⚕️</span>
-                        <span class="text-sm text-gray-700 text-center">Medical Staff</span>
-                        <span class="mt-1 text-purple-600 font-semibold text-sm">Available</span>
+                        <span class="text-sm text-gray-700 text-center">{{ trans('lang.medical staff') }}</span>
+                        <span class="mt-1 text-purple-600 font-semibold text-sm">{{ trans('lang.available') }}</span>
                     </div>
                     <div class="bg-purple-50 rounded-xl p-4 flex flex-col items-center">
                         <span class="text-2xl mb-2">💊</span>
-                        <span class="text-sm text-gray-700 text-center">Pharmacy</span>
-                        <span class="mt-1 text-purple-600 font-semibold text-sm">Stocked</span>
+                        <span class="text-sm text-gray-700 text-center">{{ trans('lang.pharmacy') }}</span>
+                        <span class="mt-1 text-purple-600 font-semibold text-sm">{{ trans('lang.stocked') }}</span>
                     </div>
                     <div class="bg-purple-50 rounded-xl p-4 flex flex-col items-center">
                         <span class="text-2xl mb-2">💉</span>
-                        <span class="text-sm text-gray-700 text-center">Vaccination</span>
-                        <span class="mt-1 text-purple-600 font-semibold text-sm">Ready</span>
+                        <span class="text-sm text-gray-700 text-center">{{ trans('lang.vaccination') }}</span>
+                        <span class="mt-1 text-purple-600 font-semibold text-sm">{{ trans('lang.ready') }}</span>
                     </div>
                 </div>
             </div>
@@ -108,7 +108,7 @@
         <!-- Members -->
         <div>
             <div class="bg-white rounded-2xl shadow-lg p-6">
-                <h3 class="font-semibold text-gray-700 mb-4">Team Members</h3>
+                <h3 class="font-semibold text-gray-700 mb-4">{{ trans('lang.doctors and nurses') }}</h3>
                 <div class="flex -space-x-2 mb-4">
                     @php
                         $colors = ['purple', 'green', 'blue', 'yellow', 'red', 'indigo', 'pink', 'teal'];
@@ -153,13 +153,13 @@
                                 and {{ $doctorsList->count() - 3 }} more
                             @endif
                         </div>
-                        <div class="text-purple-600 font-medium">{{ $doctorsList->count() }} team members</div>
+                        <div class="text-purple-600 font-medium">{{ $doctorsList->count() }} {{ trans('lang.team members') }}</div>
                         @if($doctorsList->count() > 0 && isset($doctorsList->first()->role))
                             <div class="text-xs text-gray-400 mt-1">Roles: {{ $doctorsList->pluck('role')->unique()->implode(', ') }}</div>
                         @endif
                     @else
-                        <div class="mb-1">No team members found</div>
-                        <div class="text-purple-600 font-medium">0 team members</div>
+                        <div class="mb-1">{{ trans('lang.no team members found') }}</div>
+                        <div class="text-purple-600 font-medium">0 {{ trans('lang.team members') }}</div>
                     @endif
                 </div>
             </div>
@@ -177,10 +177,10 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
                     </div>
-                    <span class="font-semibold text-gray-700 text-lg">Patient Statistics</span>
+                    <span class="font-semibold text-gray-700 text-lg">{{ trans('lang.patient statistics') }}</span>
                 </div>
                 <div class="bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-sm font-medium">
-                    Active
+                    {{ trans('lang.active') }}
                 </div>
             </div>
             <div class="flex flex-col items-center">
@@ -188,7 +188,7 @@
                     <div class="w-48 h-48 rounded-full bg-gradient-to-tr from-purple-200 via-purple-300 to-purple-400 flex items-center justify-center shadow-lg">
                         <div class="text-center">
                             <span class="text-5xl font-bold text-purple-700">{{ $patient }}</span>
-                            <div class="text-purple-600 font-medium">Total Patients</div>
+                            <div class="text-purple-600 font-medium">{{ trans('lang.total patients') }}</div>
                         </div>
                     </div>
                 </div>
@@ -206,7 +206,7 @@
         <!-- Power Consumed -->
         <div class="bg-white rounded-2xl shadow-lg p-6">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="font-semibold text-gray-700">Monthly Revenue</h3>
+                <h3 class="font-semibold text-gray-700">{{ trans('lang.monthly revenue') }}</h3>
                 <div class="bg-purple-100 text-purple-600 px-2 py-1 rounded-full text-xs font-medium">
                     2025
                 </div>
@@ -216,7 +216,7 @@
             </div>
             <div class="text-center">
                 <div class="text-2xl font-bold text-purple-600">${{ $totalPaySum }}</div>
-                <div class="text-sm text-gray-500">Total Revenue</div>
+                <div class="text-sm text-gray-500">{{ trans('lang.total revenue') }}</div>
             </div>
         </div>
     </div>

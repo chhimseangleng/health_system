@@ -49,16 +49,13 @@
                 <th>Updated</th><td>{{ optional($record->updated_at)->format('Y-m-d H:i') }}</td>
             </tr>
             <tr>
-                <th>Category</th><td>{{ $record->category }}</td>
+                {{-- <th>Category</th><td>{{ $record->category }}</td> --}}
                 <th>Physician</th><td>{{ $record->physician }}</td>
-            </tr>
-            <tr>
                 <th>Age</th><td>{{ $record->age }}</td>
-                <th>Gender</th><td>{{ $record->gender }}</td>
             </tr>
             <tr>
+                <th>Gender</th><td>{{ $record->gender }}</td>
                 <th>Village</th><td>{{ $record->village }}</td>
-                <th>Commune</th><td>{{ $record->commune }}</td>
             </tr>
         </table>
 
@@ -72,8 +69,8 @@
                 <thead>
                     <tr>
                         <th>Medicine</th>
-                        <th>Total Day</th>
                         <th>Total Medicine</th>
+                        <th>Total Day</th>
                         <th>Morning (M)</th>
                         <th>Afternoon (A)</th>
                         <th>Evening (E)</th>
@@ -88,8 +85,8 @@
                         @endphp
                         <tr>
                             <td>{{ $mname }}</td>
-                            <td>{{ $p['total_day'] ?? '' }}</td>
                             <td>{{ $p['total_medicine'] ?? '' }}</td>
+                            <td>{{ $p['total_day'] ?? '' }}</td>
                             <td>{{ $times['M']['qty'] ?? '' }}</td>
                             <td>{{ $times['A']['qty'] ?? '' }}</td>
                             <td>{{ $times['E']['qty'] ?? '' }}</td>

@@ -94,7 +94,8 @@ class PatientAssign extends Model
     {
         return [
             'nssf' => 'NSSF Member',
-            'cash' => 'Cash'
+            'cash' => 'Cash',
+            'health equity fund' => 'Health Equity Fund',
         ];
     }
 

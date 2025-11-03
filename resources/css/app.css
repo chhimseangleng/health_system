@@ -1,3 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Font Support for Multi-language Application */
+.khmer-font {
+    font-family: 'Noto Sans Khmer', 'Kantumruy Pro', 'Khmer OS', 'Khmer Sangam MN', 'Arial Unicode MS', sans-serif;
+    line-height: 1.6;
+}
+
+.english-font {
+    font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.5;
+}
+
+/* Default font for English - Modern Sans-serif */
+body {
+    font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Override for Khmer locale */
+body.khmer-font {
+    font-family: 'Noto Sans Khmer', 'Kantumruy Pro', 'Khmer OS', 'Khmer Sangam MN', 'Arial Unicode MS', sans-serif;
+}

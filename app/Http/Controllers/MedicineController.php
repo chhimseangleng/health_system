@@ -338,4 +338,26 @@ class MedicineController extends Controller
 
         return redirect()->back()->with('success', 'Medicines dispensed successfully.');
     }
+
+    public function updateStock(Request $request, $id)
+    {
+        $medicine = Medicine::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $qty = (int) $request->input('quantity');
+
+        // Normalize current stock to integer to avoid $inc on string type in Mongo
+        Medicine::where('_id', (string) $medicine->_id)->update(['stock_quantity' => (int) ($medicine->stock_quantity ?? 0)]);
+        // Atomically increment stock
+        Medicine::where('_id', (string) $medicine->_id)->increment('stock_quantity', $qty);
+
+        return redirect()->back()->with('success', 'Added ' . $qty . ' to ' . $medicine->name . '.');
+    }
 }

@@ -28,6 +28,7 @@ class Vaccine extends Model
         'comeback', // Add this line
         'comeback_count',
         'complete',
+        'dose_dates',
     ];
 
    // In Vaccine model

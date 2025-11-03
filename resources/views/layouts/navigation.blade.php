@@ -4,12 +4,36 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Samaky Health - Admin Dashboard</title>
+
+    <!-- Modern Sans-serif Font for English -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Khmer Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+
     <!-- Tailwind CSS -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Alpine.js for dropdown and hamburger menu -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Font Support Styles -->
+    <style>
+        /* Apply fonts based on locale */
+        @if (app()->getLocale() == 'kh')
+            body {
+                font-family: 'Noto Sans Khmer', 'Kantumruy Pro', 'Khmer OS', 'Khmer Sangam MN', 'Arial Unicode MS', sans-serif !important;
+            }
+        @else
+            body {
+                font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif !important;
+            }
+        @endif
+    </style>
 </head>
 
 <body class="bg-gray-50 text-gray-900 font-sans">
@@ -175,6 +199,7 @@
                                 </svg>
                             </button>
 
+
                             <!-- Language Dropdown -->
                             <div x-data="{ open: false }" class="relative">
                                 <button @click="open = !open"
@@ -189,16 +214,25 @@
                                     </svg>
                                 </button>
                                 <div x-show="open" @click.away="open = false"
-                                    class="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-                                    <a href="{{ route('lang.switch', 'en') }}"
-                                        class="flex items-center px-4 py-2 text-sm hover:bg-gray-50">
-                                        <img src="https://flagcdn.com/24x18/us.png" class="w-5 h-4 mr-2" alt="English"> English
-                                    </a>
-                                    <a href="{{ route('lang.switch', 'kh') }}"
-                                        class="flex items-center px-4 py-2 text-sm hover:bg-gray-50">
-                                        <img src="https://flagcdn.com/24x18/kh.png" class="w-5 h-4 mr-2" alt="Khmer"> Khmer
-                                    </a>
-                                </div>
+                                class="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+
+                               <form action="{{ route('locale.change') }}" method="POST">
+                                   @csrf
+
+                                   <button type="submit" name="locale" value="en"
+                                           class="flex items-center w-full px-4 py-2 text-sm hover:bg-gray-50 {{ app()->getLocale() == 'en' ? 'bg-gray-100' : '' }}">
+                                       <img src="https://flagcdn.com/24x18/us.png" class="w-5 h-4 mr-2" alt="English"> English
+                                   </button>
+
+                                   <button type="submit" name="locale" value="kh"
+                                           class="flex items-center w-full px-4 py-2 text-sm hover:bg-gray-50 {{ app()->getLocale() == 'kh' ? 'bg-gray-100' : '' }}">
+                                       <img src="https://flagcdn.com/24x18/kh.png" class="w-5 h-4 mr-2" alt="Khmer"> Khmer
+                                   </button>
+                               </form>
+
+
+                           </div>
+
                             </div>
 
                             <!-- User Dropdown -->
@@ -266,5 +300,7 @@
             }
         });
     </script>
+
+
 </body>
 </html>

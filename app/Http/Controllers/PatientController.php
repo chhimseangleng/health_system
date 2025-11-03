@@ -52,7 +52,7 @@ class PatientController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
-            'address' => 'required|string|max:255',
+            'address' => 'nullable|string|max:255',
             'date_of_birth' => 'required|date',
             'gender' => 'required|in:male,female,other',
         ]);
@@ -207,10 +207,10 @@ class PatientController extends Controller
      */
     public function assignPatient(Request $request, $id)
     {
-        // dd("doldfsa");
+        // dd($request->all());
         $validated = $request->validate([
             'assigned_to' => 'required|in:vaccine,common disease,gynecology,medicine',
-            'payment_type' => 'required|in:nssf,cash',
+            'payment_type' => 'required|string',
             'assigned_user_id' => 'required|exists:users,_id', // New: validate assigned user
         ]);
 

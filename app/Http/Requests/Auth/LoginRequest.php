@@ -38,19 +38,23 @@ class LoginRequest extends FormRequest
      * @throws \Illuminate\Validation\ValidationException
      */
     public function authenticate(): void
-{
-    $this->ensureIsNotRateLimited();
+    {
+        // Comment out or remove this line to skip rate limiting
+        // $this->ensureIsNotRateLimited();
 
-    if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
-        RateLimiter::hit($this->throttleKey());
+        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+            // Remove RateLimiter hit too
+            // RateLimiter::hit($this->throttleKey());
 
-        throw ValidationException::withMessages([
-            'email' => 'The email or password is incorrect.',
-        ]);
+            throw ValidationException::withMessages([
+                'email' => 'Username or password incorrect.',
+            ]);
+        }
+
+        // Remove RateLimiter clear
+        // RateLimiter::clear($this->throttleKey());
     }
 
-    RateLimiter::clear($this->throttleKey());
-}
 
 
     /**

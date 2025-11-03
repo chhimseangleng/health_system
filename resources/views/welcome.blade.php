@@ -22,17 +22,17 @@
                 <div class="text-center space-y-4">
                     <img src="{{ asset('IMG/samaky.png') }}" alt="Samky Logo" class="w-36 mx-auto drop-shadow-lg" />
                     <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-                        Welcome to Samky Hospital
+                        {{ trans('lang.welcome to samaky health center') }}
                     </h1>
                     <p class="text-gray-600 text-lg max-w-md">
-                        Providing exceptional healthcare services with compassion and excellence
+                        {{ trans('lang.providing exceptional healthcare services with compassion and excellence') }}
                     </p>
                 </div>
 
                 <div class="flex space-x-4">
                     <a href="{{ route('login') }}"
                         class="group relative px-8 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg font-semibold">
-                        <span class="relative z-10">Login</span>
+                        <span class="relative z-10">{{ trans('lang.login') }}</span>
                         <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </a>
 
@@ -50,7 +50,7 @@
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                             </svg>
                         </div>
-                        <p class="text-sm font-medium text-blue-800">Quality Care</p>
+                        <p class="text-sm font-medium text-blue-800">{{ trans('lang.quality care') }}</p>
                     </div>
                     <div class="text-center p-3 bg-cyan-50 rounded-lg">
                         <div class="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center mx-auto mb-2">
@@ -58,7 +58,7 @@
                                 <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd" />
                             </svg>
                         </div>
-                        <p class="text-sm font-medium text-cyan-800">Expert Staff</p>
+                        <p class="text-sm font-medium text-cyan-800">{{ trans('lang.expert staff') }}</p>
                     </div>
                 </div>
             </div>
@@ -75,7 +75,7 @@
 
     <!-- Floating elements -->
     <div class="absolute bottom-8 left-8 text-gray-400 text-sm">
-        <p>© 2025 Samky Hospital. All rights reserved.</p>
+        <p>© 2025 {{ trans('lang.samky hospital') }}. {{ trans('lang.all rights reserved') }}.</p>
     </div>
 
     <style>

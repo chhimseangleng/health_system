@@ -6,6 +6,8 @@ use App\Models\Patient;
 use App\Models\Vaccine;
 use App\Models\VaccineCategory;
 use App\Models\CommonDisease;
+use App\Models\GynecologyDisease;
+use App\Models\Gynecology;
 use App\Models\PatientAssign;
 use App\Models\Medicine;
 use Illuminate\Http\Request;
@@ -164,6 +166,7 @@ class WorkspaceController extends Controller
             'currentDate' => $validated['vaccination_date'],
             'comeback' => !empty($validated['comeback']) && $validated['comeback'] === 'on',
             'comeback_count' => 1,
+            'dose_dates' => [$validated['vaccination_date']], // Initialize with first dose date
         ]);
 
         if ($vaccine->comeback) {
@@ -235,6 +238,11 @@ class WorkspaceController extends Controller
         // Increment comeback_count by 1
         $vaccineDose->comeback_count = ($vaccineDose->comeback_count ?? 0) + 1;
 
+        // Store the current date when dose is added to array
+        $doseDates = $vaccineDose->dose_dates ?? [];
+        $doseDates[] = now()->toDateString();
+        $vaccineDose->dose_dates = $doseDates;
+
         // Get max dose from related vaccine category
         $maxDose = 0;
         if ($vaccineDose->vaccineCategory) {
@@ -267,6 +275,11 @@ class WorkspaceController extends Controller
             $query->where('name', 'like', '%' . $search . '%');
         }
 
+        // Order by comeback_count (dose sequence) ascending, then by creation date
+        // This ensures first vaccines appear first, second vaccines appear second, etc.
+        $query->orderBy('comeback_count', 'asc')
+              ->orderBy('created_at', 'asc');
+
         // paginate, 10 items per page
         $vaccinesComeback = $query->paginate(10)->appends(['search' => $search]);
 
@@ -298,6 +311,7 @@ class WorkspaceController extends Controller
         // dd("dol");
 
         $validated['comeback_count'] = 1;
+        $validated['dose_dates'] = [$validated['currentDate']]; // Initialize with first dose date
 
         // Normalize comeback to boolean
         $validated['comeback'] = !empty($validated['comeback']) && $validated['comeback'] === 'on';
@@ -364,6 +378,14 @@ class WorkspaceController extends Controller
                     })->where(function($query) {
                         $query->where('common_disease_info_complete', '!=', true)
                               ->orWhereNull('common_disease_info_complete');
+                    })->count();
+                } elseif ($roleKey === 'gynecology') {
+                    $incompleteCounts['gynecology'] = Patient::whereHas('assignments', function($query) use ($patientRole) {
+                        $query->where('assigned_to', $patientRole)
+                              ->where('status', 'pending');
+                    })->where(function($query) {
+                        $query->where('gynecology_info_complete', '!=', true)
+                              ->orWhereNull('gynecology_info_complete');
                     })->count();
                 }
             }
@@ -541,7 +563,302 @@ class WorkspaceController extends Controller
 
     public function gynecologyIndex()
     {
-        return view('workspace.gynecology.index');
+        // Fetch gynecology records with patient information
+        $gynecologyRecords = Gynecology::with('patient')->orderBy('updated_at', 'desc')->paginate(10);
+
+        // Fetch patients with pending gynecology assignments using PatientAssign
+        $incompletePatients = Patient::whereHas('assignments', function ($query) {
+            $query->where('assigned_to', 'gynecology')
+                  ->where('status', 'pending');
+        })
+        ->where(function ($query) {
+            $query->where('gynecology_info_complete', false)
+                  ->orWhere('gynecology_info_complete', 0)
+                  ->orWhere('gynecology_info_complete', 'false')
+                  ->orWhereNull('gynecology_info_complete');
+        })
+        ->with(['assignments' => function ($query) {
+            $query->where('assigned_to', 'gynecology')
+                  ->where('status', 'pending');
+        }])
+        ->latest()
+        ->get();
+
+        return view('workspace.gynecology.index', compact('gynecologyRecords', 'incompletePatients'));
+    }
+
+    public function gynecologyStore(\Illuminate\Http\Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        GynecologyDisease::create($data);
+
+        return redirect()->route('workspace.gynecology.index')->with('success', 'Disease added successfully!');
+    }
+
+    public function gynecologyEdit($id)
+    {
+        $gynecologyRecord = Gynecology::with('patient')->findOrFail($id);
+        $patient = $gynecologyRecord->patient ?? Patient::findOrFail($gynecologyRecord->patient_id);
+        $gynecologyDiseases = GynecologyDisease::orderBy('name')->get(['_id', 'name']);
+        $medicines = Medicine::orderBy('name')->get(['_id', 'name']);
+
+        return view('workspace.gynecology.patient-form', compact('patient', 'gynecologyDiseases', 'medicines', 'gynecologyRecord'));
+    }
+
+    public function gynecologyUpdate(Request $request, $id)
+    {
+        $gynecologyRecord = Gynecology::findOrFail($id);
+
+        $validated = $request->validate([
+            'disease_id' => 'required|string',
+            'symptoms' => 'required|string',
+            'notes' => 'nullable|string',
+            'prescriptions' => 'nullable|array',
+            'prescriptions.*.medicine_id' => 'required_with:prescriptions|string',
+            'prescriptions.*.total_medicine' => 'nullable|integer|min:0',
+            'prescriptions.*.total_day' => 'nullable|integer|min:0',
+            'prescriptions.*.times' => 'nullable|string|max:255',
+        ]);
+
+        // Resolve disease name
+        $selectedDisease = GynecologyDisease::find($validated['disease_id']);
+        $diseaseName = $selectedDisease ? $selectedDisease->name : ($gynecologyRecord->disease_name ?? 'Unknown');
+
+        // Rebuild prescriptions and medication summary
+        $prescriptions = [];
+        $medicationSummary = '';
+        if (isset($validated['prescriptions']) && is_array($validated['prescriptions'])) {
+            foreach ($validated['prescriptions'] as $prescription) {
+                if (!empty($prescription['medicine_id'])) {
+                    $medicine = Medicine::find($prescription['medicine_id']);
+                    $medicineName = $medicine ? $medicine->name : 'Unknown Medicine';
+                    $prescriptions[] = [
+                        'medicine_id' => $prescription['medicine_id'],
+                        'medicine_name' => $medicineName,
+                        'total_medicine' => $prescription['total_medicine'] ?? null,
+                        'total_day' => $prescription['total_day'] ?? null,
+                        'times' => $prescription['times'] ?? '',
+                    ];
+                    $medicationSummary .= $medicineName;
+                    if (!empty($prescription['total_day'])) { $medicationSummary .= " (Total Day: {$prescription['total_day']})"; }
+                    if (!empty($prescription['total_medicine'])) { $medicationSummary .= " (Total Medicine: {$prescription['total_medicine']})"; }
+                    if (!empty($prescription['times'])) { $medicationSummary .= " ({$prescription['times']})"; }
+                    $medicationSummary .= '; ';
+                }
+            }
+        }
+        $medicationSummary = rtrim($medicationSummary, '; ');
+
+        // Update record
+        $gynecologyRecord->update([
+            'disease_id' => $validated['disease_id'],
+            'disease_name' => $diseaseName,
+            'symptoms' => $validated['symptoms'],
+            'medication' => $medicationSummary,
+            'prescriptions' => $prescriptions,
+            'notes' => $validated['notes'] ?? null,
+            // keep treatment_date as original; updated_at will refresh automatically
+            'staff_name' => auth()->user()->name ?? ($gynecologyRecord->staff_name ?? 'Unknown'),
+        ]);
+
+        return redirect()->route('workspace.gynecology.index')->with('success', 'Gynecology record updated successfully!');
+    }
+
+    public function gynecologyDestroy($id)
+    {
+        $gynecologyRecord = Gynecology::findOrFail($id);
+        $gynecologyRecord->delete();
+
+        return redirect()->route('workspace.gynecology.index')->with('success', 'Gynecology record deleted successfully!');
+    }
+
+    public function showGynecologyPatientForm($patientId)
+    {
+        $patient = Patient::with('assignments')->findOrFail($patientId);
+
+        // Get the PatientAssign record for this patient and gynecology assignment
+        $patientAssign = PatientAssign::where('patient_id', $patientId)
+            ->where('assigned_to', 'gynecology')
+            ->latest()
+            ->first();
+
+        // Fetch all gynecology diseases for dropdown
+        $gynecologyDiseases = GynecologyDisease::orderBy('name')->get(['_id', 'name']);
+
+        // Fetch all medicines for dropdown
+        $medicines = Medicine::orderBy('name')->get(['_id', 'name']);
+
+        return view('workspace.gynecology.patient-form', compact('patient', 'patientAssign', 'gynecologyDiseases', 'medicines'));
+    }
+
+    public function storeGynecologyPatientInfo(Request $request, $patientId)
+    {
+        $patient = Patient::findOrFail($patientId);
+
+        $validated = $request->validate([
+            'disease_id' => 'required|string',
+            'symptoms' => 'required|string',
+            'notes' => 'nullable|string',
+            'prescriptions' => 'nullable|array',
+            'prescriptions.*.medicine_id' => 'required_with:prescriptions|string',
+            'prescriptions.*.total_medicine' => 'nullable|integer|min:0',
+            'prescriptions.*.total_day' => 'nullable|integer|min:0',
+            'prescriptions.*.times' => 'nullable|string|max:255',
+        ]);
+
+        // Get the selected disease
+        $selectedDisease = GynecologyDisease::find($validated['disease_id']);
+        $diseaseName = $selectedDisease ? $selectedDisease->name : 'Unknown';
+
+        // Process prescriptions
+        $prescriptions = [];
+        $medicationSummary = '';
+
+        if (isset($validated['prescriptions']) && is_array($validated['prescriptions'])) {
+            foreach ($validated['prescriptions'] as $prescription) {
+                if (!empty($prescription['medicine_id'])) {
+                    $medicine = Medicine::find($prescription['medicine_id']);
+                    $medicineName = $medicine ? $medicine->name : 'Unknown Medicine';
+
+                    $prescriptions[] = [
+                        'medicine_id' => $prescription['medicine_id'],
+                        'medicine_name' => $medicineName,
+                        'total_medicine' => $prescription['total_medicine'] ?? null,
+                        'total_day' => $prescription['total_day'] ?? null,
+                        'times' => $prescription['times'] ?? '',
+                    ];
+
+                    // Build medication summary
+                    $medicationSummary .= $medicineName;
+                    if (!empty($prescription['total_day'])) {
+                        $medicationSummary .= " (Total Day: {$prescription['total_day']})";
+                    }
+                    if (!empty($prescription['total_medicine'])) {
+                        $medicationSummary .= " (Total Medicine: {$prescription['total_medicine']})";
+                    }
+                    if (!empty($prescription['times'])) {
+                        $medicationSummary .= " ({$prescription['times']})";
+                    }
+                    $medicationSummary .= "; ";
+                }
+            }
+        }
+
+
+        // Trim trailing separator from summary
+        $medicationSummary = rtrim($medicationSummary, '; ');
+
+        // Calculate and validate stock requirements, then decrement stock
+        if (!empty($prescriptions)) {
+            // Aggregate required quantities per medicine
+            $requiredByMedicineId = [];
+            foreach ($prescriptions as $p) {
+                $medicineId = (string) ($p['medicine_id'] ?? '');
+                if ($medicineId === '') { continue; }
+
+                $totalMedicine = $p['total_medicine'] ?? null;
+                $requiredQty = null;
+                if ($totalMedicine !== null) {
+                    $requiredQty = (int) $totalMedicine;
+                }
+
+                if ($requiredQty !== null && $requiredQty > 0) {
+                    if (!isset($requiredByMedicineId[$medicineId])) {
+                        $requiredByMedicineId[$medicineId] = 0;
+                    }
+                    $requiredByMedicineId[$medicineId] += $requiredQty;
+                }
+            }
+
+            if (!empty($requiredByMedicineId)) {
+                // Fetch medicines and check stock availability
+                $medicineIds = array_keys($requiredByMedicineId);
+                $medicines = \App\Models\Medicine::whereIn('_id', $medicineIds)->get(['_id','name','stock_quantity']);
+                $stockErrors = [];
+                $availableById = [];
+                foreach ($medicines as $m) {
+                    $idStr = (string) $m->_id;
+                    $availableById[$idStr] = (int) ($m->stock_quantity ?? 0);
+                }
+                foreach ($requiredByMedicineId as $id => $req) {
+                    $available = $availableById[$id] ?? null;
+                    if ($available === null) {
+                        $stockErrors[] = 'Selected medicine not found: #' . $id;
+                    } elseif ($available < $req) {
+                        $name = optional($medicines->firstWhere('_id', $id))->name ?? ('#' . $id);
+                        $stockErrors[] = 'Insufficient stock for ' . $name . ' (need ' . $req . ', available ' . $available . ').';
+                    }
+                }
+
+                if (!empty($stockErrors)) {
+                    return redirect()->back()->withErrors($stockErrors)->withInput();
+                }
+
+                // Decrement stock atomically per medicine
+                foreach ($requiredByMedicineId as $id => $req) {
+                    if ($req > 0) {
+                        \App\Models\Medicine::where('_id', $id)->decrement('stock_quantity', (int) $req);
+                    }
+                }
+            }
+        }
+
+
+        // Create gynecology record
+        Gynecology::create([
+            'patient_id' => $patientId,
+            'disease_id' => $validated['disease_id'],
+            'disease_name' => $diseaseName,
+            'symptoms' => $validated['symptoms'],
+            'medication' => $medicationSummary,
+            'prescriptions' => $prescriptions,
+            'notes' => $validated['notes'],
+            'treatment_date' => now()->toDateString(),
+            'staff_name' => auth()->user()->name ?? 'Unknown',
+        ]);
+
+        // dd("dol nis");
+
+        // Update patient with gynecology information and mark as complete
+        $patient->update([
+            'gynecology_info_complete' => true,
+        ]);
+
+        // Update PatientAssign status to completed
+        $patientAssign = PatientAssign::where('patient_id', $patientId)
+            ->where('assigned_to', 'gynecology')
+            ->latest()
+            ->first();
+
+        if ($patientAssign) {
+            $patientAssign->update([
+                'status' => 'completed',
+                'processed_at' => now()
+            ]);
+        }
+
+        return redirect()->route('workspace.gynecology.index')->with('success', 'Gynecology information completed successfully!');
+    }
+
+    public function dismissGynecologyPatient($patientId)
+    {
+        // Update PatientAssign status to dismissed
+        $patientAssign = PatientAssign::where('patient_id', $patientId)
+            ->where('assigned_to', 'gynecology')
+            ->latest()
+            ->first();
+
+        if ($patientAssign) {
+            $patientAssign->update([
+                'status' => 'dismissed',
+                'processed_at' => now()
+            ]);
+        }
+
+        return redirect()->route('workspace.gynecology.index')->with('success', 'Patient dismissed successfully!');
     }
 
     public function medicineIndex()
@@ -573,109 +890,67 @@ class WorkspaceController extends Controller
         $validated = $request->validate([
             'symptoms' => 'required|string|max:1000',
             'diagnosis' => 'required|string|max:500',
-            'treatment' => 'required|string|max:1000',
-            // Keep legacy medication string but allow structured prescriptions
-            'medication' => 'nullable|string|max:500',
             'prescriptions' => 'nullable|array',
             'prescriptions.*.medicine_id' => 'required_with:prescriptions|string',
             'prescriptions.*.total_medicine' => 'nullable|integer|min:0',
             'prescriptions.*.total_day' => 'nullable|integer|min:0',
-            'prescriptions.*.times' => 'nullable|array',
-            'prescriptions.*.times.M.qty' => 'nullable|integer|min:0',
-            'prescriptions.*.times.M.remark' => 'nullable|string|max:255',
-            'prescriptions.*.times.A.qty' => 'nullable|integer|min:0',
-            'prescriptions.*.times.A.remark' => 'nullable|string|max:255',
-            'prescriptions.*.times.E.qty' => 'nullable|integer|min:0',
-            'prescriptions.*.times.E.remark' => 'nullable|string|max:255',
+            'prescriptions.*.times' => 'nullable|string|max:255',
             'notes' => 'nullable|string|max:1000',
             'follow_up_date' => 'nullable|date|after:today',
         ]);
 
-        // Store additional common disease data
-        // Normalize prescriptions array
-        $normalizedPrescriptions = [];
-        if (!empty($validated['prescriptions']) && is_array($validated['prescriptions'])) {
-            foreach ($validated['prescriptions'] as $p) {
-                if (empty($p['medicine_id'])) { continue; }
-                $times = $p['times'] ?? [];
-                $normTimes = [];
-                foreach (['M','A','E'] as $t) {
-                    $qty = isset($times[$t]['qty']) ? (int) $times[$t]['qty'] : null;
-                    $remark = isset($times[$t]['remark']) ? (string) $times[$t]['remark'] : null;
-                    if ($qty !== null || ($remark !== null && $remark !== '')) {
-                        $normTimes[$t] = [
-                            'qty' => $qty,
-                            'remark' => $remark,
-                        ];
+        // Process prescriptions (simplified structure like gynecology)
+        $prescriptions = [];
+        $medicationSummary = '';
+
+        if (isset($validated['prescriptions']) && is_array($validated['prescriptions'])) {
+            foreach ($validated['prescriptions'] as $prescription) {
+                if (!empty($prescription['medicine_id'])) {
+                    $medicine = Medicine::find($prescription['medicine_id']);
+                    $medicineName = $medicine ? $medicine->name : 'Unknown Medicine';
+
+                    $prescriptions[] = [
+                        'medicine_id' => $prescription['medicine_id'],
+                        'medicine_name' => $medicineName,
+                        'total_medicine' => $prescription['total_medicine'] ?? null,
+                        'total_day' => $prescription['total_day'] ?? null,
+                        'times' => $prescription['times'] ?? '',
+                    ];
+
+                    // Build medication summary
+                    $medicationSummary .= $medicineName;
+                    if (!empty($prescription['total_day'])) {
+                        $medicationSummary .= " (Total Day: {$prescription['total_day']})";
                     }
+                    if (!empty($prescription['total_medicine'])) {
+                        $medicationSummary .= " (Total Medicine: {$prescription['total_medicine']})";
+                    }
+                    if (!empty($prescription['times'])) {
+                        $medicationSummary .= " ({$prescription['times']})";
+                    }
+                    $medicationSummary .= "; ";
                 }
-                $normalizedPrescriptions[] = [
-                    'medicine_id' => (string) $p['medicine_id'],
-                    'total_medicine' => isset($p['total_medicine']) ? (int) $p['total_medicine'] : null,
-                    'total_day' => isset($p['total_day']) ? (int) $p['total_day'] : null,
-                    'times' => $normTimes,
-                ];
             }
         }
 
-        // Build a readable medication summary for existing reports
-        $medicationSummary = $validated['medication'] ?? null;
-        if (!$medicationSummary && !empty($normalizedPrescriptions)) {
-            // Attempt to resolve medicine names for summary (support both ObjectId and string keys)
-            $ids = collect($normalizedPrescriptions)->pluck('medicine_id')->filter()->values()->all();
-            $meds = \App\Models\Medicine::whereIn('_id', $ids)->get(['_id','name']);
-            $medicineIdToName = [];
-            foreach ($meds as $m) {
-                $keyObj = $m->_id; // often ObjectId or string depending on driver
-                $keyStr = (string) $m->_id;
-                $medicineIdToName[$keyObj] = $m->name;
-                $medicineIdToName[$keyStr] = $m->name;
-            }
-            $parts = [];
-            foreach ($normalizedPrescriptions as $p) {
-                $name = $medicineIdToName[$p['medicine_id']] ?? ('#' . $p['medicine_id']);
-                $dose = [];
-                foreach (['M','A','E'] as $t) {
-                    if (isset($p['times'][$t]['qty']) && $p['times'][$t]['qty'] !== null) {
-                        $dose[] = $t . ':' . $p['times'][$t]['qty'];
-                    }
-                }
-                $meta = [];
-                if (isset($p['total_medicine']) && $p['total_medicine'] !== null) { $meta[] = 'Total:' . $p['total_medicine']; }
-                if (isset($p['total_day']) && $p['total_day'] !== null) { $meta[] = 'Days:' . $p['total_day']; }
-                $part = $name;
-                if (!empty($dose)) { $part .= ' (' . implode(',', $dose) . ')'; }
-                if (!empty($meta)) { $part .= ' [' . implode(', ', $meta) . ']'; }
-                $parts[] = $part;
-            }
-            $medicationSummary = implode('; ', $parts);
-        }
+        // Clean up medication summary
+        $medicationSummary = rtrim($medicationSummary, '; ');
 
         // Calculate and validate stock requirements, then decrement stock
-        if (!empty($normalizedPrescriptions)) {
+        if (!empty($prescriptions)) {
             // Aggregate required quantities per medicine
             $requiredByMedicineId = [];
-            foreach ($normalizedPrescriptions as $p) {
+            foreach ($prescriptions as $p) {
                 $medicineId = (string) ($p['medicine_id'] ?? '');
                 if ($medicineId === '') { continue; }
 
-                $totalMedicine = $p['total_medicine'] ?? null; // explicit total if provided
+                $totalMedicine = $p['total_medicine'] ?? null;
                 $totalDays = $p['total_day'] ?? null;
-                $times = $p['times'] ?? [];
 
-                $dailyQty = 0;
-                foreach (['M','A','E'] as $t) {
-                    if (isset($times[$t]['qty']) && $times[$t]['qty'] !== null) {
-                        $dailyQty += (int) $times[$t]['qty'];
-                    }
-                }
-
-                // Prefer explicit total_medicine if present; otherwise derive from daily * days
+                // Use total_medicine if provided
                 $requiredQty = null;
                 if ($totalMedicine !== null) {
                     $requiredQty = (int) $totalMedicine;
-                } elseif ($totalDays !== null && $dailyQty > 0) {
-                    $requiredQty = (int) $totalDays * (int) $dailyQty;
                 }
 
                 if ($requiredQty !== null && $requiredQty > 0) {
@@ -722,9 +997,8 @@ class WorkspaceController extends Controller
         $additionalData = [
             'symptoms' => $validated['symptoms'],
             'diagnosis' => $validated['diagnosis'],
-            'treatment' => $validated['treatment'],
             'medication' => $medicationSummary,
-            'prescriptions' => $normalizedPrescriptions,
+            'prescriptions' => $prescriptions,
             'notes' => $validated['notes'],
             'follow_up_date' => $validated['follow_up_date'],
             'treatment_date' => now()->toDateString(),
@@ -764,16 +1038,15 @@ class WorkspaceController extends Controller
         ]);
 
         // Attach structured prescriptions separately in case of fillable restrictions
-        $commonDisease->prescriptions = $normalizedPrescriptions;
+        $commonDisease->prescriptions = $prescriptions;
         $commonDisease->save();
 
         // Add history entry for common disease treatment
         $historyData = [
             'symptoms' => $validated['symptoms'],
             'diagnosis' => $validated['diagnosis'],
-            'treatment' => $validated['treatment'],
             'medication' => $medicationSummary,
-            'prescriptions' => $normalizedPrescriptions,
+            'prescriptions' => $prescriptions,
             'notes' => $validated['notes'],
             'follow_up_date' => $validated['follow_up_date'],
             'treatment_date' => now()->toDateString(),

@@ -18,8 +18,10 @@
                                         </svg>
                                     </div>
                                     <div>
-                                        <h1 class="text-3xl font-bold text-gray-800 tracking-tight">Vaccine Records</h1>
-                                        <p class="text-gray-600 mt-1">Manage and track vaccination records</p>
+                                        <h1 class="text-3xl font-bold text-gray-800 tracking-tight">
+                                            {{ trans('lang.vaccine records') }}</h1>
+                                        <p class="text-gray-600 mt-1">
+                                            {{ trans('lang.manage and track vaccination records') }}</p>
                                     </div>
                                 </div>
 
@@ -27,25 +29,27 @@
 
                                     <a href="{{ route('workspace.vaccine.comeback') }}">
                                         <button
-                                        class="text-orange-600 border border-orange-600 hover:text-white hover:bg-orange-600 font-medium rounded-lg text-sm px-5  py-2.5 text-center  inline-flex">
+                                            class="text-orange-600 border border-orange-600 hover:text-white hover:bg-orange-600 font-medium rounded-lg text-sm px-5  py-2.5 text-center  inline-flex">
                                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                             </svg>
-                                            Comeback List
+                                            {{ trans('lang.comeback list') }}
                                         </button>
                                     </a>
 
                                     <a href="{{ route('workspace.vaccine.vaccineList') }}">
                                         <button
-                                        class="text-blue-600 border border-blue-600 hover:text-white hover:bg-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center gap-2">
-                                        <!-- Icon (vaccine/medical) -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="w-4 h-4">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m1-5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-3"/>
-                                        </svg>
-                                        Vaccine
-                                    </button>
+                                            class="text-blue-600 border border-blue-600 hover:text-white hover:bg-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center gap-2">
+                                            <!-- Icon (vaccine/medical) -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor" stroke-width="2" class="w-4 h-4">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M9 12l2 2 4-4m1-5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-3" />
+                                            </svg>
+                                            {{ trans('lang.vaccine') }}
+                                        </button>
 
                                     </a>
 
@@ -74,14 +78,15 @@
                                                 </path>
                                             </svg>
                                             <span class="text-sm font-medium text-blue-800">
-                                                Total Records: {{ $vaccines->total() }}
+                                                {{ trans('lang.total records') }}: {{ $vaccines->total() }}
                                                 @if (request('search'))
                                                     <span class="text-blue-600">(Filtered)</span>
                                                 @endif
                                             </span>
                                         </div>
                                         <div class="text-xs text-blue-600">
-                                            Page {{ $vaccines->currentPage() }} of {{ $vaccines->lastPage() }}
+                                            {{ trans('lang.page') }} {{ $vaccines->currentPage() }}
+                                            {{ trans('lang.of') }} {{ $vaccines->lastPage() }}
                                         </div>
                                     </div>
                                 </div>
@@ -90,12 +95,14 @@
                                     class="px-6 py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
                                     <div
                                         class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                                        <h3 class="text-lg font-semibold text-gray-700">Recent Vaccination Records</h3>
+                                        <h3 class="text-lg font-semibold text-gray-700">
+                                            {{ trans('lang.recent vaccination records') }}</h3>
 
                                         <!-- Search Bar -->
                                         <form method="GET" action="{{ route('workspace.vaccine.index') }}"
                                             class="w-80">
-                                            <label for="vaccine-search" class="sr-only">Search</label>
+                                            <label for="vaccine-search"
+                                                class="sr-only">{{ trans('lang.search') }}</label>
                                             <div class="relative group">
                                                 <div
                                                     class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
@@ -110,7 +117,7 @@
                                                 <input type="text" name="search" id="vaccine-search"
                                                     value="{{ request('search') }}"
                                                     class="block w-full p-4 pl-12 pr-12 text-sm text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm transition-all duration-200 hover:shadow-md"
-                                                    placeholder="Search by name, father, or mother..."
+                                                    placeholder="   {{ trans('lang.search by name, father, or mother...') }}"
                                                     oninput="searchVaccineTable()" />
 
                                                 <!-- Clear button -->
@@ -133,39 +140,20 @@
                                 </div>
 
                                 <div class="overflow-x-auto">
-                                    <table id="vaccineTable" class="min-w-full divide-y divide-gray-200">
-                                        <thead class="bg-gray-50">
+                                    <table id="vaccineTable" class="min-w-full divide-y divide-gray-200 text-center">
+                                        <thead class="text-sm tracking-wider uppercase bg-gray-100 ">
                                             <tr>
-                                                <th
-                                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                    Name</th>
-                                                <th
-                                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                    DOB</th>
-                                                <th
-                                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                    Age</th>
-                                                <th
-                                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                    Father</th>
-                                                <th
-                                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                    Mother</th>
-                                                <th
-                                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                    Vaccine Type</th>
-                                                <th
-                                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                    Payment Type</th>
-                                                <th
-                                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                    Dose Count</th>
-                                                <th
-                                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                    Date</th>
-                                                <th
-                                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                    Description</th>
+                                                <th scope="col" class="px-6 py-3">{{ trans('lang.name') }}</th>
+                                               <th scope="col" class="px-6 py-3">{{ trans('lang.dob') }}</th>
+                                                <th scope="col" class="px-6 py-3">{{ trans('lang.age') }}</th>
+                                                <th scope="col" class="px-6 py-3">{{ trans('lang.father') }}</th>
+                                                <th scope="col" class="px-6 py-3">{{ trans('lang.mother') }}</th>
+                                                <th scope="col" class="px-6 py-3">{{ trans('lang.vaccine type') }}</th>
+                                                <th scope="col" class="px-6 py-3">{{ trans('lang.payment type') }}</th>
+                                                <th scope="col" class="px-6 py-3">{{ trans('lang.dose count') }}</th>
+                                                <th scope="col" class="px-6 py-3">{{ trans('lang.dose date') }}</th>
+                                                <th scope="col" class="px-6 py-3">{{ trans('lang.date') }}</th>
+                                                <th scope="col" class="px-6 py-3">{{ trans('lang.description') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody class="bg-white divide-y divide-gray-100">
@@ -175,7 +163,8 @@
                                                         class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                                         {{ $vaccine->name }}</td>
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                                        {{ \Carbon\Carbon::parse($vaccine->bod)->format('Y-m-d') }}</td>
+                                                        {{ \Carbon\Carbon::parse($vaccine->bod)->format('Y-m-d') }}
+                                                    </td>
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                                                         <span
                                                             class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -222,12 +211,18 @@
                                                             $paymentColors = [
                                                                 'nssf' => 'bg-blue-100 text-blue-800',
                                                                 'cash' => 'bg-green-100 text-green-800',
+                                                                'health equity fund' => 'bg-purple-100 text-purple-800',
                                                             ];
                                                         @endphp
                                                         @if ($paymentType)
-                                                            <span
+                                                            {{-- <span
                                                                 class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $paymentColors[$paymentType] ?? 'bg-gray-100 text-gray-800' }}">
                                                                 {{ $paymentType === 'nssf' ? 'NSSF Member' : ucfirst($paymentType) }}
+                                                            </span> --}}
+
+                                                            <span
+                                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $paymentColors[$paymentType] ?? 'bg-gray-100 text-gray-800' }}">
+                                                                {{ $paymentType === 'nssf' ? trans('lang.nssf') : trans('lang.' . strtolower($paymentType)) }}
                                                             </span>
                                                         @else
                                                             <span class="text-gray-400 text-sm">N/A</span>
@@ -239,6 +234,23 @@
                                                             {{ $vaccine->comeback_count }}
                                                         </span>
                                                     </td>
+                                                    <td class="px-6 py-4 text-sm text-gray-600">
+                                                        @if ($vaccine->dose_dates && count($vaccine->dose_dates) > 0)
+                                                            <div class="space-y-1">
+                                                                @foreach ($vaccine->dose_dates as $index => $doseDate)
+                                                                    <div class="flex flex-col">
+                                                                        <span
+                                                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mb-1">
+                                                                            Dose {{ $index + 1 }}:
+                                                                            {{ \Carbon\Carbon::parse($doseDate)->format('Y-m-d') }}
+                                                                        </span>
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                        @else
+                                                            <span class="text-gray-400 text-sm">N/A</span>
+                                                        @endif
+                                                    </td>
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                                                         {{ \Carbon\Carbon::parse($vaccine->currentDate)->format('Y-m-d') }}
                                                     </td>
@@ -247,7 +259,7 @@
                                                 </tr>
                                             @empty
                                                 <tr id="no-results">
-                                                    <td colspan="10" class="px-6 py-12 text-center">
+                                                    <td colspan="11" class="px-6 py-12 text-center">
                                                         <div class="flex flex-col items-center text-gray-500">
                                                             <svg class="w-12 h-12 text-gray-300 mb-4" fill="none"
                                                                 stroke="currentColor" viewBox="0 0 24 24">
@@ -261,8 +273,9 @@
                                                                 </p>
                                                                 <p class="text-sm">Try adjusting your search terms or
                                                                     <a href="{{ route('workspace.vaccine.index') }}"
-                                                                        class="text-blue-600 hover:underline">clear the
-                                                                        search</a></p>
+                                                                           class="text-blue-600 hover:underline">clear the
+                                                                        search</a>
+                                                                </p>
                                                             @else
                                                                 <p class="text-lg font-medium">No records found</p>
                                                                 <p class="text-sm">Start by adding your first
@@ -275,73 +288,58 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="mt-6">
-                                    {{ $vaccines->links() }}
-                                </div>
+
+
                             </div>
 
-                            <!-- Pagination -->
-                            {{-- @if ($vaccines->hasPages())
-                                <div class="mt-6 bg-white rounded-lg border border-gray-200 p-4">
-                                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-                                        <div class="text-sm text-gray-700">
-                                            <span class="font-medium">Showing {{ $vaccines->firstItem() ?? 0 }} to {{ $vaccines->lastItem() ?? 0 }}</span>
-                                            <span class="text-gray-500">of {{ $vaccines->total() }} results</span>
-                                        </div>
-                                        <div class="flex items-center space-x-1">
-                                            {{ $vaccines->appends(['search' => request('search')])->links() }}
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif --}}
-
-
-
+                            <div class="mt-4 px-4 pb-4">
+                                {{ $vaccines->links() }}
+                            </div>
                             <!-- Patients Needing More Information Section -->
                             @if (!$incompletePatients->isEmpty())
                                 <div class="mt-12">
                                     <div
-                                        class="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl p-6 border-2 border-yellow-200">
+                                        class="bg-gradient-to-r from-blue-50 to-blue-50 rounded-xl p-6 border-2 border-blue-200">
                                         <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                                            <svg class="w-6 h-6 text-yellow-600 mr-2" fill="none"
+                                            <svg class="w-6 h-6 text-blue-600 mr-2" fill="none"
                                                 stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
                                             </svg>
-                                            Patients Needing Vaccine Information
+                                            {{ trans('lang.patients needing vaccine information') }}
                                             <span
-                                                class="ml-3 inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                                {{ $incompletePatients->count() }} pending
+                                                class="ml-3 inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                {{ $incompletePatients->count() }} {{ trans('lang.pending') }}
                                             </span>
                                         </h3>
 
                                         <div class="overflow-x-auto">
                                             <table class="w-full divide-y divide-gray-200 text-center">
-                                                <thead class="bg-yellow-100">
+                                                <thead class="bg-blue-100">
                                                     <tr>
                                                         <th
-                                                            class="px-6 py-4 text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                            Nº</th>
+                                                            class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                                                            {{ trans('lang.nº') }}</th>
                                                         <th
-                                                            class="px-6 py-4 text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                            Patient Name</th>
+                                                            class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                                                            {{ trans('lang.patient name') }}</th>
                                                         <th
-                                                            class="px-6 py-4 text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                            DOB</th>
+                                                            class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                                                            {{ trans('lang.dob') }}</th>
                                                         <th
-                                                            class="px-6 py-4 text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                            Age</th>
+                                                            class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                                                            {{ trans('lang.age') }}</th>
                                                         <th
-                                                            class="px-6 py-4 text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                            Phone</th>
+                                                            class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                                                            {{ trans('lang.phone number') }}</th>
                                                         <th
-                                                            class="px-6 py-4 text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                            Action</th>
+                                                            class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                                                            {{ trans('lang.actions') }}</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody class="bg-white divide-y divide-gray-200">
                                                     @foreach ($incompletePatients as $index => $patient)
-                                                        <tr class="hover:bg-yellow-50 transition-colors">
+                                                        <tr class="hover:bg-blue-50 transition-colors">
                                                             <td
                                                                 class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                                                                 {{ $index + 1 }}</td>
@@ -377,30 +375,72 @@
                                                                             stroke-linejoin="round" stroke-width="2"
                                                                             d="M5 13l4 4L19 7" />
                                                                     </svg>
-                                                                    Complete
+                                                                    {{ trans('lang.complete') }}
                                                                 </a>
 
-                                                                <!-- Dismiss Button (Cross) -->
-                                                                <form
-                                                                    action="{{ route('workspace.vaccine.patient.dismiss', $patient->_id) }}"
-                                                                    method="POST"
-                                                                    onsubmit="return confirm('Are you sure you want to dismiss this patient?');"
-                                                                    class="inline">
-                                                                    @csrf
-                                                                    @method('POST')
-                                                                    <button type="submit"
-                                                                        class="text-red-600 border border-red-600 hover:text-white hover:bg-red-600 font-medium rounded-lg text-sm px-5  py-2.5 text-center  inline-flex"
-                                                                        title="Dismiss from list">
-                                                                        <svg class="w-4 h-4 mr-1" fill="none"
-                                                                            stroke="currentColor" viewBox="0 0 24 24">
-                                                                            <path stroke-linecap="round"
-                                                                                stroke-linejoin="round"
-                                                                                stroke-width="2"
-                                                                                d="M6 18L18 6M6 6l12 12" />
-                                                                        </svg>
-                                                                        Dismiss
-                                                                    </button>
-                                                                </form>
+                                                                <!-- Dismiss Button (Trigger) -->
+                                                                <button type="button"
+                                                                    data-modal-target="dismissModal-{{ $patient->_id }}"
+                                                                    data-modal-toggle="dismissModal-{{ $patient->_id }}"
+                                                                    class="text-red-600 border border-red-600 hover:text-white hover:bg-red-600 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center transition-colors duration-200"
+                                                                    title="Dismiss from list">
+                                                                    <svg class="w-4 h-4 mr-1" fill="none"
+                                                                        stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <path stroke-linecap="round"
+                                                                            stroke-linejoin="round" stroke-width="2"
+                                                                            d="M6 18L18 6M6 6l12 12" />
+                                                                    </svg>
+                                                                    {{ trans('lang.dismiss') }}
+                                                                </button>
+
+                                                                <!-- Dismiss Confirmation Modal -->
+                                                                <div id="dismissModal-{{ $patient->_id }}"
+                                                                    class="fixed inset-0 z-50 flex items-center justify-center hidden bg-gray-900/50 backdrop-blur-sm">
+                                                                    <div
+                                                                        class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-md border border-gray-100">
+                                                                        <div class="text-center">
+                                                                            <div
+                                                                                class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-50 mb-6">
+                                                                                <svg class="h-8 w-8 text-red-500"
+                                                                                    fill="none" viewBox="0 0 24 24"
+                                                                                    stroke="currentColor">
+                                                                                    <path stroke-linecap="round"
+                                                                                        stroke-linejoin="round"
+                                                                                        stroke-width="2"
+                                                                                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                                                                                </svg>
+                                                                            </div>
+                                                                            <h3
+                                                                                class="text-xl font-bold text-gray-900 mb-3">
+                                                                                {{ trans('lang.confirm dismiss') }}
+                                                                            </h3>
+                                                                            <p class="text-gray-600 mb-8">
+                                                                                {{ trans('lang.are you sure you want to dismiss this comeback record') }}?<br>
+                                                                                {{ trans('lang.this action cannot be undone') }}.
+                                                                            </p>
+                                                                            <div class="flex justify-center space-x-4">
+                                                                                <button
+                                                                                    data-modal-target="dismissModal-{{ $patient->_id }}"
+                                                                                    data-modal-toggle="dismissModal-{{ $patient->_id }}"
+                                                                                    class="px-8 py-3 bg-gray-100 text-gray-700 rounded-2xl hover:bg-gray-200 transition-colors duration-200 font-medium">
+                                                                                    {{ trans('lang.cancel') }}
+                                                                                </button>
+
+                                                                                <form
+                                                                                    action="{{ route('workspace.vaccine.patient.dismiss', $patient->_id) }}"
+                                                                                    method="POST">
+                                                                                    @csrf
+                                                                                    @method('POST')
+                                                                                    <button type="submit"
+                                                                                        class="px-8 py-3 bg-red-500 text-white rounded-2xl hover:bg-red-600 transition-colors duration-200 font-medium">
+                                                                                        {{ trans('lang.dismiss') }}
+                                                                                    </button>
+                                                                                </form>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
                                                             </td>
                                                         </tr>
                                                     @endforeach
@@ -486,129 +526,158 @@
                                             </div>
 
                                             <!-- Parent Information -->
-                                            <div class="mb-6">
-                                                <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                                                    <svg class="w-5 h-5 mr-2 text-blue-600" fill="none"
+                                            <div className="mb-10">
+                                                <h3
+                                                    className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                                                    <svg className="w-5 h-5 mr-2 text-blue-600" fill="none"
                                                         stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
-                                                        </path>
+                                                        <path strokeLinecap="round" strokeLinejoin="round"
+                                                            strokeWidth="2"
+                                                            d="M12 6v6l4 2m6-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                     </svg>
-                                                    Parent Information
+                                                    Inspection Records
                                                 </h3>
 
-                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                    <!-- Father Info -->
-                                                    <div class="space-y-4">
+                                                {formData.inspectionRecords.map((record, index) => (
+                                                <div key={index}
+                                                    className="border border-gray-200 rounded-xl shadow-sm bg-white p-6 mb-6 hover:shadow-md transition-shadow duration-200">
+                                                    <div
+                                                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                                        {/* Date */}
                                                         <div>
                                                             <label
-                                                                class="block text-sm font-semibold text-gray-700 mb-2">Father's
-                                                                Name <span class="text-red-500">*</span></label>
-                                                            <input type="text" name="father_name"
-                                                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white hover:bg-gray-50"
-                                                                placeholder="Enter father's name" required>
+                                                                className="block text-sm font-semibold text-gray-700 mb-2">
+                                                                Date
+                                                            </label>
+                                                            <input type="date" value={record.date} onChange={(e)=>
+                                                            updateRecord(index, 'date', e.target.value)}
+                                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white hover:bg-gray-50"
+                                                            />
                                                         </div>
+
                                                         <div>
                                                             <label
-                                                                class="block text-sm font-semibold text-gray-700 mb-2">Father's
-                                                                Phone <span class="text-red-500">*</span></label>
-                                                            <input type="tel" name="father_phone"
-                                                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white hover:bg-gray-50"
-                                                                placeholder="Enter phone number" required>
+                                                                className="block text-sm font-semibold text-gray-700 mb-2">
+                                                                Color Name
+                                                            </label>
+                                                            <input type="text" value={record.colorName}
+                                                                onChange={(e)=> updateRecord(index, 'colorName',
+                                                            e.target.value)}
+                                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white hover:bg-gray-50"
+                                                            />
+                                                        </div>
+
+
+                                                        <div>
+                                                            <label
+                                                                className="block text-sm font-semibold text-gray-700 mb-2">
+                                                                Before Dry Room
+                                                            </label>
+                                                            <input type="text" value={record.beforeDryRoom}
+                                                                onChange={(e)=>
+                                                            updateRecord(index, 'beforeDryRoom', e.target.value)}
+                                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white hover:bg-gray-50"
+                                                            />
+                                                        </div>
+
+                                                        {/* After Dry Room */}
+                                                        <div>
+                                                            <label
+                                                                className="block text-sm font-semibold text-gray-700 mb-2">
+                                                                After Dry Room
+                                                            </label>
+                                                            <input type="text" value={record.afterDryRoom}
+                                                                onChange={(e)=> updateRecord(index, 'afterDryRoom',
+                                                            e.target.value)}
+                                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white hover:bg-gray-50"
+                                                            />
                                                         </div>
                                                     </div>
 
-                                                    <!-- Mother Info -->
-                                                    <div class="space-y-4">
-                                                        <div>
-                                                            <label
-                                                                class="block text-sm font-semibold text-gray-700 mb-2">Mother's
-                                                                Name <span class="text-red-500">*</span></label>
-                                                            <input type="text" name="mother_name"
-                                                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white hover:bg-gray-50"
-                                                                placeholder="Enter mother's name" required>
+                                                    <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                                                        {['top', 'middle', 'bottom'].map((section) => (
+                                                        <div key={section}>
+                                                            <h4
+                                                                className="text-md font-semibold text-gray-800 mb-3 capitalize flex items-center">
+                                                                <svg className="w-4 h-4 mr-2 text-blue-500"
+                                                                    fill="none" stroke="currentColor"
+                                                                    viewBox="0 0 24 24">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round"
+                                                                        strokeWidth="2" d="M5 13l4 4L19 7" />
+                                                                </svg>
+                                                                {section} Section
+                                                            </h4>
+
+                                                            <div className="space-y-4">
+                                                                {/* Reading */}
+                                                                <div>
+                                                                    <label
+                                                                        className="block text-sm font-medium text-gray-600 mb-1">
+                                                                        Aquaboy Reading
+                                                                    </label>
+                                                                    <input type="text"
+                                                                        value={record[section].reading} onChange={(e)=>
+                                                                    updateSectionData(index, section, 'reading',
+                                                                    e.target.value)
+                                                                    }
+                                                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                                    />
+                                                                </div>
+
+                                                                {/* Pass/Fail */}
+                                                                <div className="flex items-center space-x-6">
+                                                                    <label className="flex items-center">
+                                                                        <input type="checkbox"
+                                                                            checked={record[section].pass}
+                                                                            onChange={(e)=>
+                                                                        updateSectionData(index, section, 'pass',
+                                                                        e.target.checked)
+                                                                        }
+                                                                        className="w-4 h-4 text-green-500 border-gray-300 rounded focus:ring-green-400"
+                                                                        />
+                                                                        <span
+                                                                            className="ml-2 text-sm text-gray-700">Pass</span>
+                                                                    </label>
+
+                                                                    <label className="flex items-center">
+                                                                        <input type="checkbox"
+                                                                            checked={record[section].fail}
+                                                                            onChange={(e)=>
+                                                                        updateSectionData(index, section, 'fail',
+                                                                        e.target.checked)
+                                                                        }
+                                                                        className="w-4 h-4 text-red-500 border-gray-300 rounded focus:ring-red-400"
+                                                                        />
+                                                                        <span
+                                                                            className="ml-2 text-sm text-gray-700">Fail</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div>
-                                                            <label
-                                                                class="block text-sm font-semibold text-gray-700 mb-2">Mother's
-                                                                Phone <span class="text-red-500">*</span></label>
-                                                            <input type="tel" name="mother_phone"
-                                                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white hover:bg-gray-50"
-                                                                placeholder="Enter phone number" required>
-                                                        </div>
+                                                        ))}
+                                                    </div>
+
+                                                    {/* Remark */}
+                                                    <div className="mt-6">
+                                                        <label
+                                                            className="block text-sm font-semibold text-gray-700 mb-2">
+                                                            Remark
+                                                        </label>
+                                                        <input type="text" value={record.remark} onChange={(e)=>
+                                                        updateRecord(index, 'remark', e.target.value)}
+                                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white hover:bg-gray-50"
+                                                        placeholder="Enter remark..."
+                                                        />
                                                     </div>
                                                 </div>
+                                                ))}
+
+                                                <button onClick={addNewRecord}
+                                                    className="mt-4 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200">
+                                                    + Add New Record
+                                                </button>
                                             </div>
 
-                                            <!-- Carer Info (Optional) -->
-                                            <div class="mb-6">
-                                                <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                                                    <svg class="w-5 h-5 mr-2 text-gray-600" fill="none"
-                                                        stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
-                                                        </path>
-                                                    </svg>
-                                                    Carer Information (Optional)
-                                                </h3>
-
-                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                    <div>
-                                                        <label
-                                                            class="block text-sm font-semibold text-gray-700 mb-2">Carer
-                                                            Name</label>
-                                                        <input type="text" name="carer"
-                                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white hover:bg-gray-50"
-                                                            placeholder="Enter carer's name">
-                                                    </div>
-                                                    <div>
-                                                        <label
-                                                            class="block text-sm font-semibold text-gray-700 mb-2">Carer
-                                                            Phone Number</label>
-                                                        <input type="tel" name="carer_phone"
-                                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white hover:bg-gray-50"
-                                                            placeholder="Enter phone number">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Locations -->
-                                            <div class="mb-6">
-                                                <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                                                    <svg class="w-5 h-5 mr-2 text-green-600" fill="none"
-                                                        stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
-                                                        </path>
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z">
-                                                        </path>
-                                                    </svg>
-                                                    Location Information
-                                                </h3>
-
-                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                    <div>
-                                                        <label
-                                                            class="block text-sm font-semibold text-gray-700 mb-2">Location
-                                                            of Birth <span class="text-red-500">*</span></label>
-                                                        <input type="text" name="birth_location"
-                                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white hover:bg-gray-50"
-                                                            placeholder="Enter birth location" required>
-                                                    </div>
-                                                    <div>
-                                                        <label
-                                                            class="block text-sm font-semibold text-gray-700 mb-2">Current
-                                                            Location <span class="text-red-500">*</span></label>
-                                                        <input type="text" name="current_location"
-                                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white hover:bg-gray-50"
-                                                            placeholder="Enter current location" required>
-                                                    </div>
-                                                </div>
-                                            </div>
 
                                             <!-- Vaccine Information -->
                                             <div class="mb-6">
@@ -750,7 +819,7 @@
                         cell.innerHTML = searchInput && match ?
                             text.replace(new RegExp(searchInput, 'gi'), m =>
                                 `<span class="bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded-lg font-medium">${m}</span>`
-                                ) :
+                            ) :
                             text;
                     }
                 });

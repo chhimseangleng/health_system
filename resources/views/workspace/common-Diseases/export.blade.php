@@ -15,10 +15,10 @@
                     <div class="text-gray-500">Updated</div>
                     <div class="font-semibold text-gray-900">{{ optional($record->updated_at)->format('Y-m-d H:i') }}</div>
                 </div>
-                <div>
+                {{-- <div>
                     <div class="text-gray-500">Category</div>
                     <div class="font-semibold text-gray-900">{{ $record->category }}</div>
-                </div>
+                </div> --}}
                 <div>
                     <div class="text-gray-500">Physician</div>
                     <div class="font-semibold text-gray-900">{{ $record->physician }}</div>
@@ -35,10 +35,10 @@
                     <div class="text-gray-500">Village</div>
                     <div class="font-semibold text-gray-900">{{ $record->village }}</div>
                 </div>
-                <div>
+                {{-- <div>
                     <div class="text-gray-500">Commune</div>
                     <div class="font-semibold text-gray-900">{{ $record->commune }}</div>
-                </div>
+                </div> --}}
             </div>
 
             <div class="mt-6">

@@ -169,6 +169,15 @@ Route::middleware('auth')->group(function () {
 
     // Gynecology
     Route::get('workspace/gynecology/index', [WorkspaceController::class, 'gynecologyIndex'])->name('workspace.gynecology.index');
+    Route::post('workspace/gynecology/store', [WorkspaceController::class, 'gynecologyStore'])->name('workspace.gynecology.store');
+    Route::get('workspace/gynecology/{id}/edit', [WorkspaceController::class, 'gynecologyEdit'])->name('workspace.gynecology.edit');
+    Route::put('workspace/gynecology/{id}', [WorkspaceController::class, 'gynecologyUpdate'])->name('workspace.gynecology.update');
+    Route::delete('workspace/gynecology/{id}', [WorkspaceController::class, 'gynecologyDestroy'])->name('workspace.gynecology.destroy');
+
+    // Gynecology patient info
+    Route::get('workspace/gynecology/patient/{patientId}/form', [WorkspaceController::class, 'showGynecologyPatientForm'])->name('workspace.gynecology.patient.form');
+    Route::post('workspace/gynecology/patient/{patientId}/store', [WorkspaceController::class, 'storeGynecologyPatientInfo'])->name('workspace.gynecology.patient.store');
+    Route::post('workspace/gynecology/patient/{patientId}/dismiss', [WorkspaceController::class, 'dismissGynecologyPatient'])->name('workspace.gynecology.patient.dismiss');
 
     // Medicine
     Route::get('workspace/medicine/index', [WorkspaceController::class, 'medicineIndex'])->name('workspace.medicine.index');
@@ -199,13 +208,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Language switcher
-    Route::get('lang/{locale}', function ($locale) {
-        if (in_array($locale, ['en', 'kh'])) {
-            session(['locale' => $locale]);
-        }
-        return redirect()->back();
-    })->name('lang.switch');
+Route::post('/locale', App\Http\Controllers\LocaleController::class)->name('locale.change');
+
 });
 
 require __DIR__ . '/auth.php';

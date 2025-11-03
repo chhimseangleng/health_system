@@ -20,9 +20,8 @@
                                 </div>
 
                                 <div>
-                                    <h1 class="text-4xl font-bold text-blue-600">Add New Medicine</h1>
-                                    <p class="text-gray-400 mt-2 text-lg">Enter comprehensive medicine details to expand
-                                        your inventory</p>
+                                    <h1 class="text-4xl font-bold text-blue-600">{{ trans('lang.add new medicine') }}</h1>
+                                    <p class="text-gray-400 mt-2 text-lg">{{ trans('lang.enter comprehensive medicine details') }}</p>
                                 </div>
                             </div>
 
@@ -34,7 +33,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M15 19l-7-7 7-7" />
                                     </svg>
-                                    <span>Back to Medicines</span>
+                                    <span>{{ trans('lang.back to medicines') }}</span>
                                 </span>
                             </a>
                         </div>
@@ -55,12 +54,12 @@
                                             d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                 </div>
-                                <h3 class="text-xl font-bold text-gray-800">Basic Information</h3>
+                                <h3 class="text-xl font-bold text-gray-800">{{ trans('lang.basic information') }}</h3>
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Medicine
-                                        Name *</label>
+                                    <label for="name" class="block text-sm font-medium text-gray-700 mb-2">{{ trans('lang.medicine name') }}
+                                        *</label>
                                     <input type="text" name="name" id="name" value="{{ old('name') }}"
                                         required
                                         class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-300 bg-white/80 backdrop-blur-sm"
@@ -72,7 +71,7 @@
 
                                 <div>
                                     <label for="generic_name"
-                                        class="block text-sm font-medium text-gray-700 mb-2">Generic Name</label>
+                                        class="block text-sm font-medium text-gray-700 mb-2">{{ trans('lang.generic name') }}</label>
                                     <input type="text" name="generic_name" id="generic_name"
                                         value="{{ old('generic_name') }}"
                                         class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-300 bg-white/80 backdrop-blur-sm"
@@ -83,11 +82,11 @@
                                 </div>
 
                                 <div>
-                                    <label for="category" class="block text-sm font-medium text-gray-700 mb-2">Category
+                                    <label for="category" class="block text-sm font-medium text-gray-700 mb-2">{{ trans('lang.category') }}
                                         *</label>
                                     <select name="category" id="category" required
                                         class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-300 bg-white/80 backdrop-blur-sm">
-                                        <option value="">Select Category</option>
+                                        <option value="">{{ trans('lang.select category') }}</option>
                                         @foreach ($categories as $category)
                                             <option value="{{ $category }}"
                                                 {{ old('category') == $category ? 'selected' : '' }}>
@@ -102,7 +101,7 @@
 
                                 <div>
                                     <label for="manufacturer"
-                                        class="block text-sm font-medium text-gray-700 mb-2">Manufacturer *</label>
+                                        class="block text-sm font-medium text-gray-700 mb-2">{{ trans('lang.manufacturer') }} *</label>
                                     <input type="text" name="manufacturer" id="manufacturer"
                                         value="{{ old('manufacturer') }}" required
                                         class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-300 bg-white/80 backdrop-blur-sm"
@@ -126,11 +125,11 @@
                                             d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                 </div>
-                                <h3 class="text-xl font-bold text-gray-800">Strength & Form</h3>
+                                <h3 class="text-xl font-bold text-gray-800">{{ trans('lang.strength & form') }}</h3>
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div>
-                                    <label for="strength" class="block text-sm font-medium text-gray-700 mb-2">Strength
+                                    <label for="strength" class="block text-sm font-medium text-gray-700 mb-2">{{ trans('lang.strength') }}
                                         *</label>
                                     <input type="text" name="strength" id="strength" value="{{ old('strength') }}"
                                         required
@@ -142,11 +141,11 @@
                                 </div>
 
                                 <div>
-                                    <label for="unit" class="block text-sm font-medium text-gray-700 mb-2">Unit
+                                    <label for="unit" class="block text-sm font-medium text-gray-700 mb-2">{{ trans('lang.unit') }}
                                         *</label>
                                     <select name="unit" id="unit" required
                                         class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-300 bg-white/80 backdrop-blur-sm">
-                                        <option value="">Select Unit</option>
+                                        <option value="">{{ trans('lang.select unit') }}</option>
                                         @foreach ($units as $unit)
                                             <option value="{{ $unit }}"
                                                 {{ old('unit') == $unit ? 'selected' : '' }}>
@@ -160,11 +159,11 @@
                                 </div>
 
                                 <div>
-                                    <label for="form" class="block text-sm font-medium text-gray-700 mb-2">Form
+                                    <label for="form" class="block text-sm font-medium text-gray-700 mb-2">{{ trans('lang.form') }}
                                         *</label>
                                     <select name="form" id="form" required
                                         class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-300 bg-white/80 backdrop-blur-sm">
-                                        <option value="">Select Form</option>
+                                        <option value="">{{ trans('lang.select form') }}</option>
                                         @foreach ($forms as $form)
                                             <option value="{{ $form }}"
                                                 {{ old('form') == $form ? 'selected' : '' }}>
@@ -191,12 +190,12 @@
                                             d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                                     </svg>
                                 </div>
-                                <h3 class="text-xl font-bold text-gray-800">Stock Information</h3>
+                                <h3 class="text-xl font-bold text-gray-800">{{ trans('lang.stock information') }}</h3>
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                                 <div>
                                     <label for="stock_quantity"
-                                        class="block text-sm font-medium text-gray-700 mb-2">Stock Quantity *</label>
+                                        class="block text-sm font-medium text-gray-700 mb-2">{{ trans('lang.stock quantity') }} *</label>
                                     <input type="number" name="stock_quantity" id="stock_quantity"
                                         value="{{ old('stock_quantity') }}" required min="0"
                                         class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-300 bg-white/80 backdrop-blur-sm"
@@ -208,7 +207,7 @@
 
                                 <div>
                                     <label for="minimum_stock"
-                                        class="block text-sm font-medium text-gray-700 mb-2">Minimum Stock *</label>
+                                        class="block text-sm font-medium text-gray-700 mb-2">{{ trans('lang.minimum stock') }} *</label>
                                     <input type="number" name="minimum_stock" id="minimum_stock"
                                         value="{{ old('minimum_stock') }}" required min="0"
                                         class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-300 bg-white/80 backdrop-blur-sm"
@@ -219,7 +218,7 @@
                                 </div>
 
                                 <div>
-                                    <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Price
+                                    <label for="price" class="block text-sm font-medium text-gray-700 mb-2">{{ trans('lang.price') }}
                                         *</label>
                                     <div class="relative">
                                         <span class="absolute left-3 top-2 text-gray-500">$</span>
@@ -235,7 +234,7 @@
 
                                 <div>
                                     <label for="batch_number"
-                                        class="block text-sm font-medium text-gray-700 mb-2">Batch Number *</label>
+                                        class="block text-sm font-medium text-gray-700 mb-2">{{ trans('lang.batch number') }} *</label>
                                     <input type="text" name="batch_number" id="batch_number"
                                         value="{{ old('batch_number') }}" required
                                         class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-300 bg-white/80 backdrop-blur-sm"
@@ -247,8 +246,7 @@
                             </div>
 
                             <div class="mt-6">
-                                <label for="expiry_date" class="block text-sm font-medium text-gray-700 mb-2">Expiry
-                                    Date *</label>
+                                <label for="expiry_date" class="block text-sm font-medium text-gray-700 mb-2">{{ trans('lang.expiry date') }} *</label>
                                 <input type="date" name="expiry_date" id="expiry_date"
                                     value="{{ old('expiry_date') }}" required
                                     class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-300 bg-white/80 backdrop-blur-sm">
@@ -270,12 +268,12 @@
                                             d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                                     </svg>
                                 </div>
-                                <h3 class="text-xl font-bold text-gray-800">Medical Information</h3>
+                                <h3 class="text-xl font-bold text-gray-800">{{ trans('lang.medical information') }}</h3>
                             </div>
                             <div class="space-y-6">
                                 <div>
                                     <label for="description"
-                                        class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                                        class="block text-sm font-medium text-gray-700 mb-2">{{ trans('lang.description') }}</label>
                                     <textarea name="description" id="description" rows="3"
                                         class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-300 bg-white/80 backdrop-blur-sm"
                                         placeholder="Brief description of the medicine">{{ old('description') }}</textarea>
@@ -286,7 +284,7 @@
 
                                 <div>
                                     <label for="indications"
-                                        class="block text-sm font-medium text-gray-700 mb-2">Indications</label>
+                                        class="block text-sm font-medium text-gray-700 mb-2">{{ trans('lang.indications') }}</label>
                                     <textarea name="indications" id="indications" rows="3"
                                         class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-300 bg-white/80 backdrop-blur-sm"
                                         placeholder="What this medicine is used for">{{ old('indications') }}</textarea>
@@ -297,8 +295,7 @@
 
                                 <div>
                                     <label for="dosage_instructions"
-                                        class="block text-sm font-medium text-gray-700 mb-2">Dosage
-                                        Instructions</label>
+                                        class="block text-sm font-medium text-gray-700 mb-2">{{ trans('lang.dosage instructions') }}</label>
                                     <textarea name="dosage_instructions" id="dosage_instructions" rows="3"
                                         class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-300 bg-white/80 backdrop-blur-sm"
                                         placeholder="How to take this medicine">{{ old('dosage_instructions') }}</textarea>
@@ -309,7 +306,7 @@
 
                                 <div>
                                     <label for="storage_conditions"
-                                        class="block text-sm font-medium text-gray-700 mb-2">Storage Conditions</label>
+                                        class="block text-sm font-medium text-gray-700 mb-2">{{ trans('lang.storage conditions') }}</label>
                                     <input type="text" name="storage_conditions" id="storage_conditions"
                                         value="{{ old('storage_conditions') }}"
                                         class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-300 bg-white/80 backdrop-blur-sm"
@@ -333,12 +330,12 @@
                                             d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
                                     </svg>
                                 </div>
-                                <h3 class="text-xl font-bold text-gray-800">Additional Information</h3>
+                                <h3 class="text-xl font-bold text-gray-800">{{ trans('lang.additional information') }}</h3>
                             </div>
                             <div class="space-y-6">
                                 <div>
                                     <label for="contraindications"
-                                        class="block text-sm font-medium text-gray-700 mb-2">Contraindications</label>
+                                        class="block text-sm font-medium text-gray-700 mb-2">{{ trans('lang.contraindications') }}</label>
                                     <textarea name="contraindications" id="contraindications" rows="3"
                                         class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-300 bg-white/80 backdrop-blur-sm"
                                         placeholder="When this medicine should not be used">{{ old('contraindications') }}</textarea>
@@ -349,7 +346,7 @@
 
                                 <div>
                                     <label for="side_effects"
-                                        class="block text-sm font-medium text-gray-700 mb-2">Side Effects</label>
+                                        class="block text-sm font-medium text-gray-700 mb-2">{{ trans('lang.side effects') }}</label>
                                     <textarea name="side_effects" id="side_effects" rows="3"
                                         class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-300 bg-white/80 backdrop-blur-sm"
                                         placeholder="Common side effects">{{ old('side_effects') }}</textarea>
@@ -363,7 +360,7 @@
                                         <input type="checkbox" name="is_active" id="is_active" value="1"
                                             {{ old('is_active') ? 'checked' : '' }}
                                             class="w-5 h-5 rounded-lg border-2 border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 transition-all duration-200">
-                                        <span class="ml-2 text-sm text-gray-700">Active Medicine</span>
+                                        <span class="ml-2 text-sm text-gray-700">{{ trans('lang.active medicine') }}</span>
                                     </label>
 
                                     <label class="flex items-center">
@@ -371,7 +368,7 @@
                                             id="requires_prescription" value="1"
                                             {{ old('requires_prescription') ? 'checked' : '' }}
                                             class="w-5 h-5 rounded-lg border-2 border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 transition-all duration-200">
-                                        <span class="ml-2 text-sm text-gray-700">Requires Prescription</span>
+                                        <span class="ml-2 text-sm text-gray-700">{{ trans('lang.requires prescription') }}</span>
                                     </label>
                                 </div>
                             </div>
@@ -387,7 +384,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M6 18L18 6M6 6l12 12" />
                                     </svg>
-                                    <span>Cancel</span>
+                                    <span>{{ trans('lang.cancel') }}</span>
                                 </span>
                             </a>
                             <button type="submit"
@@ -398,7 +395,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                     </svg>
-                                    <span>Add Medicine</span>
+                                    <span>{{ trans('lang.add medicine') }}</span>
                                 </span>
                             </button>
                         </div>

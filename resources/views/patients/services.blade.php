@@ -8,14 +8,14 @@
                         {{-- Header --}}
                         <div class="flex justify-between items-center mb-5">
                             <div>
-                                <h1 class="text-2xl font-bold text-gray-900">Patient Services</h1>
+                                <h1 class="text-2xl font-bold text-gray-900">{{ trans('lang.patient services') }}</h1>
                                 <p class="text-gray-600 mt-1">{{ $patient->first_name }} {{ $patient->last_name }} - {{ $patient->phone }}</p>
                             </div>
 
                             <div class="flex items-center space-x-4">
                                 <a href="{{ route('patients.index') }}"
                                    class="px-4 py-2 bg-gray-600 text-white rounded-lg text-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400">
-                                    Back to Patients
+                                    {{ trans('lang.back to patients') }}
                                 </a>
 
                                 <button data-modal-target="add-service-modal" data-modal-toggle="add-service-modal"
@@ -25,7 +25,7 @@
                                             d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
                                             clip-rule="evenodd" />
                                     </svg>
-                                    Add New Service
+                                    {{ trans('lang.add new service') }}
                                 </button>
                             </div>
                         </div>
@@ -34,27 +34,27 @@
                         <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div>
-                                    <span class="text-sm font-medium text-blue-800">Name:</span>
+                                    <span class="text-sm font-medium text-blue-800">{{ trans('lang.name') }}:</span>
                                     <p class="text-blue-900">{{ $patient->first_name }} {{ $patient->last_name }}</p>
                                 </div>
                                 <div>
-                                    <span class="text-sm font-medium text-blue-800">Phone:</span>
+                                    <span class="text-sm font-medium text-blue-800">{{ trans('lang.phone') }}:</span>
                                     <p class="text-blue-900">{{ $patient->phone }}</p>
                                 </div>
                                 <div>
-                                    <span class="text-sm font-medium text-blue-800">Date of Birth:</span>
+                                    <span class="text-sm font-medium text-blue-800">{{ trans('lang.date of birth') }}:</span>
                                     <p class="text-blue-900">{{ $patient->date_of_birth }}</p>
                                 </div>
                                 <div>
-                                    <span class="text-sm font-medium text-blue-800">Gender:</span>
+                                    <span class="text-sm font-medium text-blue-800">{{ trans('lang.gender') }}:</span>
                                     <p class="text-blue-900">{{ ucfirst($patient->gender) }}</p>
                                 </div>
                                 <div>
-                                    <span class="text-sm font-medium text-blue-800">Address:</span>
+                                    <span class="text-sm font-medium text-blue-800">{{ trans('lang.address') }}:</span>
                                     <p class="text-blue-900">{{ $patient->address }}</p>
                                 </div>
                                 <div>
-                                    <span class="text-sm font-medium text-blue-800">Total Services:</span>
+                                    <span class="text-sm font-medium text-blue-800">{{ trans('lang.total services') }}:</span>
                                     <p class="text-blue-900 font-semibold">{{ $patient->services->count() }}</p>
                                 </div>
                             </div>
@@ -65,11 +65,11 @@
                             <table class="min-w-full divide-y divide-gray-200 text-sm">
                                 <thead class="text-xs tracking-wider uppercase bg-gray-100">
                                     <tr>
-                                        <th scope="col" class="px-6 py-3">Service Name</th>
-                                        <th scope="col" class="px-6 py-3">Date</th>
-                                        <th scope="col" class="px-6 py-3">Status</th>
-                                        <th scope="col" class="px-6 py-3">Notes</th>
-                                        <th scope="col" class="px-6 py-3">Actions</th>
+                                        <th scope="col" class="px-6 py-3">{{ trans('lang.service name') }}</th>
+                                        <th scope="col" class="px-6 py-3">{{ trans('lang.date') }}</th>
+                                        <th scope="col" class="px-6 py-3">{{ trans('lang.status') }}</th>
+                                        <th scope="col" class="px-6 py-3">{{ trans('lang.notes') }}</th>
+                                        <th scope="col" class="px-6 py-3">{{ trans('lang.actions') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
@@ -95,7 +95,7 @@
                                                     @if($service->notes)
                                                         <span class="text-gray-600">{{ Str::limit($service->notes, 50) }}</span>
                                                     @else
-                                                        <span class="text-gray-400 text-sm">No notes</span>
+                                                        <span class="text-gray-400 text-sm">{{ trans('lang.no notes') }}</span>
                                                     @endif
                                                 </td>
                                                 <td class="px-6 py-4 text-center">
@@ -121,8 +121,8 @@
                                                     <svg class="w-12 h-12 text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                                     </svg>
-                                                    <p class="text-lg font-medium">No services found</p>
-                                                    <p class="text-sm text-gray-400">This patient hasn't received any services yet.</p>
+                                                    <p class="text-lg font-medium">{{ trans('lang.no services found') }}</p>
+                                                    <p class="text-sm text-gray-400">{{ trans('lang.this patient hasn\'t received any services yet') }}.</p>
                                                 </div>
                                             </td>
                                         </tr>
