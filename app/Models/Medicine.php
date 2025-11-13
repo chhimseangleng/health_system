@@ -60,20 +60,20 @@ class Medicine extends Model
     public function getStockStatusAttribute()
     {
         if ($this->stock_quantity <= 0) {
-            return 'out_of_stock';
+            return 'out of stock';
         } elseif ($this->stock_quantity <= $this->minimum_stock) {
-            return 'low_stock';
+            return 'low stock';
         } else {
-            return 'in_stock';
+            return 'in stock';
         }
     }
 
     public function getStockStatusColorAttribute()
     {
         return [
-            'out_of_stock' => 'red',
-            'low_stock' => 'yellow',
-            'in_stock' => 'green'
+            'out of stock' => 'red',
+            'low stock' => 'yellow',
+            'in stock' => 'green'
         ][$this->stock_status] ?? 'gray';
     }
 

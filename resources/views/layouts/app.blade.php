@@ -44,7 +44,7 @@
 
         /* English Font Support - Modern Sans-serif */
         .english-font {
-            font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'Inter', 'Noto Sans Khmer', 'Kantumruy Pro', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
         }
 
         /* Apply fonts based on locale */
@@ -56,7 +56,7 @@
         @else
             body,
             .font-sans {
-                font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif !important;
+                font-family: 'Inter', 'Noto Sans Khmer', 'Kantumruy Pro', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif !important;
             }
         @endif
 
@@ -115,6 +115,10 @@
 
             <!-- Navigation Menu -->
             <nav class="px-4 space-y-2">
+                @php
+                    $role = Auth::user()->role ?? '';
+                    $groupRoles = ['Common Diseases','Vaccine','Medicine','Pregnancy'];
+                @endphp
                 <!-- Dashboard -->
                 <a href="{{ route('dashboard') }}"
                     class="flex items-center px-4 py-3 {{ request()->routeIs('dashboard') ? 'text-white bg-purple-500' : 'text-gray-700 hover:bg-gray-50' }} rounded-xl transition-colors duration-200">
@@ -123,10 +127,11 @@
                             d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
                         </path>
                     </svg>
-                    <span class="font-medium">Dashboard</span>
+                    <span> {{ trans('lang.dashboard') }}</span>
                 </a>
 
                 <!-- Patients -->
+                @if ($role === 'Admin' || $role === 'Patient')
                 <a href="{{ route('patients.index') }}"
                     class="flex items-center px-4 py-3 {{ request()->routeIs('patients.*') ? 'text-white bg-purple-500' : 'text-gray-700 hover:bg-gray-50' }} rounded-xl transition-colors duration-200">
                     <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -134,10 +139,12 @@
                             d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
                         </path>
                     </svg>
-                    <span>Patients</span>
+                    <span> {{ trans('lang.patients') }}</span>
                 </a>
+                @endif
 
                 <!-- WorkSpace -->
+                @if ($role === 'Admin' || in_array($role, $groupRoles))
                 <a href="{{ route('workspace.index') }}"
                     class="flex items-center px-4 py-3 {{ request()->routeIs('workspace.*') ? 'text-white bg-purple-500' : 'text-gray-700 hover:bg-gray-50' }} rounded-xl transition-colors duration-200">
                     <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -147,7 +154,9 @@
                     </svg>
                     <span>WorkSpace</span>
                 </a>
+                @endif
 
+                @if ($role === 'Admin')
                 <!-- Doctors -->
                 <a href="{{ route('doctors.index') }}"
                     class="flex items-center px-4 py-3 {{ request()->routeIs('doctors.*') ? 'text-white bg-purple-500' : 'text-gray-700 hover:bg-gray-50' }} rounded-xl transition-colors duration-200">
@@ -155,7 +164,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M16 7a4 4 0 11-8 0 4 4 0 018 0zm-4 7a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
-                    <span>Doctors</span>
+                    <span> {{ trans('lang.doctors') }}</span>
                 </a>
 
                 <!-- Add User -->
@@ -166,7 +175,7 @@
                             d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z">
                         </path>
                     </svg>
-                    <span>Add User</span>
+                    <span> {{ trans('lang.add user') }}</span>
                 </a>
 
                 <!-- Documents -->
@@ -201,6 +210,7 @@
                     </svg>
                     <span>Statistics</span>
                 </a>
+                @endif
             </nav>
 
             <!-- Bottom Section -->
@@ -253,15 +263,15 @@
                         <div class="flex items-center">
                             <h2 class="text-xl font-semibold text-gray-800">
                                 @if (request()->routeIs('dashboard'))
-                                    Dashboard
+                                {{ trans('lang.dashboard') }}
                                 @elseif(request()->routeIs('workspace.*'))
-                                    WorkSpace
+                                WorkSpace
                                 @elseif(request()->routeIs('patients.*'))
-                                    Patients
+                                {{ trans('lang.patients') }}
                                 @elseif(request()->routeIs('doctors.*'))
-                                    Doctors
+                                {{ trans('lang.doctors') }}
                                 @elseif(request()->routeIs('register'))
-                                    Add User
+                                {{ trans('lang.add user') }}
                                 @else
                                     {{ config('app.name', 'Samaky Health') }}
                                 @endif
@@ -291,12 +301,13 @@
                             <div x-data="{ open: false }" class="relative">
                                 <button @click="open = !open"
                                     class="flex items-center px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200">
-                                    <img src="https://flagcdn.com/24x18/us.png" class="w-5 h-4 mr-2" alt="English"
-                                        x-show="!('locale' in localStorage) || localStorage.locale === 'en'">
-                                    <img src="https://flagcdn.com/24x18/kh.png" class="w-5 h-4 mr-2" alt="Khmer"
-                                        x-show="localStorage.locale === 'kh'">
-                                    <span x-text="localStorage.locale === 'kh' ? 'Khmer' : 'English'"
-                                        class="text-sm"></span>
+                                    @if (app()->getLocale() == 'kh')
+                                        <img src="https://flagcdn.com/24x18/kh.png" class="w-5 h-4 mr-2" alt="Khmer">
+                                        <span class="text-sm">{{ trans('lang.khmer') }}</span>
+                                    @else
+                                        <img src="https://flagcdn.com/24x18/us.png" class="w-5 h-4 mr-2" alt="English">
+                                        <span class="text-sm">{{ trans('lang.english') }}</span>
+                                    @endif
                                     <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -311,12 +322,12 @@
                                         <button type="submit" name="locale" value="en"
                                             class="flex items-center w-full px-4 py-2 text-sm hover:bg-gray-50 {{ app()->getLocale() == 'en' ? 'bg-gray-100' : '' }}">
                                             <img src="https://flagcdn.com/24x18/us.png" class="w-5 h-4 mr-2"
-                                                alt="English"> English
+                                                alt="English"> {{ trans('lang.english') }}
                                         </button>
                                         <button type="submit" name="locale" value="kh"
                                             class="flex items-center w-full px-4 py-2 text-sm hover:bg-gray-50 {{ app()->getLocale() == 'kh' ? 'bg-gray-100' : '' }}">
                                             <img src="https://flagcdn.com/24x18/kh.png" class="w-5 h-4 mr-2"
-                                                alt="Khmer"> Khmer
+                                                alt="Khmer"> {{ trans('lang.khmer') }}
                                         </button>
                                     </form>
                                 </div>
@@ -403,7 +414,7 @@
             } else {
                 document.body.classList.remove('khmer-font');
                 document.body.classList.add('english-font');
-                document.body.style.fontFamily = "'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif";
+                document.body.style.fontFamily = "'Inter', 'Noto Sans Khmer', 'Kantumruy Pro', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif";
             }
         }
 

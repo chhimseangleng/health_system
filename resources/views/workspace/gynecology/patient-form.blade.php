@@ -18,18 +18,18 @@
                                 </span>
                                 <div>
                                     <h1 class="text-4xl font-bold text-gray-700 tracking-tight">
-                                        Complete Pregnancy Information
+                                        {{ trans('lang.complete pregnancy information') }}
                                     </h1>
-                                    <p class="text-base text-gray-600 mt-2">fill in the patient's pregnancy details</p>
+                                    <p class="text-base text-gray-600 mt-2">{{ trans('lang.fill in the patient\'s pregnancy details')}}</p>
                                 </div>
                             </div>
                             <a href="{{ route('workspace.gynecology.index') }}"
-                               class="flex items-center px-6 py-2 bg-pink-200 text-pink-800 font-semibold rounded-full shadow hover:bg-pink-300 transition">
+                               class="flex items-center px-6 py-2 bg-pink-200 text-pink-800 font-semibold rounded-lg shadow hover:bg-pink-300 transition">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                           d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                                 </svg>
-                                {{ trans('back') }}
+                                {{ trans('lang.back') }}
                             </a>
                         </div>
 
@@ -50,17 +50,17 @@
                                     </h3>
                                     <div class="flex flex-col sm:flex-row sm:items-center gap-2 mt-2 text-pink-800 text-[15px] font-medium">
                                         <span>
-                                            <span class="font-semibold">{{ trans('age') }}:</span>
-                                            {{ \Carbon\Carbon::parse($patient->date_of_birth)->age }} {{ trans('years') }}
+                                            <span class="font-semibold">{{ trans('lang.age') }}:</span>
+                                            {{ \Carbon\Carbon::parse($patient->date_of_birth)->age }} {{ trans('lang.years') }}
                                         </span>
                                         <span>-</span>
                                         <span>
-                                            <span class="font-semibold">{{ trans('gender') }}:</span>
-                                            {{ ucfirst($patient->gender) }}
+                                            <span class="font-semibold">{{ trans('lang.gender') }}:</span>
+                                           {{ trans('lang.' . strtolower($patient->gender)) }}</p>
                                         </span>
                                         <span>-</span>
                                         <span>
-                                            <span class="font-semibold">{{ trans('phone') }}:</span>
+                                            <span class="font-semibold">{{ trans('lang.phone number') }}:</span>
                                             {{ $patient->phone }}
                                         </span>
                                     </div>
@@ -114,17 +114,17 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                               d="M9 12h6m2 0a2 2 0 100-4H7a2 2 0 100 4h10z"></path>
                                     </svg>
-                                    {{ trans('disease information') }}
+                                    {{ trans('lang.disease information') }}
                                 </h3>
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <div>
                                         <label for="disease_id" class="block text-sm font-semibold text-pink-700 mb-2">
-                                            {{ trans('disease name') }} <span class="text-red-400">*</span>
+                                            {{ trans('lang.disease name') }} <span class="text-red-400">*</span>
                                         </label>
                                         <select name="disease_id" id="disease_id" required
                                                 class="w-full px-4 py-3 border border-pink-300 rounded-lg bg-pink-50 focus:ring-2 focus:ring-pink-300 focus:border-pink-400 transition-all duration-200">
-                                            <option value="" disabled selected>{{ trans('select a disease') }}
+                                            <option value="" disabled selected>{{ trans('lang.select a disease') }}
                                             </option>
                                             @foreach ($gynecologyDiseases as $disease)
                                                 <option value="{{ $disease->_id }}"
@@ -140,11 +140,11 @@
 
                                     <div>
                                         <label for="symptoms" class="block text-sm font-semibold text-pink-700 mb-2">
-                                            {{ trans('patient symptoms') }} <span class="text-red-400">*</span>
+                                            {{ trans('lang.patient symptoms') }} <span class="text-red-400">*</span>
                                         </label>
                                         <textarea name="symptoms" id="symptoms" rows="3" required
                                                   class="w-full px-4 py-3 border border-pink-300 rounded-lg bg-pink-50 focus:ring-2 focus:ring-pink-300 focus:border-pink-400 transition-all duration-200"
-                                                  placeholder="{{ trans('describe patient symptoms') }}">{{ old('symptoms', $isEdit ? ($gynecologyRecord->symptoms ?? '') : '') }}</textarea>
+                                                  placeholder="{{ trans('lang.describe patient symptoms') }}">{{ old('symptoms', $isEdit ? ($gynecologyRecord->symptoms ?? '') : '') }}</textarea>
                                         @error('symptoms')
                                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                                         @enderror
@@ -160,12 +160,12 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                               d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                                     </svg>
-                                    {{ trans('medication prescribed') }}
+                                    {{ trans('lang.medication prescribed') }}
                                 </h3>
                                 <div class="space-y-5">
                                     <div>
                                         <label class="block text-sm font-bold text-pink-700 mb-3">
-                                            {{ trans('medication prescribed') }}
+                                            {{ trans('lang.medication prescribed') }}
                                         </label>
                                         <div class="space-y-4">
                                             <div id="prescription-rows" class="space-y-4"></div>
@@ -177,10 +177,10 @@
                                                         <path stroke-linecap="round" stroke-linejoin="round"
                                                               stroke-width="2" d="M12 4v16m8-8H4" />
                                                     </svg>
-                                                    {{ trans('add medicine') }}
+                                                    {{ trans('lang.add medicine') }}
                                                 </button>
                                                 <span
-                                                    class="text-xs italic text-pink-500">{{ trans('select medicine and specify times with remarks') }}</span>
+                                                    class="text-xs italic text-pink-500">{{ trans('lang.select medicine and specify times with remarks') }}</span>
                                             </div>
                                         </div>
                                         @error('prescriptions')
@@ -198,7 +198,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                               d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                     </svg>
-                                    {{ trans('additional information') }}
+                                    {{ trans('lang.additional information') }}
                                 </h3>
                                 <div>
                                     <label class="block text-sm font-bold text-purple-700 mb-2">
@@ -206,7 +206,7 @@
                                     </label>
                                     <textarea name="notes" rows="3"
                                               class="w-full px-4 py-3 border border-purple-200 rounded-lg bg-purple-50 focus:ring-2 focus:ring-purple-300 focus:border-purple-300 transition"
-                                              placeholder="{{ trans('additional notes or observations...') }}">{{ old('notes', $isEdit ? ($gynecologyRecord->notes ?? '') : '') }}</textarea>
+                                              placeholder="{{ trans('lang.additional notes or observations...') }}"></textarea>
                                     @error('notes')
                                         <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                                     @enderror
@@ -217,16 +217,16 @@
                             <div class="flex justify-end gap-6 pt-8 border-t border-pink-100 mt-6">
                                 <a href="{{ route('workspace.gynecology.index') }}"
                                    class="px-8 py-3 text-pink-700 bg-pink-100 hover:bg-pink-200 font-bold rounded-full shadow transition">
-                                    {{ trans('cancel') }}
+                                    {{ trans('lang.cancel') }}
                                 </a>
                                 <button type="submit"
-                                        class="px-8 py-3 bg-pink-700 hover:bg-pink-800 text-white rounded-full font-bold shadow transition flex items-center gap-2">
+                                class="flex items-center gap-3 px-6 py-4 bg-purple-600 text-white rounded-2xl text-sm font-medium hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all duration-200 shadow-lg hover:shadow-xl">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor"
                                          viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                               d="M5 13l4 4L19 7"></path>
                                     </svg>
-                                    {{ $isEdit ? trans('lang.update') : trans('complete information') }}
+                                    {{ trans('lang.complete information') }}
                                 </button>
                             </div>
                         </form>
@@ -361,23 +361,23 @@
                 row.innerHTML = `
                     <div class="flex flex-col md:flex-row items-start md:items-end gap-4 w-full">
                         <div class="flex-1 w-full">
-                            <label class="block text-sm font-semibold text-pink-700 mb-1">{{ trans('medicine') }}</label>
+                            <label class="block text-sm font-semibold text-pink-700 mb-1">{{ trans('lang.medicine') }}</label>
                             <div class="relative w-full">
-                                <input type="text" class="medicine-input w-full px-4 py-2 border border-pink-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-pink-300" placeholder="{{ trans('type to search medicine...') }}" />
+                                <input type="text" class="medicine-input w-full px-4 py-2 border border-pink-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-pink-300" placeholder="{{ trans('lang.type to search medicine...') }}" />
                                 <input type="hidden" name="prescriptions[${rowIndex}][medicine_id]" class="medicine-id" value="${presetMedicineId || ''}" />
                                 <div class="medicine-suggestions absolute z-10 w-full bg-white border border-pink-200 rounded-md shadow-lg hidden max-h-60 overflow-y-auto"></div>
                             </div>
                         </div>
                         <div class="w-full max-w-[90px]">
-                            <label class="block text-sm font-semibold text-pink-700 mb-1">{{ trans('total medicine') }}</label>
+                            <label class="block text-sm font-semibold text-pink-700 mb-1">{{ trans('lang.total medicine') }}</label>
                             <input type="number" name="prescriptions[${rowIndex}][total_medicine]" class="w-full px-3 py-2 border border-pink-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-pink-300" min="0" value="${presetTotalMedicine || ''}" />
                         </div>
                         <div class="w-full max-w-[90px]">
-                            <label class="block text-sm font-semibold text-pink-700 mb-1">{{ trans('total day') }}</label>
+                            <label class="block text-sm font-semibold text-pink-700 mb-1">{{ trans('lang.total day') }}</label>
                             <input type="number" name="prescriptions[${rowIndex}][total_day]" class="w-full px-3 py-2 border border-pink-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-pink-300" min="0" value="${presetTotalDay || ''}" />
                         </div>
                         <div class="w-full max-w-[130px]">
-                            <label class="block text-sm font-semibold text-pink-700 mb-1">{{ trans('times') }}</label>
+                            <label class="block text-sm font-semibold text-pink-700 mb-1">{{ trans('lang.times') }}</label>
                             <input type="text" name="prescriptions[${rowIndex}][times]" class="w-full px-3 py-2 border border-pink-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-pink-300" placeholder="{{ trans('e.g. 2x daily') }}" value="${presetTimes || ''}" />
                         </div>
                         <div class="pt-2 md:pt-0 flex-shrink-0">

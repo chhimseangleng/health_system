@@ -61,7 +61,7 @@
                             </div>
 
                             {{-- Category --}}
-                            <div>
+                            {{-- <div>
                                 <label class="block mb-2 text-base font-semibold text-blue-800">Category</label>
                                 <select name="category"
                                     class="w-full border border-blue-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-400 @error('category') border-red-500 @enderror transition">
@@ -75,7 +75,7 @@
                                 @error('category')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
-                            </div>
+                            </div> --}}
 
                             {{-- Physician --}}
                             <div>

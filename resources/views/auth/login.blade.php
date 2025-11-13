@@ -16,7 +16,7 @@
 
                         <!-- Email Address -->
                         <div>
-                            <label for="email" class="block text-[#21809f] font-medium text-sm mb-1">{{ __('Email') }}</label>
+                            <label for="email" class="block text-[#21809f] font-medium text-sm mb-1">{{ trans('lang.email') }}</label>
                             <input id="email" type="email" name="email" :value="old('email')" required autofocus autocomplete="username"
                                    class="block w-full px-4 py-2 rounded-lg bg-[#f4fafb] border border-[#bee0ed] focus:outline-none focus:ring-2 focus:ring-[#50bde3] transition" />
                             <x-input-error :messages="$errors->get('email')" class="mt-2" />
@@ -24,7 +24,7 @@
 
                         <!-- Password -->
                         <div x-data="{ show: false }">
-                            <label for="password" class="block text-[#21809f] font-medium text-sm mb-1">{{ __('Password') }}</label>
+                            <label for="password" class="block text-[#21809f] font-medium text-sm mb-1">{{ trans('lang.password') }}</label>
                             <div class="relative">
                                 <input :type="show ? 'text' : 'password'" id="password" name="password" required autocomplete="current-password"
                                        class="block w-full px-4 py-2 rounded-lg bg-[#f4fafb] border border-[#bee0ed] focus:outline-none focus:ring-2 focus:ring-[#50bde3] transition pr-10" />
@@ -53,11 +53,11 @@
                             <label for="remember_me" class="inline-flex items-center">
                                 <input id="remember_me" type="checkbox" name="remember"
                                        class="rounded border-[#bee0ed] text-[#21809f] shadow-sm focus:ring-2 focus:ring-[#50bde3]" />
-                                <span class="ml-2 text-sm text-[#19788d]">{{ __('Remember me') }}</span>
+                                <span class="ml-2 text-sm text-[#19788d]">{{ trans('lang.remember me') }}</span>
                             </label>
                             @if (Route::has('password.request'))
                                 <a class="text-xs text-[#50bde3] hover:text-[#19788d] font-semibold transition" href="{{ route('password.request') }}">
-                                    {{ __('Forgot password?') }}
+                                    {{ trans('lang.forgot password') }}
                                 </a>
                             @endif
                         </div>
@@ -66,7 +66,7 @@
                         <div>
                             <button type="submit"
                                     class="w-full py-2 rounded-xl bg-gradient-to-r from-[#48c2db] to-[#21809f] text-white font-bold text-lg shadow-md hover:from-[#21809f] hover:to-[#48c2db] transition duration-150 ease-in-out">
-                                {{ __('Log in') }}
+                                {{ trans('lang.login') }}
                             </button>
                         </div>
                     </form>

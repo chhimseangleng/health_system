@@ -38,7 +38,7 @@ class MedicineController extends Controller
                 case 'low_stock':
                     $query->lowStock();
                     break;
-                case 'out_of_stock':
+                case 'out of stock':
                     $query->where('stock_quantity', '<=', 0);
                     break;
                 case 'expiring_soon':

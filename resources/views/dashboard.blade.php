@@ -4,7 +4,7 @@
         <div class="lg:col-span-2">
             <div class="bg-white rounded-2xl shadow-lg p-8 flex justify-between items-center">
                 <div>
-                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Hi {{ auth()->user()->name ?? 'Admin' }}!</h2>
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">{{ trans('lang.hi') }} {{ auth()->user()->name ?? 'Admin' }}!</h2>
                     <p class="text-gray-500 mb-6">Welcome to Samaky Health Center<br>The weather is nice today, don't you think?</p>
                     <div class="flex items-center text-3xl font-bold text-gray-700 mb-2">
                         25°C <span class="ml-3 text-2xl">☁️</span>

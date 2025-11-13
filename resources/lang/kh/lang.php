@@ -2,7 +2,7 @@
     return [
         //Dashboard
 
-        'dashboard' => 'បានបញ្ចប់ ',
+        'dashboard'   => 'ផ្ទាំងគ្រប់គ្រង',
         'search for anything...' => 'ស្វែងរកអ្វីមួយ...',
         'welcome to samaky health center' => 'សូមស្វាគមន៍មណ្ឌលសុខភាពសាមគ្គី',
         'providing exceptional healthcare services with compassion and excellence' => 'ការផ្តល់សេវាថែទាំសុខភាពពិសេសដោយក្តីមេត្តា និងឧត្តមភាព',
@@ -33,6 +33,15 @@
         'user list' => 'បញ្ជីអ្នកប្រើប្រាស់',
         'manage user accounts and edit their specializations' => 'គ្រប់គ្រងគណនីអ្នកប្រើប្រាស់ និងកែសម្រួលជំនាញរបស់ពួកគេ',
         'search by name, ...' => 'ស្វែងរកតាមឈ្មោះ...',
+        'email' => 'អ៊ីមែល',
+        'password' => 'ពាក្យសម្ងាត់',
+        'remember me' => 'ចងចាំខ្ញុំ',
+        'forgot password' => 'ភ្លេចពាក្យសម្ងាត់',
+        'samaky health center' => 'មណ្ឌលសុខភាពសាមគ្គី',
+        'all rights reserved' => 'រក្សាសិទ្ធិគ្រប់យ៉ាង',
+        'khmer' => 'ខ្មែរ',
+        'english' => 'អង់គ្លេស',
+        'hi' => 'សួស្តី',
 
         //assign patients
         'patient information' => 'ព័ត៌មានអ្នកជំងឺ',
@@ -186,7 +195,7 @@
         'symptoms' => 'រោគសញ្ញា',
         'assigned to' => 'បានចុះឈ្មោះទៅ',
         'Describe the patient\'s symptoms in detail...' => 'ពណ៌នារោគសញ្ញារបស់អ្នកជំងឺដោយលម្អិត...',
-        'diagnosis' => 'ការធ្វើរោគវិនិច្ឆ័យ',
+        'drug diagnosis' => 'ការធ្វើរោគវិនិច្ឆ័យ',
         'enter diagnosis details here...' => 'បញ្ចូលព័ត៌មានលម្អិតអំពីការធ្វើរោគវិនិច្ឆ័យនៅទីនេះ...',
         'diagnosis details' => 'ព័ត៌មានលម្អិតអំពីការធ្វើរោគវិនិច្ឆ័យ',
         'medical diagnosis' => 'ការធ្វើរោគវិនិច្ឆ័យវេជ្ជសាស្ត្រ',
@@ -213,9 +222,9 @@
         'no patients found' => 'មិនមានអ្នកជំងឺដែលបានរកឃើញ',
         'get started by adding your first patiend' => 'ចាប់ផ្តើមដោយបន្ថែមអ្នកជំងឺរបស់អ្នកជាលើកដំបូង',
         'edit' => 'កែសម្រួល',
-        'edit doctor' => 'កែសម្រួលគ្រូពេទ្យ',
+        'edit user' => 'កែសម្រួលគ្រូពេទ្យ',
         'update' => 'ធ្វើបច្ចុប្បន្នភាព',
-        'update doctor information' => 'ធ្វើបច្ចុប្បន្នភាពព័ត៌មានគ្រូពេទ្យ',
+        'update user information' => 'ធ្វើបច្ចុប្បន្នភាពព័ត៌មានគ្រូពេទ្យ',
         'email' => 'អ៊ីមែល',
         'specialaization' => 'ការបញ្ជាក់',
         'cancel' => '',
@@ -340,8 +349,8 @@
         'total entries' => 'ចំនួនបញ្ជូលសរុប',
 
         //Pregnancy
-        'complete pregnancy information' => 'បញ្ចប់ព័ត៌មានផ្ទៃពោះ',
-        'fill in the patient\'s pregnancy details' => 'បំពេញព័ត៌មានលម្អិតផ្ទៃពោះរបស់អ្នកជំងឺ',
+        'complete pregnancy information' => 'បញ្ចប់ព័ត៌មានស្រ្តីមានផ្ទៃពោះ',
+        'fill in the patient\'s pregnancy details' => 'បំពេញព័ត៌មានលម្អិតរបស់ស្រ្តៃមានផ្ទៃពោះ',
         'back to gynecology' => 'ត្រឡប់ទៅផ្នែកស្រ្តី',
         'back to pregnancy' => 'ត្រឡប់ទៅផ្ទៃពោះ',
         'disease information' => 'ព័ត៌មានជំងឺ',
@@ -351,7 +360,7 @@
         'describe patient symptoms' => 'ពិពណ៌នារោគសញ្ញាអ្នកជំងឺ',
         'medication prescribed' => 'ថ្នាំដែលបានវេជ្ជបញ្ជា',
         'add medicine' => 'បន្ថែមថ្នាំ',
-        'select medicine and specify times with remarks' => 'ជ្រើសរើសថ្នាំ និងបញ្ជាក់ពេលវេលាជាមួយកំណត់សម្គាល់',
+        'select medicine and specify times with remarks' => 'ជ្រើសរើសថ្នាំ និងកំណត់ពេលវេលាតាមវេជ្ជបញ្ជា',
         'medicine' => 'ថ្នាំ',
         'total medicine' => 'ថ្នាំសរុប',
         'total day' => 'ថ្ងៃសរុប',

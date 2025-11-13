@@ -30,7 +30,7 @@
             }
         @else
             body {
-                font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif !important;
+                font-family: 'Inter', 'Noto Sans Khmer', 'Kantumruy Pro', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif !important;
             }
         @endif
     </style>
@@ -76,7 +76,7 @@
                     <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                     </svg>
-                    <span class="font-medium">Dashboard</span>
+                    <span>Dashboard</span>
                 </a>
 
                 <!-- Patients -->
@@ -183,7 +183,9 @@
                     <div class="flex justify-between h-16">
                         <!-- Left side -->
                         <div class="flex items-center">
-                            <h2 class="text-xl font-semibold text-gray-800">Dashboard</h2>
+                            <h2 class="text-xl font-semibold text-gray-800">
+                                Dashboard
+                            </h2>
                         </div>
 
                         <!-- Right side -->
@@ -204,11 +206,13 @@
                             <div x-data="{ open: false }" class="relative">
                                 <button @click="open = !open"
                                     class="flex items-center px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200">
-                                    <img src="https://flagcdn.com/24x18/us.png" class="w-5 h-4 mr-2" alt="English"
-                                        x-show="!('locale' in localStorage) || localStorage.locale === 'en'">
-                                    <img src="https://flagcdn.com/24x18/kh.png" class="w-5 h-4 mr-2" alt="Khmer"
-                                        x-show="localStorage.locale === 'kh'">
-                                    <span x-text="localStorage.locale === 'kh' ? 'Khmer' : 'English'" class="text-sm"></span>
+                                    @if (app()->getLocale() == 'kh')
+                                        <img src="https://flagcdn.com/24x18/kh.png" class="w-5 h-4 mr-2" alt="Khmer">
+                                        <span class="text-sm">{{ trans('lang.khmer') }}</span>
+                                    @else
+                                        <img src="https://flagcdn.com/24x18/us.png" class="w-5 h-4 mr-2" alt="English">
+                                        <span class="text-sm">{{ trans('lang.english') }}</span>
+                                    @endif
                                     <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                     </svg>

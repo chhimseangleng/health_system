@@ -75,7 +75,7 @@
 
     <!-- Floating elements -->
     <div class="absolute bottom-8 left-8 text-gray-400 text-sm">
-        <p>© 2025 {{ trans('lang.samky hospital') }}. {{ trans('lang.all rights reserved') }}.</p>
+        <p>© 2025 {{ trans('lang.samaky health center') }}. {{ trans('lang.all rights reserved') }}.</p>
     </div>
 
     <style>

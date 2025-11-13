@@ -36,6 +36,14 @@
         'user list' => 'User List',
         'manage user accounts and edit their specializations' => 'Manage user accounts and edit their specializations',
         'search by name, ...' => 'Search by name, ...',
+        'password' => 'Password',
+        'remember me' => 'Remember Me',
+        'forgot password' => 'Forgot Password',
+        'samaky health center' => 'Samky Health Center',
+        'all rights reserved' => 'All Rights Reserved',
+        'khmer' => 'Khmer',
+        'english' => 'English',
+        'hi' => 'Hi',
 
         //assign patients
         'assign patient to service' => 'Assign Patient to Service',
@@ -96,7 +104,7 @@
         'search patients by name, phone, or address...' => 'search patients by name, phone, or address...',
         'male' => 'Male',
         'female' => 'Female',
-        'edit patient information' => 'Edit patient information',
+        'edit patient information' => 'Edit Patient Information',
         'patient history' => 'Patient History',
         'date of birth' => 'Date of Birth',
         'no history found' => 'No history found',
@@ -105,6 +113,7 @@
         'this action cannot be undone' => 'This action cannot be undone',
         'are you sure you want to delete this patient' => 'Are you sure you want to delete this patient',
         'delete' => 'Delete',
+        'update patient' => 'Update Patient',
 
         //Doctors
         'special list' => 'Special List',
@@ -220,7 +229,7 @@
         'assigned to' => 'Assigned To',
         'symptoms' => 'Symptoms',
         'Describe the patient\'s symptoms in detail...' => 'Describe the patient\'s symptoms in detail...',
-        'diagnosis' => 'Diagnosis',
+        'drug diagnosis' => 'Drug Diagnosis',
         'enter diagnosis details here...' => 'Enter diagnosis details here...',
         'patient records' => 'Patient Records',
         'remark' => 'Remark',
@@ -238,6 +247,7 @@
 
 
         //Medicine Management
+        'update user' => 'Update User',
         'manage your healthcare data' => 'Manage your healthcare data',
         'manage your health center\'s medicines.' => 'Manage your health center\'s medicines.',
         'patient assigns' => 'Patient Assigns',
@@ -246,9 +256,9 @@
         'no patients found' => 'No patients found',
         'get started by adding your first patiend' => 'Get started adding your first patient',
         'edit' => 'Edit',
-        'edit doctor' => 'Edit Doctor',
+        'edit user' => 'Edit User',
         'update' => 'Update',
-        'update doctor information' => 'Update doctor information',
+        'update user information' => 'Update user information',
         'email' => 'Email',
         'medical specialization' => 'Medical Specialization',
         'cancel' => 'Cancel',

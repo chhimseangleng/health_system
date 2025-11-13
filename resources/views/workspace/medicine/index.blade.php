@@ -23,7 +23,25 @@
                                     {{ trans('lang.manage your health center\'s medicines.') }}</div>
                             </div>
                         </h3>
+
                         <div class="flex items-center space-x-3">
+                            {{-- Stock status filter --}}
+                            <div>
+
+                                <select name="stock_status" id="stock_status"
+                                    class="w-full border border-gray-200 rounded-2xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 bg-white shadow-sm transition-all duration-200 hover:shadow-md">
+                                    <option value="">{{ trans('lang.all status') }}</option>
+                                    <option value="low stock" {{ $stockStatus == 'low stock' ? 'selected' : '' }}>
+                                        {{ trans('lang.low stock') }}</option>
+                                    <option value="out of stock" {{ $stockStatus == 'out of stock' ? 'selected' : '' }}>
+                                        {{ trans('lang.out of stock') }}</option>
+                                    <option value="expiring soon"
+                                        {{ $stockStatus == 'expiring soon' ? 'selected' : '' }}>
+                                        {{ trans('lang.expiring soon') }}
+                                    </option>
+                                </select>
+                            </div>
+
                             <!-- Clean Search Form -->
                             <form method="GET" action="{{ route('workspace.medicine.index') }}" class="w-80">
                                 <label for="default-search" class="sr-only">{{ trans('lang.search') }}</label>
@@ -48,14 +66,19 @@
                                 </div>
                             </form>
 
-                            <a href="{{ route('workspace.medicine.create') }}"
-                                class="flex items-center gap-3 px-6 py-4 bg-blue-100 backdrop-blur-sm text-blue-700 rounded-2xl text-sm font-medium hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-200 border border-blue-300">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 4v16m8-8H4" />
-                                </svg>
-                                {{ trans('lang.add medicine') }}
-                            </a>
+                            <div>
+                                <a href="{{ route('workspace.medicine.create') }}"
+                                    class="px-6 py-4 bg-white text-blue-600 rounded-2xl text-sm font-medium hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200 shadow-lg hover:shadow-xl">
+                                    <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 4v16m8-8H4" />
+                                    </svg>
+                                    {{ trans('lang.add medicine') }}
+                                </a>
+                            </div>
+
+
 
                             <button type="button" onclick="openBulkDispenseModal()"
                                 class="flex items-center gap-3 px-6 py-4 bg-blue-600 text-white rounded-2xl text-sm font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200 shadow-lg hover:shadow-xl">
@@ -73,11 +96,11 @@
 
 
                 {{-- Medicines Table --}}
-                <div class="p-2">
+                <div class="p-8">
                     <div class="overflow-x-auto">
                         <table id="gynecologyTable"
                             class="min-w-full  bg-white text-base divide-y divide-blue-300 shadow-sm text-center">
-                            <thead class="font-semibold text-4sm tracking-wider uppercase bg-gray-100 ">
+                            <thead class="font-semibold text-4sm tracking-wider uppercase bg-gray-100">
                                 <tr>
                                     <th scope="col" class="px-6 py-3 text-gray-700"> {{ trans('lang.nº') }}</th>
                                     <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.medicine') }}
@@ -150,34 +173,24 @@
                                                 @endif
                                             </div>
                                         </td>
-                                        <td class="px-6 py-5 text-center">
+                                        <td class="px-6 py-5">
                                             @php
                                                 $statusColors = [
-                                                    'out_of_stock' => 'bg-red-100 text-red-800 border border-red-200',
-                                                    'low_stock' =>
-                                                        'bg-yellow-100 text-yellow-900 border border-yellow-200',
-                                                    'in_stock' => 'bg-green-100 text-green-800 border border-green-200',
+                                                    'out of stock' => 'bg-red-200 text-red-800',
+                                                    'low stock' => 'bg-yellow-200 text-yellow-900',
+                                                    'in stock' => 'bg-green-200 text-green-900',
                                                 ];
-
-                                                $status = $medicine->stock_status ?? 'unknown';
                                                 $color =
-                                                    $statusColors[$status] ??
-                                                    'bg-gray-100 text-gray-700 border border-gray-200';
-
-                                                $statusLabel = match ($status) {
-                                                    'out_of_stock' => trans('lang.out of stock'),
-                                                    'low_stock' => trans('lang.low stock'),
-                                                    'in_stock' => trans('lang.in stock'),
-                                                    default => trans('lang.unknown'),
-                                                };
+                                                    $statusColors[$medicine->stock_status] ??
+                                                    'bg-gray-200 text-gray-800';
                                             @endphp
 
                                             <span
-                                                class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold shadow-sm {{ $color }}">
-                                                {{ $statusLabel }}
+                                                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold shadow {{ $color }}">
+                                                {{ trans('lang.' . $medicine->stock_status) }}
                                             </span>
-                                        </td>
 
+                                        </td>
                                         <td class="px-6 py-5 text-center">
                                             <div class="flex justify-center items-center gap-2">
                                                 <button type="button"
@@ -356,11 +369,11 @@
             <h3 class="text-xl font-semibold text-green-700 mb-3">${section.title}</h3>
             <div class="space-y-2">
                 ${section.fields.map(([label, value]) => `
-                                                            <div class="flex justify-between">
-                                                                <span class="font-medium text-gray-800">${label}</span>
-                                                                <span class="text-gray-700">${value}</span>
-                                                            </div>
-                                                        `).join('')}
+                                                                <div class="flex justify-between">
+                                                                    <span class="font-medium text-gray-800">${label}</span>
+                                                                    <span class="text-gray-700">${value}</span>
+                                                                </div>
+                                                            `).join('')}
             </div>
         </div>
         `).join('');

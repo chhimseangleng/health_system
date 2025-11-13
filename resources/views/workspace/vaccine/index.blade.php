@@ -25,6 +25,8 @@
                                     </div>
                                 </div>
 
+                                
+
                                 <div class="flex flex-wrap gap-3">
 
                                     <a href="{{ route('workspace.vaccine.comeback') }}">

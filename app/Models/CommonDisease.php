@@ -11,7 +11,6 @@ class CommonDisease extends Model
 
     protected $fillable = [
         'name',
-        'category',
         'physician',
         'age',
         'gender',

@@ -12,8 +12,8 @@
                             </svg>
                         </div>
                         <h2 class="text-3xl font-extrabold text-blue-900 mb-1 tracking-tight">
-                            {{ trans('lang.edit doctor') }}</h2>
-                        <p class="text-gray-500 text-base">{{ trans('lang.update doctor information') }}</p>
+                            {{ trans('lang.edit user') }}</h2>
+                        <p class="text-gray-500 text-base">{{ trans('lang.update user information') }}</p>
                     </div>
 
                     @if ($errors->any())

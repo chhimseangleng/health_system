@@ -59,7 +59,10 @@
                                 </div>
                                 <div class="bg-white/60 rounded-xl p-4 border border-blue-100">
                                     <label
-                                        class="block text-sm font-semibold text-blue-800 mb-1">{{ trans('lang.phone number') }}</label>
+
+
+
+                                    class="block text-sm font-semibold text-blue-800 mb-1">{{ trans('lang.phone number') }}</label>
                                     <p class="text-blue-900 font-semibold">{{ $patient->phone }}</p>
                                 </div>
                                 <div class="bg-white/60 rounded-xl p-4 border border-blue-100">
@@ -79,9 +82,9 @@
                         <!-- Assignment Info -->
                         @if ($patientAssign)
                             <div
-                                class="bg-gradient-to-br from-yellow-50 to-amber-50 rounded-2xl p-8 mb-10 border border-yellow-200/50 shadow-lg">
-                                <h3 class="text-xl font-bold text-yellow-900 mb-6 flex items-center">
-                                    <div class="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center mr-3">
+                                class="bg-gradient-to-br from-blue-50 to-amber-50 rounded-2xl p-8 mb-10 border border-blue-200/50 shadow-lg">
+                                <h3 class="text-xl font-bold text-blue-900 mb-6 flex items-center">
+                                    <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
                                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -91,25 +94,25 @@
                                     {{ trans('lang.assignment details') }}
                                 </h3>
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                    <div class="bg-white/60 rounded-xl p-4 border border-yellow-100">
+                                    <div class="bg-white/60 rounded-xl p-4 border border-blue-100">
                                         <label
-                                            class="block text-sm font-semibold text-yellow-800 mb-1">{{ trans('lang.assigned to') }}</label>
-                                        <p class="text-yellow-900 font-semibold">{{ trans('lang.' . strtolower($patientAssign->assigned_to)) }}</p>
+                                            class="block text-sm font-semibold text-blue-800 mb-1">{{ trans('lang.assigned to') }}</label>
+                                        <p class="text-blue-900 font-semibold">{{ trans('lang.' . strtolower($patientAssign->assigned_to)) }}</p>
 
                                     </div>
-                                    <div class="bg-white/60 rounded-xl p-4 border border-yellow-100">
+                                    <div class="bg-white/60 rounded-xl p-4 border border-blue-100">
                                         <label
-                                            class="block text-sm font-semibold text-yellow-800 mb-1">{{ trans('lang.payment type') }}</label>
-                                        {{-- <p class="text-yellow-900 font-semibold">{{ $patientAssign->payment_type === 'nssf' ? trans('lang.nssf member') : ucfirst($patientAssign->payment_type) }}</p> --}}
-                                        <p class="text-yellow-900 font-semibold">
+                                            class="block text-sm font-semibold text-blue-800 mb-1">{{ trans('lang.payment type') }}</label>
+                                        {{-- <p class="text-blue-900 font-semibold">{{ $patientAssign->payment_type === 'nssf' ? trans('lang.nssf member') : ucfirst($patientAssign->payment_type) }}</p> --}}
+                                        <p class="text-blue-900 font-semibold">
                                             {{ trans('lang.' . strtolower($patientAssign->payment_type)) ?? ucfirst($patientAssign->payment_type) }}
                                         </p>
 
                                     </div>
-                                    <div class="bg-white/60 rounded-xl p-4 border border-yellow-100">
+                                    <div class="bg-white/60 rounded-xl p-4 border border-blue-100">
                                         <label
-                                            class="block text-sm font-semibold text-yellow-800 mb-1">{{ trans('lang.assigned date') }}</label>
-                                        <p class="text-yellow-900 font-semibold">
+                                            class="block text-sm font-semibold text-blue-800 mb-1">{{ trans('lang.assigned date') }}</label>
+                                        <p class="text-blue-900 font-semibold">
                                             {{ $patientAssign->assigned_date->format('M d, Y H:i') }}</p>
                                     </div>
                                 </div>
@@ -123,9 +126,9 @@
 
                             <!-- Symptoms Section -->
                             <div
-                                class="bg-gradient-to-br from-white to-red-50/30 rounded-2xl border border-red-200/50 p-8 shadow-lg">
+                                class="bg-gradient-to-br from-white to-blue-50/30 rounded-2xl border border-blue-200/50 p-8 shadow-lg">
                                 <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
-                                    <div class="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center mr-3">
+                                    <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
                                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -139,10 +142,10 @@
                                         class="block text-sm font-bold text-gray-800 mb-3">{{ trans('lang.patient symptoms') }}
                                         <span class="text-red-500 font-bold">*</span></label>
                                     <textarea name="symptoms" rows="5"
-                                        class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-red-200 focus:border-red-400 transition-all duration-300 bg-white hover:bg-gray-50 text-gray-700 placeholder-gray-400 resize-none"
+                                        class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-200 focus:border-blue-400 transition-all duration-300 bg-white hover:bg-gray-50 text-gray-700 placeholder-gray-400 resize-none"
                                         placeholder="{{ trans('lang.Describe the patient\'s symptoms in detail...') }}" required>{{ old('symptoms') }}</textarea>
                                     @error('symptoms')
-                                        <p class="mt-2 text-sm text-red-600 font-medium">{{ $message }}</p>
+                                        <p class="mt-2 text-sm text-blue-600 font-medium">{{ $message }}</p>
                                     @enderror
                                 </div>
                             </div>
@@ -217,10 +220,10 @@
 
                             <!-- Additional Information -->
                             <div
-                                class="bg-gradient-to-br from-white to-purple-50/30 rounded-2xl border border-purple-200/50 p-8 shadow-lg">
+                                class="bg-gradient-to-br from-white to-blue-50/30 rounded-2xl border border-blue-200/50 p-8 shadow-lg">
                                 <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
                                     <div
-                                        class="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center mr-3">
+                                        class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
                                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -234,7 +237,7 @@
                                         <label
                                             class="block text-sm font-bold text-gray-800 mb-3">{{ trans('lang.notes') }}</label>
                                         <textarea name="notes" rows="4"
-                                            class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-400 transition-all duration-300 bg-white hover:bg-gray-50 text-gray-700 placeholder-gray-400 resize-none"
+                                            class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-200 focus:border-blue-400 transition-all duration-300 bg-white hover:bg-gray-50 text-gray-700 placeholder-gray-400 resize-none"
                                             placeholder="{{ trans('lang.additional notes or observations...') }}">{{ old('notes') }}</textarea>
                                         @error('notes')
                                             <p class="mt-2 text-sm text-red-600 font-medium">{{ $message }}</p>
@@ -245,7 +248,7 @@
                                         <label
                                             class="block text-sm font-bold text-gray-800 mb-3">{{ trans('lang.follow-up date') }}</label>
                                         <input type="date" name="follow_up_date"
-                                            class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-400 transition-all duration-300 bg-white hover:bg-gray-50 text-gray-700"
+                                            class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-200 focus:border-blue-400 transition-all duration-300 bg-white hover:bg-gray-50 text-gray-700"
                                             value="{{ old('follow_up_date') }}">
                                         @error('follow_up_date')
                                             <p class="mt-2 text-sm text-red-600 font-medium">{{ $message }}</p>
@@ -261,7 +264,7 @@
                                     {{ trans('lang.cancel') }}
                                 </a>
                                 <button type="submit"
-                                    class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-medium transition-colors duration-200 flex items-center">
+                                    class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors duration-200 flex items-center">
                                     <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

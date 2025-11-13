@@ -99,7 +99,7 @@
                                         <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.gender') }}
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-gray-700">
-                                            {{ trans('lang.diagnosis') }}</th>
+                                            {{ trans('lang.drug diagnosis') }}</th>
                                         <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.village') }}
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.updated') }}

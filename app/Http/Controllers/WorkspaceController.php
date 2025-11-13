@@ -564,7 +564,7 @@ class WorkspaceController extends Controller
     public function gynecologyIndex()
     {
         // Fetch gynecology records with patient information
-        $gynecologyRecords = Gynecology::with('patient')->orderBy('updated_at', 'desc')->paginate(10);
+        $gynecologyRecords = Gynecology::with('patient')->orderBy('updated_at', 'desc')->paginate(8);
 
         // Fetch patients with pending gynecology assignments using PatientAssign
         $incompletePatients = Patient::whereHas('assignments', function ($query) {
