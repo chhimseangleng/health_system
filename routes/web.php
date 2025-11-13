@@ -15,6 +15,7 @@ use App\Models\Vaccine;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use MongoDB\BSON\UTCDateTime;
+use App\Http\Controllers\UserAdminController;
 
 // Default route: show welcome if guest, dashboard if logged in
 Route::get('/', function () {
@@ -199,6 +200,9 @@ Route::middleware('auth')->group(function () {
 
     // Doctors
     Route::resource('doctors', DoctorController::class);
+
+    // Super User admin CRUD for users
+    Route::resource('admin', UserAdminController::class)->except(['show']);
 
     // Appointments
     Route::resource('appointments', AppointmentController::class);

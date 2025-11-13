@@ -66,7 +66,9 @@
                                 required>
                             <option value="" disabled selected>{{ trans('lang.select a role') }}</option>
                             @foreach ($roles as $role)
-                                <option value="{{ $role->name }}">{{ ucfirst($role->name) }}</option>
+                                @if ($role->name !== 'Admin')
+                                    <option value="{{ $role->name }}">{{ ucfirst($role->name) }}</option>
+                                @endif
                             @endforeach
                         </select>
                         @error('role')
