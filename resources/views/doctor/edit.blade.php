@@ -73,14 +73,16 @@
                                     <option value="" disabled selected>
                                         {{ trans('lang.select a specialization') }}</option>
                                     @foreach ($roles as $role)
-                                        @php
-                                            $translationKey = 'lang.' . strtolower($role->name);
-                                            $translated = trans($translationKey);
-                                        @endphp
-                                        <option value="{{ $role->name }}"
-                                            {{ old('role', $doctor->role) == $role->name ? 'selected' : '' }}>
-                                            {{ $translated !== $translationKey ? $translated : ucfirst($role->name) }}
-                                        </option>
+                                        @if ($role->name !== 'Admin')
+                                            @php
+                                                $translationKey = 'lang.' . strtolower($role->name);
+                                                $translated = trans($translationKey);
+                                            @endphp
+                                            <option value="{{ $role->name }}"
+                                                {{ old('role', $doctor->role) == $role->name ? 'selected' : '' }}>
+                                                {{ $translated !== $translationKey ? $translated : ucfirst($role->name) }}
+                                            </option>
+                                        @endif
                                     @endforeach
                                 </select>
 
