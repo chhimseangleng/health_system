@@ -13,8 +13,12 @@ class DoctorController extends Controller
      */
     public function index()
     {
-        $user = User::all();
-        // dd($user);
+        $user = User::where(function($query) {
+                        $query->whereNotIn('role', ['Superadmin', 'Super User', 'Admin'])
+                              ->orWhereNull('role')
+                              ->orWhere('role', '');
+                    })
+                    ->get();
 
         return view("doctor.index", compact('user'));
     }
@@ -40,7 +44,8 @@ class DoctorController extends Controller
      */
     public function show(string $id)
     {
-        //
+        // Redirect to index — we don't have a separate "show" page for doctors
+        return redirect()->route('doctors.index');
     }
 
     /**
@@ -82,6 +87,15 @@ class DoctorController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $doctor = User::findOrFail($id);
+
+        // Prevent deleting the currently authenticated user
+        if (auth()->check() && (string) auth()->id() === (string) $doctor->_id) {
+            return redirect()->route('doctors.index')->withErrors(trans('lang.cannot_delete_self') ?: 'You cannot delete your own account.');
+        }
+
+        $doctor->delete();
+
+        return redirect()->route('doctors.index')->with('success', trans('lang.user deleted') ?: 'user deleted successfully!');
     }
 }

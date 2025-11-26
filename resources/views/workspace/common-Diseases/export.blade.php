@@ -66,7 +66,8 @@
                                 @foreach($prescriptions as $p)
                                     @php
                                         $mid = (string)($p['medicine_id'] ?? '');
-                                        $mname = $medicineMap[$mid] ?? $mid;
+                                        // Prefer stored medicine_name if present, otherwise lookup in map, otherwise show id
+                                        $mname = $p['medicine_name'] ?? ($medicineMap[$mid] ?? $mid);
                                         $times = $p['times'] ?? [];
                                     @endphp
                                     <tr class="border-t border-gray-200">

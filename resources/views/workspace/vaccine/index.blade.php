@@ -25,7 +25,7 @@
                                     </div>
                                 </div>
 
-                                
+
 
                                 <div class="flex flex-wrap gap-3">
 
@@ -146,118 +146,121 @@
                                         <thead class="text-sm tracking-wider uppercase bg-gray-100 ">
                                             <tr>
                                                 <th scope="col" class="px-6 py-3">{{ trans('lang.name') }}</th>
-                                               <th scope="col" class="px-6 py-3">{{ trans('lang.dob') }}</th>
+                                                <th scope="col" class="px-6 py-3">{{ trans('lang.dob') }}</th>
                                                 <th scope="col" class="px-6 py-3">{{ trans('lang.age') }}</th>
                                                 <th scope="col" class="px-6 py-3">{{ trans('lang.father') }}</th>
                                                 <th scope="col" class="px-6 py-3">{{ trans('lang.mother') }}</th>
                                                 <th scope="col" class="px-6 py-3">{{ trans('lang.vaccine type') }}</th>
-                                                <th scope="col" class="px-6 py-3">{{ trans('lang.payment type') }}</th>
                                                 <th scope="col" class="px-6 py-3">{{ trans('lang.dose count') }}</th>
-                                                <th scope="col" class="px-6 py-3">{{ trans('lang.dose date') }}</th>
                                                 <th scope="col" class="px-6 py-3">{{ trans('lang.date') }}</th>
-                                                <th scope="col" class="px-6 py-3">{{ trans('lang.description') }}</th>
+                                                <th scope="col" class="px-6 py-3">{{ trans('lang.actions') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody class="bg-white divide-y divide-gray-100">
                                             @forelse ($vaccines as $vaccine)
                                                 <tr class="hover:bg-gray-50 transition-colors duration-150">
-                                                    <td
-                                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                    <td class="px-5 py-4 text-base font-bold text-gray-900">
                                                         {{ $vaccine->name }}</td>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                                    <td class="px-5 py-4 text-base text-gray-900">
                                                         {{ \Carbon\Carbon::parse($vaccine->bod)->format('Y-m-d') }}
                                                     </td>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                                    <td class="px-5 py-4 text-base text-gray-900">
                                                         <span
                                                             class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                                             {{ $vaccine->age }} years
                                                         </span>
                                                     </td>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                                    <td class="px-5 py-4 text-base text-gray-900">
                                                         {{ $vaccine->father_name }}</td>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                                    <td class="px-5 py-4 text-base text-gray-900">
                                                         {{ $vaccine->mother_name }}</td>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                                    <td class="px-5 py-4 text-base text-gray-900">
                                                         <span
                                                             class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                                             {{ $vaccine->vaccineCategory?->name ?? 'N/A' }}
                                                         </span>
                                                     </td>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                                        @php
-                                                            // Get payment type from patient assignment
-                                                            $patientNames = explode(' ', $vaccine->name);
-                                                            $firstName = $patientNames[0] ?? '';
-                                                            $lastName = $patientNames[1] ?? '';
+                                                    @php
+                                                        // Get payment type from patient assignment
+                                                        $patientNames = explode(' ', $vaccine->name);
+                                                        $firstName = $patientNames[0] ?? '';
+                                                        $lastName = $patientNames[1] ?? '';
 
-                                                            $patient = \App\Models\Patient::where(
-                                                                'first_name',
-                                                                $firstName,
-                                                            )
-                                                                ->where('last_name', $lastName)
-                                                                ->with('assignments')
+                                                        $patient = \App\Models\Patient::where('first_name', $firstName)
+                                                            ->where('last_name', $lastName)
+                                                            ->with('assignments')
+                                                            ->first();
+
+                                                        $paymentType = null;
+                                                        if ($patient) {
+                                                            $assignment = $patient
+                                                                ->assignments()
+                                                                ->where('assigned_to', 'vaccine')
+                                                                ->latest()
                                                                 ->first();
+                                                            $paymentType = $assignment
+                                                                ? $assignment->payment_type
+                                                                : null;
+                                                        }
 
-                                                            $paymentType = null;
-                                                            if ($patient) {
-                                                                $assignment = $patient
-                                                                    ->assignments()
-                                                                    ->where('assigned_to', 'vaccine')
-                                                                    ->latest()
-                                                                    ->first();
-                                                                $paymentType = $assignment
-                                                                    ? $assignment->payment_type
-                                                                    : null;
-                                                            }
-
-                                                            $paymentColors = [
-                                                                'nssf' => 'bg-blue-100 text-blue-800',
-                                                                'cash' => 'bg-green-100 text-green-800',
-                                                                'health equity fund' => 'bg-purple-100 text-purple-800',
-                                                            ];
-                                                        @endphp
-                                                        @if ($paymentType)
-                                                            {{-- <span
-                                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $paymentColors[$paymentType] ?? 'bg-gray-100 text-gray-800' }}">
-                                                                {{ $paymentType === 'nssf' ? 'NSSF Member' : ucfirst($paymentType) }}
-                                                            </span> --}}
-
-                                                            <span
-                                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $paymentColors[$paymentType] ?? 'bg-gray-100 text-gray-800' }}">
-                                                                {{ $paymentType === 'nssf' ? trans('lang.nssf') : trans('lang.' . strtolower($paymentType)) }}
-                                                            </span>
-                                                        @else
-                                                            <span class="text-gray-400 text-sm">N/A</span>
-                                                        @endif
-                                                    </td>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                                        $paymentColors = [
+                                                            'nssf' => 'bg-blue-100 text-blue-800',
+                                                            'cash' => 'bg-green-100 text-green-800',
+                                                            'health equity fund' => 'bg-purple-100 text-purple-800',
+                                                        ];
+                                                    @endphp
+                                                    <td class="px-5 py-4 text-base text-gray-900">
                                                         <span
                                                             class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
                                                             {{ $vaccine->comeback_count }}
                                                         </span>
                                                     </td>
-                                                    <td class="px-6 py-4 text-sm text-gray-600">
-                                                        @if ($vaccine->dose_dates && count($vaccine->dose_dates) > 0)
-                                                            <div class="space-y-1">
-                                                                @foreach ($vaccine->dose_dates as $index => $doseDate)
-                                                                    <div class="flex flex-col">
-                                                                        <span
-                                                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mb-1">
-                                                                            Dose {{ $index + 1 }}:
-                                                                            {{ \Carbon\Carbon::parse($doseDate)->format('Y-m-d') }}
-                                                                        </span>
-                                                                    </div>
-                                                                @endforeach
-                                                            </div>
-                                                        @else
-                                                            <span class="text-gray-400 text-sm">N/A</span>
-                                                        @endif
-                                                    </td>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                                    <td class="px-5 py-4 text-base text-gray-900">
                                                         {{ \Carbon\Carbon::parse($vaccine->currentDate)->format('Y-m-d') }}
                                                     </td>
-                                                    <td class="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">
-                                                        {{ $vaccine->description }}</td>
+                                                    <td class="px-5 py-4 text-base text-gray-900">
+                                                        @php
+                                                            $doseDatesJson = json_encode($vaccine->dose_dates ?? []);
+                                                            $paymentText = $paymentType ?? null;
+                                                        @endphp
+
+                                                        <div class="flex items-center justify-center space-x-2">
+                                                            <!-- Details button -->
+                                                            <button type="button"
+                                                                 class="inline-flex items-center p-2.5 text-green-600 hover:text-green-700 bg-green-50 hover:bg-green-100 rounded-xl transition-all duration-200 group"
+                                                                onclick="showVaccineDetails(this)"
+                                                                data-name="{{ e($vaccine->name) }}"
+                                                                data-dob="{{ \Carbon\Carbon::parse($vaccine->bod)->format('Y-m-d') }}"
+                                                                data-age="{{ $vaccine->age }}"
+                                                                data-father="{{ e($vaccine->father_name) }}"
+                                                                data-mother="{{ e($vaccine->mother_name) }}"
+                                                                data-category="{{ $vaccine->vaccineCategory?->name ?? 'N/A' }}"
+                                                                data-payment="{{ $paymentText ? $paymentText : '' }}"
+                                                                data-dose-count="{{ $vaccine->comeback_count }}"
+                                                                data-dose-dates='@json($vaccine->dose_dates ?? [])'
+                                                                data-current-date="{{ \Carbon\Carbon::parse($vaccine->currentDate)->format('Y-m-d') }}"
+                                                                data-description="{{ e($vaccine->description) }}">
+                                                                <svg class="w-5 h-5" fill="none"
+                                                                    stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round"
+                                                                        stroke-linejoin="round" stroke-width="2"
+                                                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z">
+                                                                    </path>
+                                                                    <path stroke-linecap="round"
+                                                                        stroke-linejoin="round" stroke-width="2"
+                                                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                                                    </path>
+                                                                </svg>
+                                                            </button>
+
+                                                            <!-- Download PDF button -->
+                                                            {{-- <a href="{{ route('workspace.vaccine.download', $vaccine->id) }}"
+                                                                target="_blank"
+                                                                class="inline-flex items-center px-3 py-1.5 rounded-md text-xs font-medium bg-gray-800 text-white hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-700">
+
+                                                            </a> --}}
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                             @empty
                                                 <tr id="no-results">
@@ -275,7 +278,7 @@
                                                                 </p>
                                                                 <p class="text-sm">Try adjusting your search terms or
                                                                     <a href="{{ route('workspace.vaccine.index') }}"
-                                                                           class="text-blue-600 hover:underline">clear the
+                                                                        class="text-blue-600 hover:underline">clear the
                                                                         search</a>
                                                                 </p>
                                                             @else
@@ -290,13 +293,140 @@
                                         </tbody>
                                     </table>
                                 </div>
-
-
                             </div>
 
+                            <!-- Vaccine Detail Modal -->
+
+                            <div id="vaccineDetailModal" role="dialog" aria-modal="true"
+                                aria-labelledby="vmd-title"
+                                class="fixed inset-0 z-50 hidden items-center justify-center">
+
+                                <!-- Overlay -->
+                                <div class="absolute inset-0 bg-black/40" onclick="closeVaccineModal()"
+                                    aria-hidden="true"></div>
+
+                                <div
+                                    class="relative w-full max-w-3xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+                                    <!-- Header -->
+                                    <div
+                                        class="flex items-center justify-between px-8 py-5 bg-gradient-to-r from-blue-600 to-blue-400">
+                                        <div>
+                                            <h3 id="vmd-title" class="text-2xl font-bold text-gray-900">
+                                                {{ trans('lang.vaccine details') }}
+                                            </h3>
+                                            <span class="text-sm text-gray-400">
+                                                {{ trans('lang.patient vaccine record') }}
+                                            </span>
+                                        </div>
+                                        <button type="button" onclick="closeVaccineModal()" aria-label="Close"
+                                            class="p-2 rounded-xl hover:bg-gray-300/40 text-gray-500 focus:ring-2 focus:ring-gray-300 transition-all text-2xl">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </button>
+                                    </div>
+
+                                    <div class="px-8 py-8 flex-1 overflow-y-auto border-2">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+
+                                            <!-- Patient Card -->
+                                            <div class="bg-white rounded-2xl shadow p-6 border border-gray-100 flex flex-col gap-4">
+                                                <div class="flex items-center mb-1">
+                                                    <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5s-3 1.343-3 3 1.343 3 3 3zm0 2c-2.761 0-5 2.239-5 5h10c0-2.761-2.239-5-5-5z" />
+                                                    </svg>
+                                                    <h4 class="font-bold text-xl text-gray-700">
+                                                        {{ trans('lang.patient') }}
+                                                    </h4>
+                                                </div>
+
+                                                <div class="space-y-4 text-sm mb-2">
+                                                    <div>
+                                                        <span class="text-gray-500 font-medium">{{ trans('lang.name') }}:</span>
+                                                        <span class="font-semibold text-gray-900" id="vmd-name"></span>
+                                                    </div>
+
+                                                    <div>
+                                                        <span class="text-gray-500 font-medium">{{ trans('lang.dob') }}:</span>
+                                                        <span class="font-semibold text-gray-900" id="vmd-dob"></span>
+                                                    </div>
+
+                                                    <div>
+                                                        <span class="text-gray-500 font-medium">{{ trans('lang.age') }}:</span>
+                                                        <span class="inline-block ml-1 px-2 py-0.5 bg-blue-100 rounded-full font-bold text-blue-700 text-xs" id="vmd-age"></span>
+                                                    </div>
+
+                                                    <div>
+                                                        <span class="text-gray-500 font-medium">{{ trans('lang.father name') }}:</span>
+                                                        <span class="font-semibold text-gray-900" id="vmd-father"></span>
+                                                    </div>
+
+                                                    <div>
+                                                        <span class="text-gray-500 font-medium">{{ trans('lang.mother name') }}:</span>
+                                                        <span class="font-semibold text-gray-900" id="vmd-mother"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Vaccine Card -->
+                                            <div class="bg-white rounded-2xl shadow p-6 border border-gray-100 flex flex-col gap-4">
+                                                <div class="flex items-center mb-1">
+                                                    <svg class="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                    <h4 class="font-bold text-xl text-gray-700">
+                                                        {{ trans('lang.vaccine') }}
+                                                    </h4>
+                                                </div>
+
+                                                <div class="space-y-4 text-sm mb-2">
+                                                    <div>
+                                                        <span class="text-gray-500 font-medium">{{ trans('lang.vaccine type') }}:</span>
+                                                        <span class="inline-flex items-center ml-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800" id="vmd-category"></span>
+                                                    </div>
+
+                                                    <div>
+                                                        <span class="text-gray-500 font-medium">{{ trans('lang.payment type') }}:</span>
+                                                        <span class="inline-flex items-center ml-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800" id="vmd-payment"></span>
+                                                    </div>
+
+                                                    <div>
+                                                        <span class="text-gray-500 font-medium">{{ trans('lang.dose dates') }}:</span>
+                                                        <span id="vmd-dose-dates" class="flex flex-wrap gap-2"></span>
+                                                    </div>
+
+                                                    <div>
+                                                        <span class="text-gray-500 font-medium">{{ trans('lang.description') }}:</span>
+                                                        <span id="vmd-description" class="block font-normal rounded-md mt-1 bg-gray-100 text-gray-800 border border-gray-200 px-2 py-3"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <!-- Footer -->
+                                    <div
+                                        class="px-8 py-5 bg-gray-50 border-t border-gray-200 flex items-center justify-end gap-4">
+                                        <button type="button" onclick="closeVaccineModal()"
+                                            class="px-6 py-2 rounded-xl bg-gray-200 hover:bg-gray-300 text-gray-700 text-base transition font-semibold">
+                                            {{ trans('lang.close') }}
+                                        </button>
+                                        <a id="vmd-download-link" href="#" target="_blank"
+                                            class="px-7 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-base font-semibold shadow">
+                                            {{ trans('lang.download') }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="mt-4 px-4 pb-4">
                                 {{ $vaccines->links() }}
                             </div>
+
                             <!-- Patients Needing More Information Section -->
                             @if (!$incompletePatients->isEmpty())
                                 <div class="mt-12">
@@ -931,6 +1061,95 @@
                 }
             });
         });
+    </script>
+    <script>
+        function showVaccineDetails(btn) {
+            const d = btn.dataset;
+            // If multiple IDs, only the first is ever updated.
+            document.getElementById('vmd-name').textContent = d.name || '';
+
+            // Defensive for DOM elements that MUST exist
+            const elDob = document.getElementById('vmd-dob');
+            if (elDob) elDob.textContent = d.dob || '';
+
+            const elAge = document.getElementById('vmd-age');
+            if (elAge) elAge.textContent = d.age ? (d.age + ' year') : '';
+
+            const elFather = document.getElementById('vmd-father');
+            if (elFather) elFather.textContent = d.father || '';
+
+            const elMother = document.getElementById('vmd-mother');
+            if (elMother) elMother.textContent = d.mother || '';
+
+            const elCategory = document.getElementById('vmd-category');
+            if (elCategory) elCategory.textContent = d.category || '';
+
+            const elPayment = document.getElementById('vmd-payment');
+            if (elPayment) elPayment.textContent = d.payment || 'N/A';
+
+            const elDesc = document.getElementById('vmd-description');
+            if (elDesc) elDesc.textContent = d.description || '';
+
+            // No vmd-current-date in markup, so do not set!
+
+            // Dose Dates
+            const doseDatesEl = document.getElementById('vmd-dose-dates');
+            if (doseDatesEl) {
+                doseDatesEl.innerHTML = '';
+                try {
+                    const dates = JSON.parse(d.doseDates || '[]');
+                    if (Array.isArray(dates) && dates.length) {
+                        dates.forEach((dt, idx) => {
+                            const span = document.createElement('span');
+                            span.className =
+                                'inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-800 border border-blue-200';
+                            span.textContent = (idx + 1) + '. ' + dt;
+                            doseDatesEl.appendChild(span);
+                        });
+                    } else {
+                        const span = document.createElement('span');
+                        span.className = 'text-gray-400';
+                        span.textContent = 'N/A';
+                        doseDatesEl.appendChild(span);
+                    }
+                } catch (e) {
+                    const span = document.createElement('span');
+                    span.className = 'text-gray-400';
+                    span.textContent = 'N/A';
+                    doseDatesEl.appendChild(span);
+                }
+            }
+
+            // set download link
+            const downloadLink = document.getElementById('vmd-download-link');
+            // Be sure that there IS an a[href*="workspace/vaccine/download"] in the row!
+            let vaccineAnchor = null;
+            try {
+                vaccineAnchor = btn.closest('tr')?.querySelector('a[href*="workspace/vaccine/download"]');
+            } catch (_) {}
+            if (downloadLink) {
+                if (vaccineAnchor) {
+                    downloadLink.setAttribute('href', vaccineAnchor.getAttribute('href'));
+                    downloadLink.style.display = 'inline-flex';
+                } else {
+                    downloadLink.style.display = 'none';
+                }
+            }
+
+            const modal = document.getElementById('vaccineDetailModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function closeVaccineModal() {
+            const modal = document.getElementById('vaccineDetailModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
     </script>
 
 </x-app-layout>

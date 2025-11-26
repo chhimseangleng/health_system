@@ -112,6 +112,8 @@ Route::middleware('auth')->group(function () {
     // Register
     Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
     Route::post('register', [RegisteredUserController::class, 'store'])->name('register.store');
+    Route::put('register/{user}/role', [RegisteredUserController::class, 'updateRole'])->name('register.updateRole');
+    Route::delete('register/{user}', [RegisteredUserController::class, 'destroy'])->name('register.destroy');
 
     // Patients
     Route::get('/patients', [PatientController::class, 'index'])->name('patients.index');
@@ -151,6 +153,7 @@ Route::middleware('auth')->group(function () {
     Route::get('workspace/vaccine/patient/{patientId}/form', [WorkspaceController::class, 'showVaccinePatientForm'])->name('workspace.vaccine.patient.form');
     Route::post('workspace/vaccine/patient/{patientId}/store', [WorkspaceController::class, 'storeVaccinePatientInfo'])->name('workspace.vaccine.patient.store');
     Route::post('workspace/vaccine/patient/{patientId}/dismiss', [WorkspaceController::class, 'dismissVaccinePatient'])->name('workspace.vaccine.patient.dismiss');
+    Route::get('workspace/vaccine/{id}/download', [WorkspaceController::class, 'downloadVaccine'])->name('workspace.vaccine.download');
 
     // Common diseases
     Route::get('workspace/common-diseases/index', [WorkspaceController::class, 'commonDiseasesIndex'])->name('workspace.common-diseases.index');
@@ -172,6 +175,7 @@ Route::middleware('auth')->group(function () {
     Route::get('workspace/gynecology/index', [WorkspaceController::class, 'gynecologyIndex'])->name('workspace.gynecology.index');
     Route::post('workspace/gynecology/store', [WorkspaceController::class, 'gynecologyStore'])->name('workspace.gynecology.store');
     Route::get('workspace/gynecology/{id}/edit', [WorkspaceController::class, 'gynecologyEdit'])->name('workspace.gynecology.edit');
+    Route::get('workspace/gynecology/{id}/export/pdf', [WorkspaceController::class, 'exportGynecologyPdf'])->name('workspace.gynecology.export.pdf');
     Route::put('workspace/gynecology/{id}', [WorkspaceController::class, 'gynecologyUpdate'])->name('workspace.gynecology.update');
     Route::delete('workspace/gynecology/{id}', [WorkspaceController::class, 'gynecologyDestroy'])->name('workspace.gynecology.destroy');
 
@@ -186,7 +190,7 @@ Route::middleware('auth')->group(function () {
     // ✅ Fixed Medicine Management Routes
     Route::prefix('workspace/medicine')->name('workspace.medicine.')->group(function () {
         Route::get('/', [App\Http\Controllers\MedicineController::class, 'index'])->name('index');
-        Route::get('/create', [App\Http\Controllers\MedicineController::class, 'create'])->name('create');
+        Route::get('/add-modal', [App\Http\Controllers\MedicineController::class, 'create'])->name('add-modal');
         Route::post('/', [App\Http\Controllers\MedicineController::class, 'store'])->name('store');
         Route::get('/{id}', [App\Http\Controllers\MedicineController::class, 'show'])->name('show');
         Route::get('/{id}/edit', [App\Http\Controllers\MedicineController::class, 'edit'])->name('edit');
@@ -212,7 +216,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-Route::post('/locale', App\Http\Controllers\LocaleController::class)->name('locale.change');
+    Route::post('/locale', App\Http\Controllers\LocaleController::class)->name('locale.change');
 
 });
 

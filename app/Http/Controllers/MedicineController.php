@@ -48,13 +48,49 @@ class MedicineController extends Controller
         }
 
         $medicines = Medicine::orderBy('created_at', 'desc')->paginate(10);
-        // Get unique categories for filter
-        $categories = Medicine::distinct('category')->pluck('category')->filter()->sort()->values();
+
+        // Predefined categories for the add medicine modal
+        $predefinedCategories = [
+            'Antibiotics',
+            'Analgesics',
+            'Anti-inflammatory',
+            'Antihistamines',
+            'Antacids',
+            'Vitamins',
+            'Supplements',
+            'Other'
+        ];
+
+        // Get unique categories from database for filter (merge with predefined)
+        $dbCategories = Medicine::distinct('category')->pluck('category')->filter()->toArray();
+        $categories = collect($predefinedCategories)->merge($dbCategories)->unique()->sort()->values();
 
         // For bulk dispense suggestions
         $allMedicines = Medicine::orderBy('name')->get(['_id', 'name', 'stock_quantity']);
 
-        return view('workspace.medicine.index', compact('medicines', 'categories', 'search', 'category', 'stockStatus', 'allMedicines'));
+        // For create medicine modal
+        $forms = [
+            'Tablet',
+            'Capsule',
+            'Syrup',
+            'Injection',
+            'Cream',
+            'Ointment',
+            'Drops',
+            'Inhaler',
+            'Other'
+        ];
+
+        $units = [
+            'mg',
+            'g',
+            'ml',
+            'mcg',
+            'IU',
+            'units'
+        ];
+
+        return view('workspace.medicine.index', compact('medicines', 'categories', 'search', 'category', 'stockStatus', 'allMedicines', 'forms', 'units'));
     }
 
     public function create()
@@ -91,7 +127,7 @@ class MedicineController extends Controller
             'units'
         ];
 
-        return view('workspace.medicine.create', compact('categories', 'forms', 'units'));
+        return view('workspace.medicine.add-modal', compact('categories', 'forms', 'units'));
     }
 
     public function store(Request $request)

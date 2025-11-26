@@ -55,7 +55,6 @@
                 </div>
             </div>
 
-            <!-- Search Bar -->
             <div class="p-4">
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -68,9 +67,31 @@
                 </div>
             </div>
 
-            <!-- Navigation Menu -->
             <nav class="px-4 space-y-2">
-                <!-- Dashboard (Active) -->
+                @php
+                    // Normalize user role to lowercase
+                    $role = strtolower(trim(Auth::user()->role ?? ''));
+
+                    // Privileged roles
+                    $isPrivileged = in_array($role, ['admin', 'superadmin']);
+
+                    // Receptionist role - match common variants and substrings to be robust
+                    $isReceptionist = $role === 'receptionist'
+                        || $role === 'reception'
+                        || strpos($role, 'recept') !== false;
+
+                    // Medical roles
+                    $medicalRoles = [
+                        'vaccine',
+                        'medicine',
+                        'gynecology diseases',
+                        'common diseases'
+                    ];
+                    $isMedical = in_array($role, $medicalRoles);
+                @endphp
+
+
+
                 <a href="{{ route('dashboard') }}"
                    class="flex items-center px-4 py-3 text-white bg-purple-500 rounded-xl transition-colors duration-200">
                     <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -79,7 +100,8 @@
                     <span>Dashboard</span>
                 </a>
 
-                <!-- Patients -->
+
+                @if($isPrivileged || {{ auth()->user()->role === 'Receptionist' }})
                 <a href="{{ route('patients.index') }}"
                    class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors duration-200">
                     <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -87,35 +109,44 @@
                     </svg>
                     <span>Patients</span>
                 </a>
+                @endif
 
-                  <!-- WorkSpace -->
+
+                @if(!$isReceptionist)
                   <a href="{{ route('workspace.index') }}"
                   class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors duration-200">
                    <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                    </svg>
                    <span>WorkSpace</span>
-               </a>
+                   </a>
+                @endif
+
 
                 <!-- Doctors -->
+                @if($isPrivileged)
                 <a href="{{ route('doctors.index') }}"
                    class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors duration-200">
                     <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zm-4 7a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
-                    <span>Doctors</span>
+                    <span>user</span>
                 </a>
+                @endif
 
                 <!-- Add User -->
+                @if($isPrivileged)
                 <a href="{{ route('register') }}"
                    class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors duration-200">
                     <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
                     </svg>
-                    <span>Add User</span>
+                    <span>admin</span>
                 </a>
+                @endif
 
                 <!-- Documents -->
+                @if($isPrivileged)
                 <a href="#"
                    class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors duration-200">
                     <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -123,8 +154,10 @@
                     </svg>
                     <span>Documents</span>
                 </a>
+                @endif
 
                 <!-- Main Overview -->
+                @if($isPrivileged)
                 <a href="#"
                    class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors duration-200">
                     <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -132,8 +165,10 @@
                     </svg>
                     <span>Main Overview</span>
                 </a>
+                @endif
 
                 <!-- Statistics -->
+                @if($isPrivileged)
                 <a href="#"
                    class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors duration-200">
                     <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -141,6 +176,7 @@
                     </svg>
                     <span>Statistics</span>
                 </a>
+                @endif
             </nav>
 
             <!-- Bottom Section -->
@@ -164,9 +200,16 @@
 
                 <!-- User Profile -->
                 <div class="flex items-center px-4 py-3">
-                    <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-3">
-                        <span class="text-purple-600 font-medium text-sm">{{ substr(Auth::user()->name, 0, 1) }}</span>
-                    </div>
+                    @if(Auth::user()->hasPhoto())
+                        <img src="{{ Auth::user()->photo_url }}" alt="{{ Auth::user()->name }}" class="w-8 h-8 rounded-full object-cover mr-3 border-2 border-purple-200" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="w-8 h-8 bg-purple-100 rounded-full items-center justify-center mr-3 border-2 border-purple-200 hidden">
+                            <span class="text-purple-600 font-medium text-sm">{{ substr(Auth::user()->name, 0, 1) }}</span>
+                        </div>
+                    @else
+                        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-3 border-2 border-purple-200">
+                            <span class="text-purple-600 font-medium text-sm">{{ substr(Auth::user()->name, 0, 1) }}</span>
+                        </div>
+                    @endif
                     <div>
                         <div class="text-sm font-medium text-gray-800">{{ Auth::user()->name }}</div>
                         <div class="text-xs text-gray-500">{{ Auth::user()->email }}</div>
@@ -243,6 +286,16 @@
                             <div x-data="{ open: false }" class="relative">
                                 <button @click="open = !open"
                                     class="flex items-center px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                                    @if(Auth::user()->hasPhoto())
+                                        <img src="{{ Auth::user()->photo_url }}" alt="{{ Auth::user()->name }}" class="w-8 h-8 rounded-full object-cover mr-2 border-2 border-gray-200" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                        <div class="w-8 h-8 bg-purple-100 rounded-full items-center justify-center mr-2 border-2 border-gray-200 hidden">
+                                            <span class="text-purple-600 font-medium text-xs">{{ substr(Auth::user()->name, 0, 1) }}</span>
+                                        </div>
+                                    @else
+                                        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-2 border-2 border-gray-200">
+                                            <span class="text-purple-600 font-medium text-xs">{{ substr(Auth::user()->name, 0, 1) }}</span>
+                                        </div>
+                                    @endif
                                     <div class="text-sm font-medium">{{ Auth::user()->name }}</div>
                                     <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>

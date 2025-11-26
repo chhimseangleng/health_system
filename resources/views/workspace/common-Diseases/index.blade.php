@@ -22,19 +22,7 @@
                                         {{ trans('lang.manage search export common disease records') }}</p>
                                 </div>
                             </div>
-
-
-
                             <div class="flex items-center gap-3 space-x-2">
-                                {{-- <button id="openAddDiseaseModal"
-                                    class="text-blue-600 border border-blue-600 hover:text-white hover:bg-blue-600 font-medium rounded-lg text-sm px-5  py-2.5 text-center  inline-flex ">
-                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 4v16m8-8H4" />
-                                    </svg>
-                                    Add Disease
-                                </button> --}}
-
                                 <form method="GET" action="{{ route('workspace.common-diseases.index') }}"
                                     class="w-80">
                                     <label for="common-disease-search"
@@ -85,35 +73,202 @@
                             </div>
                         </div>
 
+                        <!-- Common Disease Detail Modal -->
+                        <div id="commonDiseaseDetailModal"
+                           class="fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-all duration-300">
+                            <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full overflow-hidden relative">
+                                <div class="flex justify-between items-start border-b border-gray-100 pb-3 mb-4">
+                                    <h3 class="text-lg font-semibold text-gray-900">{{ trans('lang.record details') }}
+                                    </h3>
+                                    <button type="button" id="closeCommonDiseaseDetailModal"
+                                        class="w-8 h-8 rounded-lg text-gray-400 hover:bg-gray-200 flex items-center justify-center transition">
+                                        <svg class="w-4 h-4" aria-hidden="true" fill="none" viewBox="0 0 14 14">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div id="commonDiseaseDetailBody" class="space-y-3 text-sm">
+                                    <div class="text-gray-400">{{ trans('lang.loading') }}...</div>
+                                </div>
+
+                                <!-- Footer actions -->
+                                <div class="mt-4 flex justify-end space-x-2">
+                                    <button type="button" onclick="closeCommonDiseaseDetailModal()"
+                                        class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
+                                        {{ trans('lang.close') }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <script>
+                            // expose globally so inline onclick works
+                            window.viewDisease = function(btn) {
+                                const modal = document.getElementById('commonDiseaseDetailModal');
+                                const body = document.getElementById('commonDiseaseDetailBody');
+                                if (!modal || !body) return;
+
+                                const name = btn.getAttribute('data-name') || 'N/A';
+                                const physician = btn.getAttribute('data-physician') || 'N/A';
+                                const age = btn.getAttribute('data-age') || 'N/A';
+                                const gender = btn.getAttribute('data-gender') || 'N/A';
+                                const village = btn.getAttribute('data-village') || 'N/A';
+                                const updated = btn.getAttribute('data-updated') || 'N/A';
+                                // drug diagnosis is base64-encoded JSON (safe for HTML attributes)
+                                let drugDiagnosis = 'N/A';
+                                const drugDiagnosisB64 = btn.getAttribute('data-drug-diagnosis');
+                                if (drugDiagnosisB64) {
+                                    try {
+                                        const jsonStr = atob(drugDiagnosisB64);
+                                        const parsed = JSON.parse(jsonStr);
+                                        if (parsed === null || parsed === undefined || parsed === '') {
+                                            drugDiagnosis = 'N/A';
+                                        } else if (Array.isArray(parsed)) {
+                                            drugDiagnosis = parsed.join(', ');
+                                        } else if (typeof parsed === 'object') {
+                                            drugDiagnosis = JSON.stringify(parsed);
+                                        } else {
+                                            drugDiagnosis = parsed;
+                                        }
+                                    } catch (e) {
+                                        try {
+                                            drugDiagnosis = atob(drugDiagnosisB64);
+                                        } catch (e2) {
+                                            drugDiagnosis = drugDiagnosisB64;
+                                        }
+                                    }
+                                }
+
+                                body.innerHTML = `
+                                    <div class="px-4 py-4 max-h-[72vh] overflow-y-auto bg-slate-50 rounded-b-xl">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                            <div class="bg-white rounded-2xl shadow p-4 border border-gray-100">
+                                                <div class="flex items-center mb-2">
+                                                    <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5s-3 1.343-3 3 1.343 3 3 3zm0 2c-2.761 0-5 2.239-5 5h10c0-2.761-2.239-5-5-5z"></path>
+                                                    </svg>
+                                                    <h4 class="font-bold text-lg text-gray-700 mb-0">{{ trans('lang.patient') }}</h4>
+                                                </div>
+                                                <div class="space-y-2 text-sm">
+                                                    <div>
+                                                        <span class="text-gray-500 font-medium">{{ trans('lang.name') }}:</span>
+                                                        <span class="font-semibold text-gray-900 ml-2">${name}</span>
+                                                    </div>
+                                                    <div>
+                                                        <span class="text-gray-500 font-medium">{{ trans('lang.age') }}:</span>
+                                                        <span class="font-semibold text-gray-900 ml-2">${age}</span>
+                                                    </div>
+                                                    <div>
+                                                        <span class="text-gray-500 font-medium">{{ trans('lang.gender') }}:</span>
+                                                        <span class="font-semibold text-gray-900 ml-2">${gender}</span>
+                                                    </div>
+                                                    <div>
+                                                        <span class="text-gray-500 font-medium">{{ trans('lang.village') }}:</span>
+                                                        <span class="font-semibold text-gray-900 ml-2">${village}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="bg-white rounded-2xl shadow p-4 border border-gray-100">
+                                                <div class="flex items-center mb-2">
+                                                    <svg class="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                    </svg>
+                                                    <h4 class="font-bold text-lg text-gray-700 mb-0">{{ trans('lang.record') }}</h4>
+                                                </div>
+                                                <div class="space-y-2 text-sm">
+                                                    <div>
+                                                        <span class="text-gray-500 font-medium">{{ trans('lang.physician') }}:</span>
+                                                        <span class="font-semibold text-gray-900 ml-2">${physician}</span>
+                                                    </div>
+                                                    <div>
+                                                        <span class="text-gray-500 font-medium">{{ trans('lang.drug diagnosis') }}:</span>
+                                                        <div class="block font-normal rounded-md mt-1 bg-gray-100 text-gray-800 border border-gray-200 px-2 py-2">${drugDiagnosis}</div>
+                                                    </div>
+                                                    <div>
+                                                        <span class="text-gray-500 font-medium">{{ trans('lang.updated') }}:</span>
+                                                        <span class="font-semibold text-gray-900 ml-2">${updated}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Additional details section -->
+                                        <div class="mt-4">
+                                            <h4 class="text-md font-semibold text-gray-700 mb-2">{{ trans('lang.additional details') }}</h4>
+                                            <div class="bg-white rounded-xl p-4 border border-gray-100 text-sm text-gray-800">
+                                                <!-- Placeholder: you can add more fields here -->
+                                                {{ trans('lang.no additional details') }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+
+                                modal.classList.remove('hidden');
+                                modal.classList.add('flex');
+                            }
+
+                            (function() {
+                                const modal = document.getElementById('commonDiseaseDetailModal');
+                                const closeBtn = document.getElementById('closeCommonDiseaseDetailModal');
+                                if (closeBtn && modal) {
+                                    closeBtn.addEventListener('click', function() {
+                                        modal.classList.add('hidden');
+                                        modal.classList.remove('flex');
+                                    });
+                                }
+                                if (modal) {
+                                    modal.addEventListener('click', function(e) {
+                                        if (e.target === modal) {
+                                            modal.classList.add('hidden');
+                                            modal.classList.remove('flex');
+                                        }
+                                    });
+                                }
+                            })();
+
+                            // global close function for footer button
+                            function closeCommonDiseaseDetailModal() {
+                                const modal = document.getElementById('commonDiseaseDetailModal');
+                                if (!modal) return;
+                                modal.classList.add('hidden');
+                                modal.classList.remove('flex');
+                            }
+                        </script>
+
                         <div class="overflow-x-auto">
                             <table id="CommonDiseasesTable"
                                 class="min-w-full  bg-white text-base divide-y divide-blue-300 shadow-sm text-center">
                                 <thead class="font-semibold text-4sm tracking-wider uppercase bg-gray-100 ">
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-gray-700">Nº</th>
-                                        <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.name') }}</th>
+                                        <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.name') }}
+                                        </th>
                                         <th scope="col" class="px-6 py-3 text-gray-700">
                                             {{ trans('lang.physician') }}
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.age') }}</th>
                                         <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.gender') }}
                                         </th>
-                                        <th scope="col" class="px-6 py-3 text-gray-700">
-                                            {{ trans('lang.drug diagnosis') }}</th>
+                                        {{-- <th scope="col" class="px-6 py-3 text-gray-700">
+                                            {{ trans('lang.drug diagnosis') }}</th> --}}
                                         <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.village') }}
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.updated') }}
                                         </th>
-                                        <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.actions') }}
+                                        <th scope="col" class="px-6 py-3 text-gray-700">
+                                            {{ trans('lang.actions') }}
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody id="diseasesTableBody" class="divide-y divide-blue-100 bg-white">
                                     @forelse($diseases as $i => $d)
-                                         <tr class="hover:bg-gray-50 transition-all duration-200">
+                                        <tr class="hover:bg-gray-50 transition-all duration-200">
                                             <td class="px-6 py-4 text-center font-semibold">
                                                 {{ $diseases->total() - $diseases->firstItem() - $i + 1 }}</td>
-                                            <td class="px-5 py-4 text-base font-bold text-gray-900">{{ $d->name }}
+                                            <td class="px-5 py-4 text-base font-bold text-gray-900">
+                                                {{ $d->name }}
                                             </td>
                                             <td class="px-6 py-4 text-base text-gray-800">
                                                 <span
@@ -133,7 +288,7 @@
                                                 @endif
                                             </td>
 
-                                            <td class="px-6 py-4 text-base text-gray-800">
+                                            {{-- <td class="px-6 py-4 text-base text-gray-800">
                                                 @php
                                                     $prescriptions = $d->prescriptions ?? null;
                                                 @endphp
@@ -192,7 +347,7 @@
                                                 @else
                                                     {{ $d->drug_diagnosis }}
                                                 @endif
-                                            </td>
+                                            </td> --}}
                                             <td class="px-6 py-4 text-base text-gray-800">{{ $d->village }}</td>
                                             {{-- <td class="px-6 py-4 text-base text-blue-800">{{ $d->commune }}</td> --}}
                                             <td class="px-6 py-4 text-base text-gray-800">
@@ -212,9 +367,30 @@
                                                     </a>
 
 
-                                                    <a href="{{ route('workspace.common-diseases.edit', $d->_id) }}"
+                                                    <button type="button" onclick="viewDisease(this)"
+                                                        title="{{ trans('lang.view details') }}"
+                                                        data-name="{{ $d->name }}"
+                                                        data-physician="{{ $d->physician ?? 'N/A' }}"
+                                                        data-age="{{ $d->age }}"
+                                                        data-gender="{{ $d->gender ?? 'N/A' }}"
+                                                        data-village="{{ $d->village ?? 'N/A' }}"
+                                                        data-updated="{{ optional($d->updated_at)->format('Y-m-d') }}"
+                                                        data-drug-diagnosis="{{ base64_encode(json_encode($d->drug_diagnosis ?? null)) }}"
+                                                        class="inline-flex items-center p-2.5 text-green-600 hover:text-green-700 bg-green-50 hover:bg-green-100 rounded-xl transition-all duration-200 group">
+                                                        <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                            viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z">
+                                                            </path>
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                                            </path>
+                                                        </svg>
+                                                    </button>
+                                                    <button type="button" onclick="openEditModal(@js($d))"
                                                         title="Edit"
-                                                        class="inline-flex items-center px-3 py-2 text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-xl transition-all duration-200 group">
+                                                        class="inline-flex items-center p-2.5 text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-xl transition-all duration-200 group">
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                             viewBox="0 0 24 24" stroke-width="1.5"
                                                             stroke="currentColor"
@@ -222,20 +398,19 @@
                                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                                 d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                                                         </svg>
-                                                    </a>
+                                                    </button>
+                                                    @include('workspace.common-Diseases.edit-modal')
 
                                                     <button
-                                                        onclick="openDeleteModal('{{ route('workspace.common-diseases.destroy', $d->_id) }}', '{{ $d->name ?? 'this record' }}')"
-                                                        class="inline-flex items-center p-2.5 text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 rounded-xl transition-all duration-200 group">
-                                                        <svg class="w-5 h-5 group-hover:scale-110 transition-transform"
-                                                            fill="none" stroke="currentColor" stroke-width="1.5"
-                                                            viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                                                        </svg>
+                                                    onclick="openDeleteModal('{{ route('workspace.common-diseases.destroy', $d->_id) }}', '{{ $d->name ?? 'this record' }}')"
+                                                    class="inline-flex items-center p-2.5 text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 rounded-xl transition-all duration-200 group">
+                                                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform"
+                                                        fill="none" stroke="currentColor" stroke-width="1.5"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                                    </svg>
                                                     </button>
-
-
                                                 </div>
                                             </td>
                                         </tr>
@@ -257,9 +432,9 @@
 
                         {{-- Delete Modal --}}
                         <div id="deleteModal"
-                            class="fixed inset-0 bg-gray-900 bg-opacity-70 hidden flex items-center justify-center z-50 backdrop-blur-sm">
+                            class="hidden fixed inset-0 bg-gray-900 bg-opacity-70 z-50 backdrop-blur-sm">
                             <div
-                                class="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 relative border border-gray-200">
+                                class="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 relative border border-gray-200 mx-auto my-48">
 
                                 <!-- Close Button -->
                                 <button onclick="closeDeleteModal()"
@@ -453,7 +628,7 @@
 
                                                             <!-- Dismiss Confirmation Modal -->
                                                             <div id="dismissModal-{{ $patient->_id }}"
-                                                                class="fixed inset-0 z-50 flex items-center justify-center hidden bg-gray-900/50 backdrop-blur-sm">
+                                                                class="hidden fixed inset-0 z-50 bg-gray-900/50 backdrop-blur-sm">
                                                                 <div
                                                                     class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-md border border-gray-100">
                                                                     <div class="text-center">
@@ -517,6 +692,113 @@
 
 
         <script>
+            // ensure view handler available (define again to guard against script ordering issues)
+            window.viewDisease = window.viewDisease || function(btn) {
+                const modal = document.getElementById('commonDiseaseDetailModal');
+                const body = document.getElementById('commonDiseaseDetailBody');
+                if (!modal || !body) return;
+
+                const name = btn.getAttribute('data-name') || 'N/A';
+                const physician = btn.getAttribute('data-physician') || 'N/A';
+                const age = btn.getAttribute('data-age') || 'N/A';
+                const gender = btn.getAttribute('data-gender') || 'N/A';
+                const village = btn.getAttribute('data-village') || 'N/A';
+                const updated = btn.getAttribute('data-updated') || 'N/A';
+                // drug diagnosis is base64-encoded JSON (safe for HTML attributes)
+                let drugDiagnosis = 'N/A';
+                const drugDiagnosisB64 = btn.getAttribute('data-drug-diagnosis');
+                if (drugDiagnosisB64) {
+                    try {
+                        const jsonStr = atob(drugDiagnosisB64);
+                        const parsed = JSON.parse(jsonStr);
+                        if (parsed === null || parsed === undefined || parsed === '') {
+                            drugDiagnosis = 'N/A';
+                        } else if (Array.isArray(parsed)) {
+                            drugDiagnosis = parsed.join(', ');
+                        } else if (typeof parsed === 'object') {
+                            drugDiagnosis = JSON.stringify(parsed);
+                        } else {
+                            drugDiagnosis = parsed;
+                        }
+                    } catch (e) {
+                        // fallback: try to atob then use raw
+                        try {
+                            drugDiagnosis = atob(drugDiagnosisB64);
+                        } catch (e2) {
+                            drugDiagnosis = drugDiagnosisB64;
+                        }
+                    }
+                }
+
+                body.innerHTML = `
+                    <div class="px-4 py-4 max-h-[72vh] overflow-y-auto bg-slate-50 rounded-b-xl">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div class="bg-white rounded-2xl shadow p-4 border border-gray-100">
+                                <div class="flex items-center mb-2">
+                                    <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5s-3 1.343-3 3 1.343 3 3 3zm0 2c-2.761 0-5 2.239-5 5h10c0-2.761-2.239-5-5-5z"></path>
+                                    </svg>
+                                    <h4 class="font-bold text-lg text-gray-700 mb-0">{{ trans('lang.patient') }}</h4>
+                                </div>
+                                <div class="space-y-2 text-sm">
+                                    <div>
+                                        <span class="text-gray-500 font-medium">{{ trans('lang.name') }}:</span>
+                                        <span class="font-semibold text-gray-900 ml-2">${name}</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-gray-500 font-medium">{{ trans('lang.age') }}:</span>
+                                        <span class="font-semibold text-gray-900 ml-2">${age}</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-gray-500 font-medium">{{ trans('lang.gender') }}:</span>
+                                        <span class="font-semibold text-gray-900 ml-2">${gender}</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-gray-500 font-medium">{{ trans('lang.village') }}:</span>
+                                        <span class="font-semibold text-gray-900 ml-2">${village}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white rounded-2xl shadow p-4 border border-gray-100">
+                                <div class="flex items-center mb-2">
+                                    <svg class="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <h4 class="font-bold text-lg text-gray-700 mb-0">{{ trans('lang.record') }}</h4>
+                                </div>
+                                <div class="space-y-2 text-sm">
+                                    <div>
+                                        <span class="text-gray-500 font-medium">{{ trans('lang.physician') }}:</span>
+                                        <span class="font-semibold text-gray-900 ml-2">${physician}</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-gray-500 font-medium">{{ trans('lang.drug diagnosis') }}:</span>
+                                        <div class="block font-normal rounded-md mt-1 bg-gray-100 text-gray-800 border border-gray-200 px-2 py-2">${drugDiagnosis}</div>
+                                    </div>
+                                    <div>
+                                        <span class="text-gray-500 font-medium">{{ trans('lang.updated') }}:</span>
+                                        <span class="font-semibold text-gray-900 ml-2">${updated}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Additional details section -->
+                        <div class="mt-4">
+                            <h4 class="text-md font-semibold text-gray-700 mb-2">{{ trans('lang.additional details') }}</h4>
+                            <div class="bg-white rounded-xl p-4 border border-gray-100 text-sm text-gray-800">
+                                <!-- Placeholder: you can add more fields here -->
+                                {{ trans('lang.no additional details') }}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            };
+
             // Delete Modal
             function openDeleteModal(actionUrl, itemName) {
                 const modal = document.getElementById('deleteModal');
@@ -574,14 +856,18 @@
             const searchInput = document.getElementById('searchInput');
             const suggestionsEl = document.getElementById('patientSuggestions');
 
-            openAddBtn.addEventListener('click', () => {
-                addModal.classList.remove('hidden');
-                addModal.classList.add('flex');
-            });
-            closeAddBtn.addEventListener('click', () => {
-                addModal.classList.add('hidden');
-                addModal.classList.remove('flex');
-            });
+            if (openAddBtn && addModal) {
+                openAddBtn.addEventListener('click', () => {
+                    addModal.classList.remove('hidden');
+                    addModal.classList.add('flex');
+                });
+            }
+            if (closeAddBtn && addModal) {
+                closeAddBtn.addEventListener('click', () => {
+                    addModal.classList.add('hidden');
+                    addModal.classList.remove('flex');
+                });
+            }
 
             function debounce(fn, wait) {
                 let t;
@@ -644,7 +930,7 @@
                 searchInput.addEventListener('focus', (e) => renderSuggestions(e.target.value));
             }
             document.addEventListener('click', (e) => {
-                if (!suggestionsEl.contains(e.target) && e.target !== searchInput) {
+                if (suggestionsEl && !suggestionsEl.contains(e.target) && e.target !== searchInput) {
                     suggestionsEl.classList.add('hidden');
                 }
             });
@@ -712,4 +998,5 @@
                 });
             }
         </script>
+
 </x-app-layout>

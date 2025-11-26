@@ -17,8 +17,49 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-
+        'photo',
     ];
+
+    /**
+     * Get the user's photo URL or return null
+     */
+    public function getPhotoUrlAttribute()
+    {
+        if ($this->photo) {
+            $path = 'storage/' . $this->photo;
+            if (file_exists(public_path($path))) {
+                return asset($path);
+            }
+            // Try alternative path
+            if (file_exists(storage_path('app/public/' . $this->photo))) {
+                return asset('storage/' . $this->photo);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get the user's avatar (photo or initials)
+     */
+    public function getAvatarAttribute()
+    {
+        return $this->photo_url;
+    }
+
+    /**
+     * Check if user has a valid photo
+     */
+    public function hasPhoto()
+    {
+        if (!$this->photo) {
+            return false;
+        }
+
+        $path = public_path('storage/' . $this->photo);
+        $altPath = storage_path('app/public/' . $this->photo);
+
+        return file_exists($path) || file_exists($altPath);
+    }
 
     protected $hidden = [
         'password',

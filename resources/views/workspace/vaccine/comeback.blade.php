@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="py-12">
+    <div class="py-12" x-data="vaccineModal()" x-cloak>
         <div class="mx-auto sm:px-6 lg:px-8">
             <div class="bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-xl">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-2xl ring-1 ring-gray-100">
@@ -25,7 +25,8 @@
 
                         <!-- Search Section -->
                         <div class="flex gap-3 items-center space-x-1 py-4">
-                            <form method="GET" action="{{ route('workspace.vaccine.comeback') }}" class="w-80">
+                            <form method="GET" action="{{ route('workspace.vaccine.comeback') }}"
+                                class="w-80 relative">
                                 <label for="default-search" class="sr-only">{{ trans('lang.search') }}</label>
                                 <div class="relative group">
                                     <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
@@ -38,7 +39,7 @@
                                     </div>
                                     <input type="text" name="search" value="{{ request('search') }}"
                                         id="default-search"
-                                        class="block w-full p-3 pl-12 pr-4 text-sm text-gray-700
+                                        class="block w-full p-3 pl-12 pr-10 text-sm text-gray-700
                                     placeholder-gray-400 bg-white border border-gray-200
                                     rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                                     shadow-sm transition-all duration-200 hover:shadow-md"
@@ -63,7 +64,7 @@
                     </div>
 
                     <!-- Vaccine Records Table -->
-                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-lg">
+                    <div class="bg-white border border-gray-200 overflow-hidden shadow-lg py-2 space-y-1">
                         <div class="px-8 py-6 bg-gradient-to-r from-blue-50 to-blue-100 border-b border-gray-200">
                             <h3 class="text-xl font-semibold text-gray-700 flex items-center">
                                 <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor"
@@ -77,36 +78,46 @@
                         </div>
 
                         <div class="p-0 md:p-2">
-                            <div class="overflow-x-auto">
-                                <table id="gynecologyTable"
+                            <div class="overflow-x-auto border-b">
+                                <table id="vaccinesTable"
                                     class="min-w-full  bg-white text-base divide-y divide-blue-300 shadow-sm text-center">
-                                    <thead class="font-semibold text-4sm tracking-wider uppercase bg-gray-100 ">
+                                    <thead class="font-semibold text-4sm tracking-wider uppercase bg-gray-100">
                                         <tr>
                                             <th scope="col" class="px-6 py-3 text-gray-700"> Nº</th>
-                                            <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.name') }}</th>
-                                            <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.dob') }}</th>
-                                            <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.age') }}</th>
-                                            <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.father') }}</th>
-                                            <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.mother') }}</th>
-                                            <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.vaccine type') }}</th>
-                                            <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.dose count') }}</th>
-                                            <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.date') }}</th>
-                                            <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.description') }}</th>
-                                            <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.actions') }}</th>
+                                            <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.name') }}
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.dob') }}
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.age') }}
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-gray-700">
+                                                {{ trans('lang.father') }}</th>
+                                            <th scope="col" class="px-6 py-3 text-gray-700">
+                                                {{ trans('lang.mother') }}</th>
+                                            <th scope="col" class="px-6 py-3 text-gray-700">
+                                                {{ trans('lang.vaccine type') }}</th>
+                                            <th scope="col" class="px-6 py-3 text-gray-700">
+                                                {{ trans('lang.dose count') }}</th>
+                                            <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.date') }}
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-gray-700">
+                                                {{ trans('lang.description') }}</th>
+                                            <th scope="col" class="px-6 py-3 text-gray-700">
+                                                {{ trans('lang.actions') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-blue-50">
                                         @forelse ($vaccinesComeback as $vaccine)
                                             <tr class="hover:bg-blue-50 transition duration-150">
                                                 <td class="px-6 py-1 text-center text-blue-900 font-semibold">
-                                                    <tr class="hover:bg-gray-50 transition-all duration-200">
-                                                        <td class="px-6 py-4 text-center font-semibold">
+                                            <tr class="hover:bg-gray-50 transition-all duration-200">
+                                                <td class="px-6 py-4 text-center font-semibold">
                                                     {{ $vaccinesComeback->total() - ($vaccinesComeback->firstItem() - 1 + $loop->index) }}
                                                 </td>
 
                                                 <td class="px-5 py-4 text-base font-bold text-gray-900">
                                                     {{ $vaccine->name }}</td>
-                                                 <td class="px-5 py-4 text-base text-gray-900">
+                                                <td class="px-5 py-4 text-base text-gray-900">
                                                     {{ \Carbon\Carbon::parse($vaccine->bod)->format('Y-m-d') }}
                                                 </td>
                                                 <td class="px-8 py-4 whitespace-nowrap text-base text-gray-600">
@@ -115,26 +126,26 @@
                                                         {{ $vaccine->age }} years
                                                     </span>
                                                 </td>
-                                                   <td class="px-5 py-4 text-base text-gray-900">
+                                                <td class="px-5 py-4 text-base text-gray-900">
                                                     {{ $vaccine->father_name }}</td>
-                                                   <td class="px-5 py-4 text-base text-gray-900">
+                                                <td class="px-5 py-4 text-base text-gray-900">
                                                     {{ $vaccine->mother_name }}</td>
-                                                   <td class="px-5 py-4 text-base text-gray-900">
+                                                <td class="px-5 py-4 text-base text-gray-900">
                                                     <span
                                                         class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                                         {{ $vaccine->vaccineCategory?->name ?? 'N/A' }}
                                                     </span>
                                                 </td>
-                                                   <td class="px-5 py-4 text-base text-gray-900">
+                                                <td class="px-5 py-4 text-base text-gray-900">
                                                     <span
                                                         class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
                                                         {{ $vaccine->comeback_count }}
                                                     </span>
                                                 </td>
-                                                    <td class="px-5 py-4 text-base text-gray-900">
+                                                <td class="px-5 py-4 text-base text-gray-900">
                                                     {{ \Carbon\Carbon::parse($vaccine->currentDate)->format('Y-m-d') }}
                                                 </td>
-                                                    <td class="px-5 py-4 text-base text-gray-900">
+                                                <td class="px-5 py-4 text-base text-gray-900">
                                                     {{ $vaccine->description }}</td>
                                                 <td class="px-6 py-3 text-center">
                                                     <div class="flex items-center justify-center space-x-2">
@@ -157,7 +168,8 @@
                                                             <svg class="w-5 h-5" fill="none" stroke="currentColor"
                                                                 viewBox="0 0 24 24">
                                                                 <path stroke-linecap="round" stroke-linejoin="round"
-                                                                    stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z">
+                                                                    stroke-width="2"
+                                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z">
                                                                 </path>
                                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                                     stroke-width="2"
@@ -191,6 +203,9 @@
                                     </tbody>
                                 </table>
                             </div>
+                        </div>
+                        <div class="mt-8 flex justify-end">
+                            {{ $vaccinesComeback->links() }}
                         </div>
 
 
@@ -251,7 +266,7 @@
                                                 <h4 class="font-bold text-xl text-gray-700">
                                                     {{ trans('lang.patient') }}</h4>
                                             </div>
-                                            <div class="space-y-2 text-sm mb-2">
+                                            <div class="space-y-3 text-sm mb-2">
                                                 <div>
                                                     <span
                                                         class="text-gray-500 font-medium">{{ trans('lang.name') }}:</span>
@@ -298,7 +313,7 @@
                                                 <h4 class="font-bold text-xl text-gray-700">
                                                     {{ trans('lang.vaccine') }}</h4>
                                             </div>
-                                            <div class="space-y-2 text-sm mb-2">
+                                            <div class="space-y-3 text-sm mb-2">
                                                 <div>
                                                     <span class="text-gray-500 font-medium">
                                                         {{ trans('lang.vaccine type') }}:</span>
@@ -547,15 +562,15 @@
                                 </form>
                             </div>
                         </div>
+                        {{-- <div class="mt-8 flex justify-end">
+                            {{ $vaccinesComeback->links() }}
+                        </div> --}}
                     </div>
 
-                   <div class="mt-8 flex justify-end">
-                        {{ $vaccinesComeback->links() }}
-                    </div>
+
                 </div>
             </div>
         </div>
-    </div>
     </div>
 
     <script>

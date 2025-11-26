@@ -44,6 +44,7 @@
         'khmer' => 'Khmer',
         'english' => 'English',
         'hi' => 'Hi',
+        'user deleted' => 'User Deleted',
 
         //assign patients
         'assign patient to service' => 'Assign Patient to Service',
@@ -114,17 +115,20 @@
         'are you sure you want to delete this patient' => 'Are you sure you want to delete this patient',
         'delete' => 'Delete',
         'update patient' => 'Update Patient',
+        'confirm delete message' => 'Confirm delete message',
+        'confirm delete warning' => 'Confirm delete warning',
 
         //Doctors
         'special list' => 'Special List',
         'created at' => 'created at',
-        'doctors' => 'Docotors',
-        'add user' => 'Add User',
+        'admin' => 'Admin',
+        'user' => 'User',
         'documents' => 'Documents',
         'settings' => 'Settings',
         'help' => 'Help',
         'hi admin!' => 'Hi Admin!',
         'welcome to samaky health center' => 'Welcome to Samaky Health Center',
+        'add admin' => 'Add Admin',
 
         'add record' => 'Add Record',
 
@@ -216,6 +220,9 @@
         'edit vaccine category' => 'Edit Vaccine Category',
         'close' => 'Close',
         'are you sure you want to delete this category' => 'Are you sure you want to delete this category',
+        'patient vaccine record' => 'patient vaccine record',
+        'prescriptions' => 'Prescriptions',
+        'record details' => 'Record Details',
 
 
         //Common Diseases
@@ -244,6 +251,7 @@
         'frequent health issues' => 'Frequent Health Issues',
         'are you sure you want to dismiss this patient' => 'Are you sure you want to dismiss this patient',
         'search common diseases by name, address...' => 'Search common diseases by name, address...',
+        'diagnosis' => 'Diagnosis',
 
 
         //Medicine Management
@@ -317,6 +325,13 @@
         'search medicines by name, code, or type...' => 'Search medicines by name, code, or type...',
         'edit medicine' => 'Edit Medicine',
         'requires prescription' => 'Requires Prescription',
+        'add stock' => 'Add Stock',
+        'quantity to add' => 'Quantity to Add',
+        'add' => 'Add',
+        'stock quantity' => 'Stock Quantity',
+        'indications' => 'Indications',
+        'expiry date' => 'Expiry Date',
+        'fill in the medicine details below to add it to your inventory' => 'Fill in the medicine details below to add it to your inventory',
 
 
         'what this medicine is used for' => 'What this medicine is used for',

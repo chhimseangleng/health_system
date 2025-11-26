@@ -216,11 +216,23 @@ class PatientController extends Controller
 
         $patient = Patient::findOrFail($id);
 
-        // Create new assignment
+        // Prevent duplicate pending assignment for same patient, service and user
+        $assignedUserId = (string) ($validated['assigned_user_id'] ?? '');
+        $exists = PatientAssign::where('patient_id', $patient->_id)
+            ->where('assigned_to', $validated['assigned_to'])
+            ->where('assigned_user_id', $assignedUserId)
+            ->where('status', 'pending')
+            ->exists();
+
+        if ($exists) {
+            return redirect()->back()->with('error', 'This patient is already assigned to the selected user for that service.');
+        }
+
+        // Create new assignment (store assigned_user_id as string for consistent querying)
         PatientAssign::create([
             'patient_id' => $patient->_id,
             'assigned_to' => $validated['assigned_to'],
-            'assigned_user_id' => $validated['assigned_user_id'], // New: track assigned user
+            'assigned_user_id' => $assignedUserId, // New: track assigned user
             'assigned_date' => now(),
             'payment_type' => $validated['payment_type'],
             'status' => 'pending', // New: set initial status
@@ -239,7 +251,7 @@ class PatientController extends Controller
         $assignment = PatientAssign::findOrFail($assignmentId);
 
         // Check if the current user is the assigned user
-        if (Auth::user()->_id !== $assignment->assigned_user_id) {
+        if ((string) Auth::user()->_id !== (string) $assignment->assigned_user_id) {
             return redirect()->back()->with('error', 'You are not authorized to mark this assignment as read.');
         }
 
@@ -256,7 +268,7 @@ class PatientController extends Controller
         $assignment = PatientAssign::findOrFail($assignmentId);
 
         // Check if the current user is the assigned user
-        if (Auth::user()->_id !== $assignment->assigned_user_id) {
+        if ((string) Auth::user()->_id !== (string) $assignment->assigned_user_id) {
             return redirect()->back()->with('error', 'You are not authorized to mark this assignment as processed.');
         }
 
@@ -273,7 +285,7 @@ class PatientController extends Controller
      */
     public function myAssignments()
     {
-        $userId = Auth::user()->_id;
+        $userId = (string) Auth::user()->_id;
 
         // Get paginated assignments for the current user with patient information
         $assignments = PatientAssign::where('assigned_user_id', $userId)
@@ -335,7 +347,7 @@ class PatientController extends Controller
      */
     public function getAssignmentStats()
     {
-        $userId = Auth::user()->_id;
+        $userId = (string) Auth::user()->_id;
 
         $stats = [
             'total' => PatientAssign::where('assigned_user_id', $userId)->count(),
@@ -359,7 +371,7 @@ class PatientController extends Controller
      */
     public function getCompletedAssignments()
     {
-        $assignments = PatientAssign::where('assigned_user_id', Auth::user()->_id)
+        $assignments = PatientAssign::where('assigned_user_id', (string) Auth::user()->_id)
             ->whereNotNull('processed_at') // Only show completed assignments
             ->with(['patient'])
             ->orderBy('processed_at', 'desc')
@@ -373,7 +385,7 @@ class PatientController extends Controller
      */
     public function debugAssignments()
     {
-        $userId = Auth::user()->_id;
+        $userId = (string) Auth::user()->_id;
 
         $allAssignments = PatientAssign::where('assigned_user_id', $userId)->get();
         $pendingAssignments = PatientAssign::where('assigned_user_id', $userId)

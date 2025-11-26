@@ -35,11 +35,6 @@
                         <span class="relative z-10">{{ trans('lang.login') }}</span>
                         <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </a>
-
-                    {{-- <a href="{{ route('register') }}"
-                        class="px-8 py-3 bg-white text-blue-600 border-2 border-blue-500 rounded-xl hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 hover:shadow-lg font-semibold">
-                        Sign Up
-                    </a> --}}
                 </div>
 
                 <!-- Feature highlights -->

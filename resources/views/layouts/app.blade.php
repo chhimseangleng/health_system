@@ -116,8 +116,21 @@
             <!-- Navigation Menu -->
             <nav class="px-4 space-y-2">
                 @php
-                    $role = Auth::user()->role ?? '';
+                    // Normalize role similar to navigation blade to ensure consistent behavior
+                    $rawRole = Auth::user()->role ?? '';
+                    if (is_array($rawRole)) {
+                        $rawRole = $rawRole[0] ?? '';
+                    } elseif (is_object($rawRole)) {
+                        $rawRole = $rawRole->name ?? ($rawRole->role ?? '');
+                    }
+                    $role = trim((string) $rawRole);
+                    $normalizedRole = strtolower($role);
+
                     $groupRoles = ['Common Diseases','Vaccine','Medicine','Pregnancy'];
+                    // Privileged roles
+                    $isPrivileged = in_array($normalizedRole, ['superadmin', 'super user', 'admin']);
+                    // Receptionist detection (permissive)
+                    $isReceptionist = $normalizedRole === 'receptionist' || $normalizedRole === 'reception' || strpos($normalizedRole, 'recept') !== false;
                 @endphp
                 <!-- Dashboard -->
                 <a href="{{ route('dashboard') }}"
@@ -131,7 +144,7 @@
                 </a>
 
                 <!-- Patients -->
-                @if ($role === 'Admin' || $role === 'Patient')
+                @if ($isPrivileged || $isReceptionist || $normalizedRole === 'patient')
                 <a href="{{ route('patients.index') }}"
                     class="flex items-center px-4 py-3 {{ request()->routeIs('patients.*') ? 'text-white bg-purple-500' : 'text-gray-700 hover:bg-gray-50' }} rounded-xl transition-colors duration-200">
                     <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -144,7 +157,7 @@
                 @endif
 
                 <!-- WorkSpace -->
-                @if ($role === 'Admin' || in_array($role, $groupRoles))
+                @if(!$isReceptionist)
                 <a href="{{ route('workspace.index') }}"
                     class="flex items-center px-4 py-3 {{ request()->routeIs('workspace.*') ? 'text-white bg-purple-500' : 'text-gray-700 hover:bg-gray-50' }} rounded-xl transition-colors duration-200">
                     <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -156,7 +169,7 @@
                 </a>
                 @endif
 
-                @if ($role === 'Admin')
+                @if ($isPrivileged)
                 <!-- Doctors -->
                 <a href="{{ route('doctors.index') }}"
                     class="flex items-center px-4 py-3 {{ request()->routeIs('doctors.*') ? 'text-white bg-purple-500' : 'text-gray-700 hover:bg-gray-50' }} rounded-xl transition-colors duration-200">
@@ -164,7 +177,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M16 7a4 4 0 11-8 0 4 4 0 018 0zm-4 7a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
-                    <span> {{ trans('lang.doctors') }}</span>
+                    <span> {{ trans('lang.user') }}</span>
                 </a>
 
                 <!-- Add User -->
@@ -175,7 +188,7 @@
                             d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z">
                         </path>
                     </svg>
-                    <span> {{ trans('lang.add user') }}</span>
+                    <span> {{ trans('lang.admin') }}</span>
                 </a>
 
                 <!-- Documents -->
@@ -241,10 +254,16 @@
 
                 <!-- User Profile -->
                 <div class="flex items-center px-4 py-3">
-                    <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-3">
-                        <span
-                            class="text-purple-600 font-medium text-sm">{{ substr(Auth::user()->name, 0, 1) }}</span>
-                    </div>
+                    @if(Auth::user() && Auth::user()->photo)
+                        <img src="{{ asset('storage/' . Auth::user()->photo) }}" alt="{{ Auth::user()->name }}" class="w-8 h-8 rounded-full object-cover mr-3 border-2 border-purple-200" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="w-8 h-8 bg-purple-100 rounded-full items-center justify-center mr-3 border-2 border-purple-200 hidden">
+                            <span class="text-purple-600 font-medium text-sm">{{ substr(Auth::user()->name, 0, 1) }}</span>
+                        </div>
+                    @else
+                        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-3 border-2 border-purple-200">
+                            <span class="text-purple-600 font-medium text-sm">{{ substr(Auth::user()->name, 0, 1) }}</span>
+                        </div>
+                    @endif
                     <div>
                         <div class="text-sm font-medium text-gray-800">{{ Auth::user()->name }}</div>
                         <div class="text-xs text-gray-500">{{ Auth::user()->email }}</div>
@@ -269,9 +288,9 @@
                                 @elseif(request()->routeIs('patients.*'))
                                 {{ trans('lang.patients') }}
                                 @elseif(request()->routeIs('doctors.*'))
-                                {{ trans('lang.doctors') }}
+                                {{ trans('lang.user') }}
                                 @elseif(request()->routeIs('register'))
-                                {{ trans('lang.add user') }}
+                                {{ trans('lang.admin') }}
                                 @else
                                     {{ config('app.name', 'Samaky Health') }}
                                 @endif
@@ -337,6 +356,16 @@
                             <div x-data="{ open: false }" class="relative">
                                 <button @click="open = !open"
                                     class="flex items-center px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                                    @if(Auth::user()->hasPhoto())
+                                        <img src="{{ Auth::user()->photo_url }}" alt="{{ Auth::user()->name }}" class="w-8 h-8 rounded-full object-cover mr-2 border-2 border-gray-200" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                        <div class="w-8 h-8 bg-purple-100 rounded-full items-center justify-center mr-2 border-2 border-gray-200 hidden">
+                                            <span class="text-purple-600 font-medium text-xs">{{ substr(Auth::user()->name, 0, 1) }}</span>
+                                        </div>
+                                    @else
+                                        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-2 border-2 border-gray-200">
+                                            <span class="text-purple-600 font-medium text-xs">{{ substr(Auth::user()->name, 0, 1) }}</span>
+                                        </div>
+                                    @endif
                                     <div class="text-sm font-medium">{{ Auth::user()->name }}</div>
                                     <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">

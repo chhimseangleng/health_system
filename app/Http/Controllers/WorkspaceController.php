@@ -14,6 +14,9 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use App\Exports\CommonDiseaseExport;
+use App\Exports\GynecologyExport;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class WorkspaceController extends Controller
 {
@@ -481,6 +484,44 @@ class WorkspaceController extends Controller
         return view('workspace.common-diseases.print', compact('diseases'));
     }
 
+    /**
+     * Generate and return a PDF download for a Vaccine record.
+     */
+    public function downloadVaccine($id)
+    {
+        $vaccine = Vaccine::findOrFail($id);
+
+        // Prepare logo if available
+        $logoBase64 = null;
+        $logoMime = null;
+        $logoPath = public_path('IMG/samaky.png');
+        if (is_file($logoPath)) {
+            $logoBase64 = base64_encode(file_get_contents($logoPath));
+            $logoMime = 'image/png';
+        }
+
+        $html = view('workspace.vaccine.export-pdf', [
+            'vaccine' => $vaccine,
+            'logoBase64' => $logoBase64,
+            'logoMime' => $logoMime,
+        ])->render();
+
+        $dompdf = new \Dompdf\Dompdf();
+        $dompdf->set_option('isRemoteEnabled', true);
+        $dompdf->set_option('defaultFont', 'DejaVu Sans');
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        $bytes = $dompdf->output();
+
+        $downloadName = 'vaccine_' . Str::slug($vaccine->name ?? 'record', '_') . '_' . (string) ($vaccine->_id ?? 'id') . '.pdf';
+
+        return response($bytes, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $downloadName . '"',
+        ]);
+    }
+
 
     public function exportCommonDiseasePdf($id)
     {
@@ -501,6 +542,101 @@ class WorkspaceController extends Controller
             'record' => $record,
             'medicineMap' => $medicineMap,
         ]);
+        return response($bytes, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $download . '"',
+        ]);
+    }
+
+    public function exportGynecologyPdf($id)
+    {
+        $record = Gynecology::with('patient')->findOrFail($id);
+        $patient = $record->patient ?? Patient::find($record->patient_id);
+        $latestAssignment = $patient ? $patient->assignments()->latest()->first() : null;
+        $paymentType = $latestAssignment->payment_type ?? 'N/A';
+
+        $patientName = trim(($patient->first_name ?? '') . ' ' . ($patient->last_name ?? ''));
+        if ($patientName === '') {
+            $patientName = $record->name ?? 'N/A';
+        }
+
+        $age = 'N/A';
+        if (!empty($patient?->date_of_birth)) {
+            try {
+                $age = Carbon::parse($patient->date_of_birth)->age;
+            } catch (\Exception $e) {
+                $age = $record->age ?? 'N/A';
+            }
+        } elseif (!empty($record->age)) {
+            $age = $record->age;
+        }
+
+        $gender = $patient->gender ?? ($record->gender ?? 'N/A');
+        $phone = $patient->phone ?? 'N/A';
+        $address = $patient->address ?? ($record->village ?? 'N/A');
+        $staffName = $record->staff_name ?? 'N/A';
+
+        $treatmentDate = 'N/A';
+        if (!empty($record->treatment_date)) {
+            try {
+                $treatmentDate = Carbon::parse($record->treatment_date)->format('Y-m-d');
+            } catch (\Exception $e) {
+                $treatmentDate = $record->treatment_date;
+            }
+        } elseif ($record->updated_at) {
+            $treatmentDate = $record->updated_at->format('Y-m-d');
+        }
+
+        $updatedAt = $record->updated_at ? $record->updated_at->format('Y-m-d H:i') : 'N/A';
+        $symptoms = $record->symptoms ?? 'N/A';
+        $medicationText = $record->medication ?? 'N/A';
+        $notes = $record->notes ?? '';
+
+        $medicineMap = \App\Models\Medicine::get(['_id','name'])
+            ->mapWithKeys(function ($m) {
+                return [(string) $m->_id => $m->name];
+            })
+            ->all();
+
+        $meta = [
+            'patientName' => $patientName,
+            'age' => $age,
+            'gender' => $gender,
+            'phone' => $phone,
+            'paymentType' => $paymentType,
+            'staffName' => $staffName,
+            'treatmentDate' => $treatmentDate,
+            'address' => $address,
+            'updatedAt' => $updatedAt,
+            'symptoms' => $symptoms,
+            'medicationText' => $medicationText,
+            'notes' => $notes,
+        ];
+
+        $fontBase64 = null;
+        $fontPath = public_path('fonts/NotoSansKhmer-Regular.ttf');
+        if (!is_file($fontPath)) {
+            $fontPath = resource_path('fonts/NotoSansKhmer-Regular.ttf');
+        }
+        if (is_file($fontPath)) {
+            $fontBase64 = base64_encode(file_get_contents($fontPath));
+        }
+
+        $viewData = [
+            'record' => $record,
+            'patient' => $patient,
+            'medicineMap' => $medicineMap,
+            'meta' => $meta,
+            'prescriptions' => $record->prescriptions ?? [],
+            'fontBase64' => $fontBase64,
+        ];
+
+        [$path, $download] = GynecologyExport::savePdf($record, 'workspace.gynecology.export-pdf', $viewData);
+        $full = storage_path('app/' . $path);
+        if (file_exists($full)) {
+            return response()->download($full, $download)->deleteFileAfterSend(true);
+        }
+        $bytes = GynecologyExport::generatePdf($record, 'workspace.gynecology.export-pdf', $viewData);
         return response($bytes, 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'attachment; filename="' . $download . '"',
@@ -620,7 +756,14 @@ class WorkspaceController extends Controller
             'prescriptions.*.medicine_id' => 'required_with:prescriptions|string',
             'prescriptions.*.total_medicine' => 'nullable|integer|min:0',
             'prescriptions.*.total_day' => 'nullable|integer|min:0',
-            'prescriptions.*.times' => 'nullable|string|max:255',
+            'prescriptions.*.times' => [
+                'nullable',
+                function ($attribute, $value, $fail) {
+                    if (!is_null($value) && !is_string($value) && !is_array($value)) {
+                        $fail("The {$attribute} must be a string or an array.");
+                    }
+                },
+            ],
         ]);
 
         // Resolve disease name
@@ -640,12 +783,22 @@ class WorkspaceController extends Controller
                         'medicine_name' => $medicineName,
                         'total_medicine' => $prescription['total_medicine'] ?? null,
                         'total_day' => $prescription['total_day'] ?? null,
-                        'times' => $prescription['times'] ?? '',
+                        'times' => $prescription['times'] ?? [],
                     ];
                     $medicationSummary .= $medicineName;
                     if (!empty($prescription['total_day'])) { $medicationSummary .= " (Total Day: {$prescription['total_day']})"; }
                     if (!empty($prescription['total_medicine'])) { $medicationSummary .= " (Total Medicine: {$prescription['total_medicine']})"; }
-                    if (!empty($prescription['times'])) { $medicationSummary .= " ({$prescription['times']})"; }
+                    if (!empty($prescription['times']) && is_array($prescription['times'])) {
+                        $parts = [];
+                        foreach (['M','A','E'] as $k) {
+                            if (!empty($prescription['times'][$k])) {
+                                $parts[] = "{$k}: {$prescription['times'][$k]}";
+                            }
+                        }
+                        if (!empty($parts)) {
+                            $medicationSummary .= " (" . implode(', ', $parts) . ")";
+                        }
+                    }
                     $medicationSummary .= '; ';
                 }
             }
@@ -661,7 +814,7 @@ class WorkspaceController extends Controller
             'prescriptions' => $prescriptions,
             'notes' => $validated['notes'] ?? null,
             // keep treatment_date as original; updated_at will refresh automatically
-            'staff_name' => auth()->user()->name ?? ($gynecologyRecord->staff_name ?? 'Unknown'),
+            'staff_name' => Auth::user()->name ?? ($gynecologyRecord->staff_name ?? 'Unknown'),
         ]);
 
         return redirect()->route('workspace.gynecology.index')->with('success', 'Gynecology record updated successfully!');
@@ -706,7 +859,14 @@ class WorkspaceController extends Controller
             'prescriptions.*.medicine_id' => 'required_with:prescriptions|string',
             'prescriptions.*.total_medicine' => 'nullable|integer|min:0',
             'prescriptions.*.total_day' => 'nullable|integer|min:0',
-            'prescriptions.*.times' => 'nullable|string|max:255',
+            'prescriptions.*.times' => [
+                'nullable',
+                function ($attribute, $value, $fail) {
+                    if (!is_null($value) && !is_string($value) && !is_array($value)) {
+                        $fail("The {$attribute} must be a string or an array.");
+                    }
+                },
+            ],
         ]);
 
         // Get the selected disease
@@ -728,7 +888,7 @@ class WorkspaceController extends Controller
                         'medicine_name' => $medicineName,
                         'total_medicine' => $prescription['total_medicine'] ?? null,
                         'total_day' => $prescription['total_day'] ?? null,
-                        'times' => $prescription['times'] ?? '',
+                        'times' => $prescription['times'] ?? [],
                     ];
 
                     // Build medication summary
@@ -739,8 +899,17 @@ class WorkspaceController extends Controller
                     if (!empty($prescription['total_medicine'])) {
                         $medicationSummary .= " (Total Medicine: {$prescription['total_medicine']})";
                     }
-                    if (!empty($prescription['times'])) {
-                        $medicationSummary .= " ({$prescription['times']})";
+                    // times may be an array with keys M, A, E
+                    if (!empty($prescription['times']) && is_array($prescription['times'])) {
+                        $parts = [];
+                        foreach (['M','A','E'] as $k) {
+                            if (!empty($prescription['times'][$k])) {
+                                $parts[] = "{$k}: {$prescription['times'][$k]}";
+                            }
+                        }
+                        if (!empty($parts)) {
+                            $medicationSummary .= " (" . implode(', ', $parts) . ")";
+                        }
                     }
                     $medicationSummary .= "; ";
                 }
@@ -798,11 +967,12 @@ class WorkspaceController extends Controller
                 }
 
                 // Decrement stock atomically per medicine
-                foreach ($requiredByMedicineId as $id => $req) {
-                    if ($req > 0) {
-                        \App\Models\Medicine::where('_id', $id)->decrement('stock_quantity', (int) $req);
-                    }
-                }
+                // Automatic stock decrement disabled — keep logic here commented out in case you want to re-enable later.
+                // foreach ($requiredByMedicineId as $id => $req) {
+                //     if ($req > 0) {
+                //         \App\Models\Medicine::where('_id', $id)->decrement('stock_quantity', (int) $req);
+                //     }
+                // }
             }
         }
 
@@ -817,7 +987,7 @@ class WorkspaceController extends Controller
             'prescriptions' => $prescriptions,
             'notes' => $validated['notes'],
             'treatment_date' => now()->toDateString(),
-            'staff_name' => auth()->user()->name ?? 'Unknown',
+            'staff_name' => Auth::user()->name ?? 'Unknown',
         ]);
 
         // dd("dol nis");
@@ -884,7 +1054,6 @@ class WorkspaceController extends Controller
 
     public function storeCommonDiseasePatientInfo(Request $request, $patientId)
     {
-        // dd("dol");
         $patient = Patient::findOrFail($patientId);
 
         $validated = $request->validate([
@@ -894,7 +1063,11 @@ class WorkspaceController extends Controller
             'prescriptions.*.medicine_id' => 'required_with:prescriptions|string',
             'prescriptions.*.total_medicine' => 'nullable|integer|min:0',
             'prescriptions.*.total_day' => 'nullable|integer|min:0',
-            'prescriptions.*.times' => 'nullable|string|max:255',
+            // times should be an optional array with numeric qty for M/A/E
+            'prescriptions.*.times' => 'nullable|array',
+            'prescriptions.*.times.M.qty' => 'nullable|integer|min:0',
+            'prescriptions.*.times.A.qty' => 'nullable|integer|min:0',
+            'prescriptions.*.times.E.qty' => 'nullable|integer|min:0',
             'notes' => 'nullable|string|max:1000',
             'follow_up_date' => 'nullable|date|after:today',
         ]);
@@ -909,12 +1082,31 @@ class WorkspaceController extends Controller
                     $medicine = Medicine::find($prescription['medicine_id']);
                     $medicineName = $medicine ? $medicine->name : 'Unknown Medicine';
 
+                    // Normalize times into structured shape: ['M' => ['qty'=>n], 'A' => [...], 'E' => [...]]
+                    $times = [];
+                    if (!empty($prescription['times']) && is_array($prescription['times'])) {
+                        foreach (['M','A','E'] as $slot) {
+                            if (isset($prescription['times'][$slot])) {
+                                $val = $prescription['times'][$slot];
+                                // support either nested ['qty' => n] or direct numeric value
+                                if (is_array($val)) {
+                                    $qty = $val['qty'] ?? null;
+                                } else {
+                                    $qty = $val;
+                                }
+                                if ($qty !== null && $qty !== '') {
+                                    $times[$slot] = ['qty' => (int) $qty];
+                                }
+                            }
+                        }
+                    }
+
                     $prescriptions[] = [
                         'medicine_id' => $prescription['medicine_id'],
                         'medicine_name' => $medicineName,
                         'total_medicine' => $prescription['total_medicine'] ?? null,
                         'total_day' => $prescription['total_day'] ?? null,
-                        'times' => $prescription['times'] ?? '',
+                        'times' => $times,
                     ];
 
                     // Build medication summary
@@ -925,8 +1117,16 @@ class WorkspaceController extends Controller
                     if (!empty($prescription['total_medicine'])) {
                         $medicationSummary .= " (Total Medicine: {$prescription['total_medicine']})";
                     }
-                    if (!empty($prescription['times'])) {
-                        $medicationSummary .= " ({$prescription['times']})";
+                    // append times summary if present
+                    if (!empty($times)) {
+                        $parts = [];
+                        foreach (['M','A','E'] as $slot) {
+                            $q = $times[$slot]['qty'] ?? null;
+                            if ($q !== null && $q !== '') { $parts[] = "{$slot}:{$q}"; }
+                        }
+                        if (!empty($parts)) {
+                            $medicationSummary .= " (" . implode(' ', $parts) . ")";
+                        }
                     }
                     $medicationSummary .= "; ";
                 }
@@ -986,11 +1186,12 @@ class WorkspaceController extends Controller
                 }
 
                 // Decrement stock atomically per medicine
-                foreach ($requiredByMedicineId as $id => $req) {
-                    if ($req > 0) {
-                        \App\Models\Medicine::where('_id', $id)->decrement('stock_quantity', (int) $req);
-                    }
-                }
+                // Automatic stock decrement disabled — keep logic here commented out in case you want to re-enable later.
+                // foreach ($requiredByMedicineId as $id => $req) {
+                //     if ($req > 0) {
+                //         \App\Models\Medicine::where('_id', $id)->decrement('stock_quantity', (int) $req);
+                //     }
+                // }
             }
         }
 

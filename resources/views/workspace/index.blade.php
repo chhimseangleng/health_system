@@ -26,7 +26,10 @@
             </div>
         </div>
 
-        @php $role = auth()->user()->role ?? null; @endphp
+        @php
+            $role = auth()->user()->role ?? null;
+            $isSuperadmin = in_array($role, ['Superadmin', 'Super User']);
+        @endphp
 
         <!-- Module Grid -->
         <div class="bg-white rounded-2xl shadow-sm p-8">
@@ -37,7 +40,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Vaccine Module -->
-                @php $canAccess = ($role === 'Vaccine' || $role === 'Admin'); @endphp
+                @php $canAccess = ($isSuperadmin || $role === 'Vaccine' || $role === 'Admin'); @endphp
                 <a href="{{ $canAccess ? route('workspace.vaccine.index') : '#' }}"
                    class="{{ !$canAccess ? 'pointer-events-none opacity-50' : '' }} relative">
                     <div class="flex flex-col items-center justify-center h-64 rounded-3xl shadow-xl border-4 border-cyan-400 bg-gradient-to-tr from-cyan-400 to-blue-400 transition-transform hover:-translate-y-2">
@@ -55,7 +58,7 @@
                 </a>
 
                 {{-- Common Diseases --}}
-                @php $canAccess = ($role === 'Common diseases' || $role === 'Admin'); @endphp
+                @php $canAccess = ($isSuperadmin || $role === 'Common diseases' || $role === 'Admin'); @endphp
                 <a href="{{ $canAccess ? route('workspace.common-diseases.index') : '#' }}"
                    class="{{ !$canAccess ? 'pointer-events-none opacity-50' : '' }} relative">
                     <div class="flex flex-col items-center justify-center h-64 rounded-3xl shadow-xl border-4 border-yellow-400 bg-gradient-to-tr from-yellow-300 to-orange-300 transition-transform hover:-translate-y-2">
@@ -73,7 +76,8 @@
                 </a>
 
                 {{-- Gynecology --}}
-                @php $canAccess = $role === 'Gynecology'; @endphp
+
+                @php $canAccess = ($isSuperadmin || $role === 'Gynecology' || $role === 'Admin'); @endphp
                 <a href="{{ $canAccess ? route('workspace.gynecology.index') : '#' }}"
                    class="{{ !$canAccess ? 'pointer-events-none opacity-50' : '' }} relative">
                     <div class="flex flex-col items-center justify-center h-64 rounded-3xl shadow-xl border-4 border-pink-400 bg-gradient-to-tr from-pink-300 to-fuchsia-300 transition-transform hover:-translate-y-2">
@@ -91,7 +95,7 @@
                 </a>
 
                 {{-- Medicine --}}
-                @php $canAccess = ($role === 'Medicine' || $role === 'Admin'); @endphp
+                @php $canAccess = ($isSuperadmin || $role === 'Medicine' || $role === 'Admin'); @endphp
                 <a href="{{ $canAccess ? route('workspace.medicine.index') : '#' }}"
                    class="{{ !$canAccess ? 'pointer-events-none opacity-50' : '' }} relative">
                     <div class="flex flex-col items-center justify-center h-64 rounded-3xl shadow-xl border-4 border-green-400 bg-gradient-to-tr from-green-300 to-emerald-300 transition-transform hover:-translate-y-2">

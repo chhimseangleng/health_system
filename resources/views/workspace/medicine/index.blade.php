@@ -24,10 +24,9 @@
                             </div>
                         </h3>
 
-                        <div class="flex items-center space-x-3">
+                        <div class="flex items-center space-x-2">
                             {{-- Stock status filter --}}
                             <div>
-
                                 <select name="stock_status" id="stock_status"
                                     class="w-full border border-gray-200 rounded-2xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 bg-white shadow-sm transition-all duration-200 hover:shadow-md">
                                     <option value="">{{ trans('lang.all status') }}</option>
@@ -66,41 +65,39 @@
                                 </div>
                             </form>
 
-                            <div>
-                                <a href="{{ route('workspace.medicine.create') }}"
-                                    class="px-6 py-4 bg-white text-blue-600 rounded-2xl text-sm font-medium hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200 shadow-lg hover:shadow-xl">
-                                    <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 4v16m8-8H4" />
-                                    </svg>
-                                    {{ trans('lang.add medicine') }}
-                                </a>
-                            </div>
+                            <button
+                                class="flex items-center px-6 py-4 bg-blue-600 text-white rounded-2xl text-sm font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200 shadow-lg hover:shadow-xl"
+                                data-modal-target="add-modal" data-modal-toggle="add-modal">
+                                <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4v16m8-8H4" />
+                                </svg>
+                                {{ trans('lang.add medicine') }}
+                            </button>
 
+                            @include('workspace.medicine.add-modal')
 
-
-                            <button type="button" onclick="openBulkDispenseModal()"
-                                class="flex items-center gap-3 px-6 py-4 bg-blue-600 text-white rounded-2xl text-sm font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200 shadow-lg hover:shadow-xl">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            {{-- <button type="button" onclick="openBulkDispenseModal()"
+                                class="gap-3 px-6 py-4 bg-white text-blue-600 rounded-2xl text-sm font-medium hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200 shadow-lg hover:shadow-xl">
+                                <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M9 17v-2a4 4 0 014-4h4" />
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M7 7h.01" />
                                 </svg>
                                 {{ trans('lang.cut stock') }}
-                            </button>
+                            </button> --}}
                         </div>
                     </div>
                 </div>
-
-
+                
                 {{-- Medicines Table --}}
-                <div class="p-8">
+                <div class="p-0 md:p-1">
                     <div class="overflow-x-auto">
                         <table id="gynecologyTable"
                             class="min-w-full  bg-white text-base divide-y divide-blue-300 shadow-sm text-center">
-                            <thead class="font-semibold text-4sm tracking-wider uppercase bg-gray-100">
+                            <thead class="font-semibold text-4sm tracking-wider uppercase bg-gray-100 ">
                                 <tr>
                                     <th scope="col" class="px-6 py-3 text-gray-700"> {{ trans('lang.nº') }}</th>
                                     <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.medicine') }}
@@ -121,8 +118,6 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-100">
                                 @forelse ($medicines as $i => $medicine)
-                                    {{-- @dd($medicine) --}}
-                                    {{-- @dd($medicine) --}}
                                     <tr class="hover:bg-blue-50 transition duration-150">
                                         <td class="px-6 py-5">
                                             <span class="font-semibold text-blue-800">
@@ -195,23 +190,20 @@
                                             <div class="flex justify-center items-center gap-2">
                                                 <button type="button"
                                                     onclick='showMedicineDetails(@json($medicine))'
-                                                    class="p-2 rounded-full bg-green-100 text-green-700 hover:bg-green-200 hover:text-green-900 transition"
+                                                    class="inline-flex items-center justify-center w-8 h-8 rounded-md text-green-600 hover:text-green-900 hover:bg-green-50 transition"
                                                     title="View Details">
                                                     <svg class="w-5 h-5" fill="none" stroke="currentColor"
                                                         viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
                                                             stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                                         <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5
-                                                                c4.478 0 8.268 2.943 9.542 7
-                                                                -1.274 4.057-5.064 7-9.542 7
-                                                                -4.477 0-8.268-2.943-9.542-7z" />
+                                                            stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5 c4.478 0 8.268 2.943 9.542 7 -1.274 4.057-5.064 7-9.542 7 -4.477 0-8.268-2.943-9.542-7z" />
                                                     </svg>
                                                 </button>
 
                                                 <button type="button"
                                                     onclick='showAddStockModal(@json($medicine))'
-                                                    class="p-2 rounded-full bg-emerald-100 text-emerald-700 hover:bg-emerald-200 hover:text-emerald-900 transition"
+                                                    class="inline-flex items-center justify-center w-8 h-8 rounded-md text-blue-600 hover:text-blue-900 hover:bg-blue-50 transition"
                                                     title="Add Stock">
                                                     <svg class="w-5 h-5" fill="none" stroke="currentColor"
                                                         viewBox="0 0 24 24">
@@ -222,7 +214,7 @@
 
                                                 <button type="button"
                                                     onclick='showEditMedicineModal(@json($medicine))'
-                                                    class="p-2 rounded-full  bg-blue-100 text-blue-700 hover:bg-blue-200 hover:text-blue-900 transition"
+                                                    class="inline-flex items-center justify-center w-8 h-8 rounded-md text-blue-600 hover:text-blue-900 hover:bg-blue-50 transition"
                                                     title="Edit">
                                                     <svg class="w-5 h-5" fill="none" stroke="currentColor"
                                                         viewBox="0 0 24 24">
@@ -234,7 +226,7 @@
 
                                                 <button
                                                     onclick="deleteMedicine('{{ $medicine->_id }}', '{{ $medicine->name }}')"
-                                                    class="p-2 rounded-full bg-red-100 text-red-700 hover:bg-red-200 hover:text-red-900 transition"
+                                                    class="inline-flex items-center justify-center w-8 h-8 rounded-md text-red-600 hover:text-red-900 hover:bg-red-50 transition"
                                                     title="Delete">
                                                     <svg class="w-5 h-5" fill="none" stroke="currentColor"
                                                         viewBox="0 0 24 24">
@@ -267,305 +259,413 @@
                             </tbody>
                         </table>
                     </div>
+
+                    @if ($medicines->hasPages())
+                        <div class="mt-6 px-8 pb-8">
+                            {{ $medicines->links() }}
+                        </div>
+                    @endif
                 </div>
-                @if ($medicines->hasPages())
-                    <div class="mt-6 px-8 pb-8">
-                        {{ $medicines->links() }}
-                    </div>
-                @endif
             </div>
         </div>
-    </div>
-    {{-- Medicine Detail Modal --}}
-    <div id="medicineDetailModal"
-        class="fixed inset-0 bg-gray-900 bg-opacity-70 hidden flex items-center justify-center z-50 backdrop-blur-sm">
-        <div
-            class="bg-white rounded-3xl shadow-2xl w-full max-w-4xl p-8 relative border border-gray-200 overflow-y-auto max-h-[90vh]">
 
-            <!-- Close Button -->
-            <button onclick="closeMedicineModal()"
-                class="absolute top-5 right-5 text-gray-500 hover:text-gray-800 transition">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
+        {{-- Medicine Detail Modal --}}
+        <div id="medicineDetailModal"
+            class="fixed inset-0 bg-gray-900 bg-opacity-70 hidden flex items-center justify-center z-50 backdrop-blur-sm">
+            <div
+                class="bg-white rounded-3xl shadow-2xl w-full max-w-4xl p-8 relative border border-gray-200 overflow-y-auto max-h-[90vh]">
 
-            <!-- Title -->
-            <div class="mb-6 flex items-center gap-3">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-green-700" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M9 12h6m2 8H7a2 2 0 01-2-2V6a2 2 0 012-2h8l6 6v8a2 2 0 01-2 2z" />
-                </svg>
-                <h2 class="text-3xl font-bold text-green-700">{{ trans('lang.medicine details') }}</h2>
-            </div>
-
-            <!-- Sections -->
-            <div id="medicineDetailContent" class="space-y-6 text-gray-700 text-lg">
-                <!-- Dynamic content goes here -->
-            </div>
-
-            <!-- Optional Footer -->
-            <div class="mt-6 text-right">
+                <!-- Close Button -->
                 <button onclick="closeMedicineModal()"
-                    class="px-6 py-2 bg-green-700 text-white rounded-xl font-semibold hover:bg-green-800 transition">
-                    {{ trans('lang.close') }}
+                    class="absolute top-5 right-5 text-gray-500 hover:text-gray-800 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
                 </button>
-            </div>
-        </div>
-    </div>
 
-    <script>
-        function showMedicineDetails(medicine) {
-            const modal = document.getElementById('medicineDetailModal');
-            const content = document.getElementById('medicineDetailContent');
-
-            const sections = [{
-                    title: "Basic Info",
-                    fields: [
-                        ['Name', medicine.name],
-                        ['Generic Name', medicine.generic_name ?? '-'],
-                        ['Category', medicine.category],
-                        ['Manufacturer', medicine.manufacturer ?? '-'],
-                        ['Strength', `${medicine.strength ?? '-'} ${medicine.unit ?? ''} ${medicine.form ?? ''}`]
-                    ]
-                },
-                {
-                    title: "Stock & Pricing",
-                    fields: [
-                        ['Stock Quantity', medicine.stock_quantity],
-                        ['Minimum Stock', medicine.minimum_stock ?? '-'],
-                        ['Price', medicine.formatted_price ?? medicine.price],
-                        ['Batch Number', medicine.batch_number ?? '-'],
-                        ['Expiry Date', medicine.expiry_date ? new Date(medicine.expiry_date).toLocaleDateString() :
-                            '-'
-                        ]
-                    ]
-                },
-                {
-                    title: "Usage & Safety",
-                    fields: [
-                        ['Description', medicine.description ?? '-'],
-                        ['Indications', medicine.indications ?? '-'],
-                        ['Dosage Instructions', medicine.dosage_instructions ?? '-'],
-                        ['Storage Conditions', medicine.storage_conditions ?? '-'],
-                        ['Contraindications', medicine.contraindications ?? '-'],
-                        ['Side Effects', medicine.side_effects ?? '-'],
-                        ['Requires Prescription', medicine.requires_prescription ?
-                            '<span class="text-green-600 font-semibold">{{ trans('lang.yes') }}</span>' :
-                            '<span class="text-gray-500">{{ trans('lang.no') }}</span>'
-                        ],
-                        ['Active', medicine.is_active ?
-                            '<span class="text-green-600 font-semibold">{{ trans('lang.yes') }}</span>' :
-                            '<span class="text-red-500 font-semibold">{{ trans('lang.no') }}</span>'
-                        ]
-                    ]
-                }
-            ];
-
-            content.innerHTML = sections.map(section => `
-        <div class="p-4 bg-gray-50 rounded-xl border border-gray-200">
-            <h3 class="text-xl font-semibold text-green-700 mb-3">${section.title}</h3>
-            <div class="space-y-2">
-                ${section.fields.map(([label, value]) => `
-                                                                <div class="flex justify-between">
-                                                                    <span class="font-medium text-gray-800">${label}</span>
-                                                                    <span class="text-gray-700">${value}</span>
-                                                                </div>
-                                                            `).join('')}
-            </div>
-        </div>
-        `).join('');
-
-            modal.classList.remove('hidden');
-        }
-
-        function closeMedicineModal() {
-            document.getElementById('medicineDetailModal').classList.add('hidden');
-        }
-    </script>
-
-    {{-- edit modal --}}
-    <!-- Edit Medicine Modal -->
-    <div id="editMedicineModal"
-        class="fixed inset-0 bg-gray-900/70 hidden flex items-center justify-center z-50 backdrop-blur-sm">
-        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-4xl p-8 relative overflow-y-auto max-h-[90vh]">
-
-            <!-- Close Button -->
-            <button type="button" onclick="closeEditMedicineModal()"
-                class="absolute top-5 right-5 text-gray-500 hover:text-gray-700 transition">✕</button>
-
-            <h3 class="text-2xl font-bold text-blue-800 mb-6">{{ trans('lang.edit medicine') }}</h3>
-
-            <form id="editMedicineForm" method="POST" action="{{ route('workspace.medicine.update', '__id__') }}">
-                @csrf
-                @method('PUT')
-                <input type="hidden" id="edit_id" name="id">
-
-                <!-- Basic Fields -->
-                <div class="grid grid-cols-2 gap-5">
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-1">{{ trans('lang.name') }}<span
-                                class="text-red-500">*</span></label>
-                        <input type="text" id="edit_name" name="name"
-                            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-1">{{ trans('lang.generic name') }}<span
-                                class="text-red-500">*</span></label>
-                        <input type="text" id="edit_generic_name" name="generic_name"
-                            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-1">{{ trans('lang.category') }}<span
-                                class="text-red-500">*</span></label>
-                        <input type="text" id="edit_category" name="category"
-                            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-1">{{ trans('lang.manufacturer') }}<span
-                                class="text-red-500">*</span></label>
-                        <input type="text" id="edit_manufacturer" name="manufacturer"
-                            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-1">{{ trans('lang.strength') }}<span
-                                class="text-red-500">*</span></label>
-                        <input type="text" id="edit_strength" name="strength"
-                            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-1">{{ trans('lang.unit') }}<span
-                                class="text-red-500">*</span></label>
-                        <input type="text" id="edit_unit" name="unit"
-                            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-1">{{ trans('lang.form') }}<span
-                                class="text-red-500">*</span></label>
-                        <input type="text" id="edit_form" name="form"
-                            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-1">{{ trans('lang.stock quantity') }}<span
-                                class="text-red-500">*</span></label>
-                        <input type="number" id="edit_stock_quantity" name="stock_quantity"
-                            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-1">{{ trans('lang.minimum stock') }}<span
-                                class="text-red-500">*</span></label>
-                        <input type="number" id="edit_minimum_stock" name="minimum_stock"
-                            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-1">{{ trans('lang.price') }}<span
-                                class="text-red-500">*</span></label>
-                        <input type="number" id="edit_price" name="price" step="0.01"
-                            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-1">{{ trans('lang.batch number') }}<span
-                                class="text-red-500">*</span></label>
-                        <input type="text" id="edit_batch_number" name="batch_number"
-                            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-1">{{ trans('lang.expiry date') }}<span
-                                class="text-red-500">*</span></label>
-                        <input type="date" id="edit_expiry_date" name="expiry_date"
-                            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
+                <!-- Title -->
+                <div class="mb-6 flex items-center gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-green-700" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 12h6m2 8H7a2 2 0 01-2-2V6a2 2 0 012-2h8l6 6v8a2 2 0 01-2 2z" />
+                    </svg>
+                    <h2 class="text-3xl font-bold text-green-700">{{ trans('lang.medicine details') }}</h2>
                 </div>
 
-                <!-- Textareas -->
-                <div class="mt-6 grid grid-cols-2 gap-5">
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-1">{{ trans('lang.description') }}<span
-                                class="text-red-500">*</span></label>
-                        <textarea id="edit_description" name="description"
-                            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-1">{{ trans('lang.indications') }}<span
-                                class="text-red-500">*</span></label>
-                        <textarea id="edit_indications" name="indications"
-                            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
-                    </div>
-
-                    <div>
-                        <label
-                            class="block text-gray-700 font-semibold mb-1">{{ trans('lang.dosage instructions') }}<span
-                                class="text-red-500">*</span></label>
-                        <textarea id="edit_dosage_instructions" name="dosage_instructions"
-                            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
-                    </div>
-
-                    <div>
-                        <label
-                            class="block text-gray-700 font-semibold mb-1">{{ trans('lang.storage conditions') }}<span
-                                class="text-red-500">*</span></label>
-                        <textarea id="edit_storage_conditions" name="storage_conditions"
-                            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
-                    </div>
-
-                    <div>
-                        <label
-                            class="block text-gray-700 font-semibold mb-1">{{ trans('lang.contraindications') }}<span
-                                class="text-red-500">*</span></label>
-                        <textarea id="edit_contraindications" name="contraindications"
-                            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-1">{{ trans('lang.side effects') }}<span
-                                class="text-red-500">*</span></label>
-                        <textarea id="edit_side_effects" name="side_effects"
-                            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
-                    </div>
+                <!-- Sections -->
+                <div id="medicineDetailContent" class="space-y-6 text-gray-700 text-lg">
+                    <!-- Dynamic content goes here -->
                 </div>
 
-                <!-- Checkboxes -->
-                <div class="mt-5 flex gap-4 items-center">
-                    <label class="flex items-center space-x-2">
-                        <input type="checkbox" id="edit_requires_prescription" name="requires_prescription"
-                            class="w-4 h-4">
-                        <span>{{ trans('lang.requires prescription') }}</span>
-                    </label>
-
-                    <label class="flex items-center space-x-2">
-                        <input type="checkbox" id="edit_is_active" name="is_active" class="w-4 h-4">
-                        <span>{{ trans('lang.active') }}</span>
-                    </label>
-                </div>
-
-                <!-- Buttons -->
-                <div class="mt-8 flex justify-end gap-3">
-                    <button type="button" onclick="closeEditMedicineModal()"
-                        class="px-5 py-2 bg-gray-200 rounded-xl hover:bg-gray-300 transition font-semibold">
-                        {{ trans('lang.cancel') }}
-                    </button>
-                    <button type="submit"
-                        class="px-5 py-2 bg-blue-600 text-white rounded-xl  font-semibold transition">
-                        {{ trans('lang.update medicine') }}
+                <!-- Optional Footer -->
+                <div class="mt-6 text-right">
+                    <button onclick="closeMedicineModal()"
+                        class="px-6 py-2 bg-green-700 text-white rounded-xl font-semibold hover:bg-green-800 transition">
+                        {{ trans('lang.close') }}
                     </button>
                 </div>
-            </form>
+            </div>
         </div>
-    </div>
+
+        <!-- Edit Medicine Modal -->
+        <div id="editMedicineModal"
+            class="fixed inset-0 bg-gray-900/70 hidden flex items-center justify-center z-50 backdrop-blur-sm">
+            <div class="bg-white rounded-3xl shadow-2xl w-full max-w-4xl p-8 relative overflow-y-auto max-h-[90vh]">
+
+                <!-- Close Button -->
+                <button type="button" onclick="closeEditMedicineModal()"
+                    class="absolute top-5 right-5 text-gray-500 hover:text-gray-700 transition">✕</button>
+
+                <h3 class="text-2xl font-bold text-blue-800 mb-6">{{ trans('lang.edit medicine') }}</h3>
+
+                <form id="editMedicineForm" method="POST"
+                    action="{{ route('workspace.medicine.update', '__id__') }}">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" id="edit_id" name="id">
+
+                    <!-- Basic Fields -->
+                    <div class="grid grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-1">{{ trans('lang.name') }}<span
+                                    class="text-red-500">*</span></label>
+                            <input type="text" id="edit_name" name="name"
+                                class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+
+                        <div>
+                            <label
+                                class="block text-gray-700 font-semibold mb-1">{{ trans('lang.generic name') }}<span
+                                    class="text-red-500">*</span></label>
+                            <input type="text" id="edit_generic_name" name="generic_name"
+                                class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-1">{{ trans('lang.category') }}<span
+                                    class="text-red-500">*</span></label>
+                            <input type="text" id="edit_category" name="category"
+                                class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+
+                        <div>
+                            <label
+                                class="block text-gray-700 font-semibold mb-1">{{ trans('lang.manufacturer') }}<span
+                                    class="text-red-500">*</span></label>
+                            <input type="text" id="edit_manufacturer" name="manufacturer"
+                                class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-1">{{ trans('lang.strength') }}<span
+                                    class="text-red-500">*</span></label>
+                            <input type="text" id="edit_strength" name="strength"
+                                class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-1">{{ trans('lang.unit') }}<span
+                                    class="text-red-500">*</span></label>
+                            <input type="text" id="edit_unit" name="unit"
+                                class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-1">{{ trans('lang.form') }}<span
+                                    class="text-red-500">*</span></label>
+                            <input type="text" id="edit_form" name="form"
+                                class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+
+                        <div>
+                            <label
+                                class="block text-gray-700 font-semibold mb-1">{{ trans('lang.stock quantity') }}<span
+                                    class="text-red-500">*</span></label>
+                            <input type="number" id="edit_stock_quantity" name="stock_quantity"
+                                class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+
+                        <div>
+                            <label
+                                class="block text-gray-700 font-semibold mb-1">{{ trans('lang.minimum stock') }}<span
+                                    class="text-red-500">*</span></label>
+                            <input type="number" id="edit_minimum_stock" name="minimum_stock"
+                                class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-1">{{ trans('lang.price') }}<span
+                                    class="text-red-500">*</span></label>
+                            <input type="number" id="edit_price" name="price" step="0.01"
+                                class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+
+                        <div>
+                            <label
+                                class="block text-gray-700 font-semibold mb-1">{{ trans('lang.batch number') }}<span
+                                    class="text-red-500">*</span></label>
+                            <input type="text" id="edit_batch_number" name="batch_number"
+                                class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-1">{{ trans('lang.expiry date') }}<span
+                                    class="text-red-500">*</span></label>
+                            <input type="date" id="edit_expiry_date" name="expiry_date"
+                                class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                    </div>
+
+                    <!-- Textareas -->
+                    <div class="mt-6 grid grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-1">{{ trans('lang.description') }}<span
+                                    class="text-red-500">*</span></label>
+                            <textarea id="edit_description" name="description"
+                                class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-1">{{ trans('lang.indications') }}<span
+                                    class="text-red-500">*</span></label>
+                            <textarea id="edit_indications" name="indications"
+                                class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                        </div>
+
+                        <div>
+                            <label
+                                class="block text-gray-700 font-semibold mb-1">{{ trans('lang.dosage instructions') }}<span
+                                    class="text-red-500">*</span></label>
+                            <textarea id="edit_dosage_instructions" name="dosage_instructions"
+                                class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                        </div>
+
+                        <div>
+                            <label
+                                class="block text-gray-700 font-semibold mb-1">{{ trans('lang.storage conditions') }}<span
+                                    class="text-red-500">*</span></label>
+                            <textarea id="edit_storage_conditions" name="storage_conditions"
+                                class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                        </div>
+
+                        <div>
+                            <label
+                                class="block text-gray-700 font-semibold mb-1">{{ trans('lang.contraindications') }}<span
+                                    class="text-red-500">*</span></label>
+                            <textarea id="edit_contraindications" name="contraindications"
+                                class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                        </div>
+
+                        <div>
+                            <label
+                                class="block text-gray-700 font-semibold mb-1">{{ trans('lang.side effects') }}<span
+                                    class="text-red-500">*</span></label>
+                            <textarea id="edit_side_effects" name="side_effects"
+                                class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Checkboxes -->
+                    <div class="mt-5 flex gap-4 items-center">
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" id="edit_requires_prescription" name="requires_prescription"
+                                class="w-4 h-4">
+                            <span>{{ trans('lang.requires prescription') }}</span>
+                        </label>
+
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" id="edit_is_active" name="is_active" class="w-4 h-4">
+                            <span>{{ trans('lang.active') }}</span>
+                        </label>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="mt-8 flex justify-end gap-3">
+                        <button type="button" onclick="closeEditMedicineModal()"
+                            class="px-5 py-2 bg-gray-200 rounded-xl hover:bg-gray-300 transition font-semibold">
+                            {{ trans('lang.cancel') }}
+                        </button>
+                        <button type="submit"
+                            class="px-5 py-2 bg-blue-600 text-white rounded-xl  font-semibold transition">
+                            {{ trans('lang.update medicine') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {{-- Delete Confirmation Modal --}}
+        <div id="deleteModal"
+            class="fixed inset-0 z-50 flex items-center justify-center hidden bg-gray-900/50 backdrop-blur-sm">
+            <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-md border border-gray-100">
+                <div class="text-center">
+                    <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-50 mb-6">
+                        <svg class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667
+                        1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732
+                        0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">{{ trans('lang.confirm delete') }}</h3>
+                    <p class="text-gray-600 mb-8">
+                        {{ trans('lang.confirm delete message') }}
+                        <span id="medicineName" class="font-semibold text-red-600"></span>?
+                        <br>{{ trans('lang.confirm delete warning') }}
+                    </p>
+                    <div class="flex justify-center space-x-4">
+                        <button onclick="closeDeleteModal()"
+                            class="px-8 py-3 bg-gray-100 text-gray-700 rounded-2xl hover:bg-gray-200 transition-colors duration-200 font-medium">
+                            {{ trans('lang.cancel') }}
+                        </button>
+
+                        <form id="deleteForm" method="POST" class="inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                class="px-8 py-3 bg-red-500 text-white rounded-2xl hover:bg-red-600 transition-colors duration-200 font-medium">
+                                {{ trans('lang.delete') }}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Bulk Dispense Modal --}}
+        <div id="bulkDispenseModal"
+            class="fixed inset-0 z-50 flex items-center justify-center hidden bg-gray-900/60 backdrop-blur">
+            <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-2xl border border-gray-100">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">{{ trans('lang.cut stock medicines') }}</h3>
+                <form id="bulkDispenseForm" method="POST" action="{{ route('workspace.medicine.bulkDispense') }}"
+                    class="space-y-5">
+                    @csrf
+                    <div id="bulkRows" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 bulk-row">
+                            <div class="md:col-span-8">
+                                <label
+                                    class="block text-base font-semibold text-gray-700 mb-2">{{ trans('lang.medicine') }}</label>
+                                <input list="medicineOptions" name="items[0][medicine_name]"
+                                    class="w-full border border-blue-200 rounded-xl px-4 py-2.5 focus:ring-blue-400 focus:border-blue-400 bg-blue-50 text-gray-800 placeholder-gray-400"
+                                    placeholder="{{ trans('lang.search medicine by name') }}" required>
+                                <datalist id="medicineOptions">
+                                    @foreach ($allMedicines as $m)
+                                        <option value="{{ $m->name }}" data-id="{{ $m->_id }}"
+                                            data-stock="{{ (int) $m->stock_quantity }}">{{ $m->name }} (Stock:
+                                            {{ (int) $m->stock_quantity }})</option>
+                                    @endforeach
+                                </datalist>
+                            </div>
+                            <div class="md:col-span-3">
+                                <label
+                                    class="block text-base font-semibold text-gray-700 mb-2">{{ trans('lang.quantity') }}</label>
+                                <input type="number" name="items[0][quantity]" min="1" step="1"
+                                    class="w-full border border-blue-200 rounded-xl px-4 py-2.5 focus:ring-blue-400 focus:border-blue-400 bg-blue-50 text-gray-800"
+                                    required>
+                                <p class="text-xs text-gray-500 mt-1 stock-hint"></p>
+                                <p class="text-xs text-red-600 mt-1 qty-warning hidden"></p>
+                            </div>
+                            <div class="md:col-span-1 flex items-end">
+                                <button type="button"
+                                    class="w-full px-3 py-2 bg-gray-200 rounded-xl hover:bg-gray-300 font-bold text-lg"
+                                    onclick="removeBulkRow(this)">-</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button type="button"
+                            class="px-4 py-2 bg-gray-100 border border-gray-200 rounded-xl hover:bg-gray-200 font-semibold"
+                            onclick="addBulkRow()">+ {{ trans('lang.add another') }}</button>
+                    </div>
+                    <div class="flex justify-end gap-3">
+                        <button type="button" onclick="closeBulkDispenseModal()"
+                            class="px-5 py-2 text-gray-700 bg-gray-200 rounded-xl hover:bg-gray-300 font-semibold transition">{{ trans('lang.cancel') }}</button>
+                        <button type="submit"
+                            class="px-5 py-2 text-white bg-amber-600 rounded-xl hover:bg-amber-700 font-semibold transition">{{ trans('lang.cut stock') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {{-- Add Stock Modal --}}
+        <div id="addStockModal"
+            class="fixed inset-0 z-50 flex items-center justify-center hidden bg-gray-900/60 backdrop-blur">
+            <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md border border-gray-100 relative">
+                <button type="button" onclick="closeAddStockModal()"
+                    class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors duration-200 mt-3">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">{{ trans('lang.add stock') }}</h3>
+                <form id="addStockForm" method="POST"
+                    action="{{ route('workspace.medicine.updateStock', '__id__') }}">
+                    @csrf
+                    @method('PATCH')
+                    <input type="hidden" name="id" id="add_stock_id">
+                    <div class="space-y-4">
+                        <div>
+                            <label
+                                class="block text-base font-semibold text-gray-700 mb-2">{{ trans('lang.medicine name') }}:</label>
+                            <div id="add_stock_name" class="text-gray-900 font-semibold"></div>
+                        </div>
+                        <div>
+                            <label
+                                class="block text-base font-semibold text-gray-700 mb-2">{{ trans('lang.quantity to add') }}</label>
+                            <input type="number" min="1" step="1" name="quantity" id="add_stock_qty"
+                                class="w-full border border-blue-200 rounded-xl px-4 py-2.5 focus:ring-blue-400 focus:border-blue-400 bg-blue-50 text-gray-800"
+                                placeholder="e.g. 50" required>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex justify-end gap-3">
+                        <button type="button" onclick="closeAddStockModal()"
+                            class="px-5 py-2 text-gray-700 bg-gray-200 rounded-xl hover:bg-gray-300 font-semibold transition">{{ trans('lang.cancel') }}</button>
+                        <button type="submit"
+                            class="px-5 py-2 text-white bg-blue-600 rounded-xl hover:bg-blue-700 font-semibold transition">{{ trans('lang.submit') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {{-- Flash Messages --}}
+        @if (session('success'))
+            <div id="success-alert"
+                class="fixed bottom-6 right-6 z-50 border-l-4 border-emerald-500 text-emerald-700 px-6 py-4 rounded-2xl mb-4 bg-emerald-50 shadow-xl min-w-[320px] max-w-sm"
+                role="alert">
+                <div class="flex items-center">
+                    <svg class="w-6 h-6 text-emerald-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="font-semibold">{{ session('success') }}</span>
+                </div>
+            </div>
+        @endif
+
+        @if ($errors->any())
+            <div id="error-alert"
+                class="fixed bottom-6 right-6 z-50 border-l-4 border-red-500 text-red-700 px-6 py-4 rounded-2xl mb-4 bg-red-50 shadow-xl min-w-[320px] max-w-sm"
+                role="alert">
+                <div class="flex items-center mb-3">
+                    <svg class="w-6 h-6 text-red-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="font-semibold">{{ trans('lang.please fix the following errors') }}:</span>
+                </div>
+                <ul class="text-sm space-y-2">
+                    @foreach ($errors->all() as $error)
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-red-500 rounded-full mr-3"></span>
+                            {{ $error }}
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
     <!-- JavaScript to Fill Modal -->
     <script>
@@ -612,173 +712,6 @@
         }
     </script>
 
-
-
-
-    {{-- Delete Confirmation Modal --}}
-    <div id="deleteModal"
-        class="fixed inset-0 z-50 flex items-center justify-center hidden bg-gray-900/50 backdrop-blur-sm">
-        <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-md border border-gray-100">
-            <div class="text-center">
-                <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-50 mb-6">
-                    <svg class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667
-                        1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732
-                        0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                    </svg>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-3">{{ trans('lang.confirm delete') }}</h3>
-                <p class="text-gray-600 mb-8">
-                    {{ trans('lang.confirm delete message') }}
-                    <span id="medicineName" class="font-semibold text-red-600"></span>?
-                    <br>{{ trans('lang.confirm delete warning') }}
-                </p>
-                <div class="flex justify-center space-x-4">
-                    <button onclick="closeDeleteModal()"
-                        class="px-8 py-3 bg-gray-100 text-gray-700 rounded-2xl hover:bg-gray-200 transition-colors duration-200 font-medium">
-                        {{ trans('lang.cancel') }}
-                    </button>
-
-                    <form id="deleteForm" method="POST" class="inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit"
-                            class="px-8 py-3 bg-red-500 text-white rounded-2xl hover:bg-red-600 transition-colors duration-200 font-medium">
-                            {{ trans('lang.delete') }}
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- Bulk Dispense Modal --}}
-    <div id="bulkDispenseModal"
-        class="fixed inset-0 z-50 flex items-center justify-center hidden bg-gray-900/60 backdrop-blur">
-        <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-2xl border border-gray-100">
-            <h3 class="text-2xl font-bold text-gray-900 mb-6">{{ trans('lang.cut stock medicines') }}</h3>
-            <form id="bulkDispenseForm" method="POST" action="{{ route('workspace.medicine.bulkDispense') }}"
-                class="space-y-5">
-                @csrf
-                <div id="bulkRows" class="space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 bulk-row">
-                        <div class="md:col-span-8">
-                            <label
-                                class="block text-base font-semibold text-gray-700 mb-2">{{ trans('lang.medicine') }}</label>
-                            <input list="medicineOptions" name="items[0][medicine_name]"
-                                class="w-full border border-blue-200 rounded-xl px-4 py-2.5 focus:ring-blue-400 focus:border-blue-400 bg-blue-50 text-gray-800 placeholder-gray-400"
-                                placeholder="{{ trans('lang.search medicine by name') }}" required>
-                            <datalist id="medicineOptions">
-                                @foreach ($allMedicines as $m)
-                                    <option value="{{ $m->name }}" data-id="{{ $m->_id }}"
-                                        data-stock="{{ (int) $m->stock_quantity }}">{{ $m->name }} (Stock:
-                                        {{ (int) $m->stock_quantity }})</option>
-                                @endforeach
-                            </datalist>
-                        </div>
-                        <div class="md:col-span-3">
-                            <label
-                                class="block text-base font-semibold text-gray-700 mb-2">{{ trans('lang.quantity') }}</label>
-                            <input type="number" name="items[0][quantity]" min="1" step="1"
-                                class="w-full border border-blue-200 rounded-xl px-4 py-2.5 focus:ring-blue-400 focus:border-blue-400 bg-blue-50 text-gray-800"
-                                required>
-                            <p class="text-xs text-gray-500 mt-1 stock-hint"></p>
-                            <p class="text-xs text-red-600 mt-1 qty-warning hidden"></p>
-                        </div>
-                        <div class="md:col-span-1 flex items-end">
-                            <button type="button"
-                                class="w-full px-3 py-2 bg-gray-200 rounded-xl hover:bg-gray-300 font-bold text-lg"
-                                onclick="removeBulkRow(this)">-</button>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <button type="button"
-                        class="px-4 py-2 bg-gray-100 border border-gray-200 rounded-xl hover:bg-gray-200 font-semibold"
-                        onclick="addBulkRow()">+ {{ trans('lang.add another') }}</button>
-                </div>
-                <div class="flex justify-end gap-3">
-                    <button type="button" onclick="closeBulkDispenseModal()"
-                        class="px-5 py-2 text-gray-700 bg-gray-200 rounded-xl hover:bg-gray-300 font-semibold transition">{{ trans('lang.cancel') }}</button>
-                    <button type="submit"
-                        class="px-5 py-2 text-white bg-amber-600 rounded-xl hover:bg-amber-700 font-semibold transition">{{ trans('lang.cut stock') }}</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    {{-- Add Stock Modal --}}
-    <div id="addStockModal"
-        class="fixed inset-0 z-50 flex items-center justify-center hidden bg-gray-900/60 backdrop-blur">
-        <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md border border-gray-100">
-            <h3 class="text-2xl font-bold text-gray-900 mb-6">{{ trans('lang.add stock') }}</h3>
-            <form id="addStockForm" method="POST" action="{{ route('workspace.medicine.updateStock', '__id__') }}">
-                @csrf
-                @method('PATCH')
-                <input type="hidden" name="id" id="add_stock_id">
-                <div class="space-y-4">
-                    <div>
-                        <label
-                            class="block text-base font-semibold text-gray-700 mb-2">{{ trans('lang.medicine') }}</label>
-                        <div id="add_stock_name" class="text-gray-900 font-semibold"></div>
-                    </div>
-                    <div>
-                        <label
-                            class="block text-base font-semibold text-gray-700 mb-2">{{ trans('lang.quantity to add') }}</label>
-                        <input type="number" min="1" step="1" name="quantity" id="add_stock_qty"
-                            class="w-full border border-blue-200 rounded-xl px-4 py-2.5 focus:ring-blue-400 focus:border-blue-400 bg-blue-50 text-gray-800"
-                            placeholder="e.g. 50" required>
-                    </div>
-                </div>
-                <div class="mt-6 flex justify-end gap-3">
-                    <button type="button" onclick="closeAddStockModal()"
-                        class="px-5 py-2 text-gray-700 bg-gray-200 rounded-xl hover:bg-gray-300 font-semibold transition">{{ trans('lang.cancel') }}</button>
-                    <button type="submit"
-                        class="px-5 py-2 text-white bg-emerald-600 rounded-xl hover:bg-emerald-700 font-semibold transition">{{ trans('lang.add') }}</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    {{-- Flash Messages --}}
-    @if (session('success'))
-        <div id="success-alert"
-            class="fixed bottom-6 right-6 z-50 border-l-4 border-emerald-500 text-emerald-700 px-6 py-4 rounded-2xl mb-4 bg-emerald-50 shadow-xl min-w-[320px] max-w-sm"
-            role="alert">
-            <div class="flex items-center">
-                <svg class="w-6 h-6 text-emerald-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                        clip-rule="evenodd"></path>
-                </svg>
-                <span class="font-semibold">{{ session('success') }}</span>
-            </div>
-        </div>
-    @endif
-
-    @if ($errors->any())
-        <div id="error-alert"
-            class="fixed bottom-6 right-6 z-50 border-l-4 border-red-500 text-red-700 px-6 py-4 rounded-2xl mb-4 bg-red-50 shadow-xl min-w-[320px] max-w-sm"
-            role="alert">
-            <div class="flex items-center mb-3">
-                <svg class="w-6 h-6 text-red-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                        clip-rule="evenodd"></path>
-                </svg>
-                <span class="font-semibold">{{ trans('lang.please fix the following errors') }}:</span>
-            </div>
-            <ul class="text-sm space-y-2">
-                @foreach ($errors->all() as $error)
-                    <li class="flex items-center">
-                        <span class="w-2 h-2 bg-red-500 rounded-full mr-3"></span>
-                        {{ $error }}
-                    </li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
     <script>
         function deleteMedicine(id, name) {
             document.getElementById('medicineName').textContent = name;
@@ -804,20 +737,19 @@
             const row = document.createElement('div');
             row.className = 'grid grid-cols-1 md:grid-cols-12 gap-4 bulk-row';
             row.innerHTML = `
-                <div class="md:col-span-8">
-                    <label class="block text-base font-semibold text-gray-700 mb-2">Medicine</label>
-                    <input list="medicineOptions" name="items[${index}][medicine_name]" class="w-full border border-blue-200 rounded-xl px-4 py-2.5 focus:ring-blue-400 focus:border-blue-400 bg-blue-50 text-gray-800 placeholder-gray-400" placeholder="Search medicine by name" required>
-                </div>
-                <div class="md:col-span-3">
-                    <label class="block text-base font-semibold text-gray-700 mb-2">Quantity</label>
-                    <input type="number" name="items[${index}][quantity]" min="1" step="1" class="w-full border border-blue-200 rounded-xl px-4 py-2.5 focus:ring-blue-400 focus:border-blue-400 bg-blue-50 text-gray-800" required>
-                    <p class="text-xs text-gray-500 mt-1 stock-hint"></p>
-                    <p class="text-xs text-red-600 mt-1 qty-warning hidden"></p>
-                </div>
-                <div class="md:col-span-1 flex items-end">
-                    <button type="button" class="w-full px-3 py-2 bg-gray-200 rounded-xl hover:bg-gray-300 font-bold text-lg" onclick="removeBulkRow(this)">-</button>
-                </div>
-            `;
+        <div class="md:col-span-8">
+            <label class="block text-base font-semibold text-gray-700 mb-2">Medicine</label>
+            <input list="medicineOptions" name="items[${index}][medicine_name]" class="w-full border border-blue-200 rounded-xl px-4 py-2.5 focus:ring-blue-400 focus:border-blue-400 bg-blue-50 text-gray-800 placeholder-gray-400" placeholder="Search medicine by name" required>
+        </div>
+        <div class="md:col-span-3">
+            <label class="block text-base font-semibold text-gray-700 mb-2">Quantity</label>
+            <input type="number" name="items[${index}][quantity]" min="1" step="1" class="w-full border border-blue-200 rounded-xl px-4 py-2.5 focus:ring-blue-400 focus:border-blue-400 bg-blue-50 text-gray-800" required>
+            <p class="text-xs text-gray-500 mt-1 stock-hint"></p>
+            <p class="text-xs text-red-600 mt-1 qty-warning hidden"></p>
+        </div>
+        <div class="md:col-span-1 flex items-end">
+            <button type="button" class="w-full px-3 py-2 bg-gray-200 rounded-xl hover:bg-gray-300 font-bold text-lg" onclick="removeBulkRow(this)">-</button>
+        </div>`;
             container.appendChild(row);
         }
 
@@ -1006,5 +938,75 @@
                 this.closest('form').submit();
             }
         });
+    </script>
+
+    <!-- Medicine Details Modal Script -->
+    <script>
+        function showMedicineDetails(medicine) {
+            const modal = document.getElementById('medicineDetailModal');
+            const content = document.getElementById('medicineDetailContent');
+
+            const sections = [{
+                    title: "Basic Info",
+                    fields: [
+                        ['Name', medicine.name],
+                        ['Generic Name', medicine.generic_name ?? '-'],
+                        ['Category', medicine.category],
+                        ['Manufacturer', medicine.manufacturer ?? '-'],
+                        ['Strength', `${medicine.strength ?? '-'} ${medicine.unit ?? ''} ${medicine.form ?? ''}`]
+                    ]
+                },
+                {
+                    title: "Stock & Pricing",
+                    fields: [
+                        ['Stock Quantity', medicine.stock_quantity],
+                        ['Minimum Stock', medicine.minimum_stock ?? '-'],
+                        ['Price', medicine.formatted_price ?? medicine.price],
+                        ['Batch Number', medicine.batch_number ?? '-'],
+                        ['Expiry Date', medicine.expiry_date ? new Date(medicine.expiry_date).toLocaleDateString() :
+                            '-'
+                        ]
+                    ]
+                },
+                {
+                    title: "Usage & Safety",
+                    fields: [
+                        ['Description', medicine.description ?? '-'],
+                        ['Indications', medicine.indications ?? '-'],
+                        ['Dosage Instructions', medicine.dosage_instructions ?? '-'],
+                        ['Storage Conditions', medicine.storage_conditions ?? '-'],
+                        ['Contraindications', medicine.contraindications ?? '-'],
+                        ['Side Effects', medicine.side_effects ?? '-'],
+                        ['Requires Prescription', medicine.requires_prescription ?
+                            '<span class="text-green-600 font-semibold">{{ trans('lang.yes') }}</span>' :
+                            '<span class="text-gray-500">{{ trans('lang.no') }}</span>'
+                        ],
+                        ['Active', medicine.is_active ?
+                            '<span class="text-green-600 font-semibold">{{ trans('lang.yes') }}</span>' :
+                            '<span class="text-red-500 font-semibold">{{ trans('lang.no') }}</span>'
+                        ]
+                    ]
+                }
+            ];
+
+                content.innerHTML = sections.map(section => `
+                    <div class="p-4 bg-gray-50 rounded-xl border border-gray-200">
+                        <h3 class="text-xl font-semibold text-green-700 mb-3">${section.title}</h3>
+                        <div class="space-y-2">
+                            ${section.fields.map(([label, value]) => `<div class="flex justify-between">
+                            <span class="font-medium text-gray-800">${label}</span>
+                            <span class="text-gray-700">${value}</span>
+                        </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeMedicineModal() {
+            document.getElementById('medicineDetailModal').classList.add('hidden');
+        }
     </script>
 </x-app-layout>

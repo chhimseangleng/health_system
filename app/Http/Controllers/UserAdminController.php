@@ -12,9 +12,10 @@ class UserAdminController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        // Inline middleware to restrict to Super User without modifying Kernel
+        // Inline middleware to restrict to Admin or Superadmin
         $this->middleware(function ($request, $next) {
-            if (! Auth::check() || Auth::user()->role !== 'Super User') {
+            $userRole = Auth::user()->role ?? '';
+            if (! Auth::check() || !in_array($userRole, ['Admin', 'Superadmin', 'Super User'])) {
                 abort(403);
             }
             return $next($request);
@@ -23,8 +24,24 @@ class UserAdminController extends Controller
 
     public function index()
     {
-        $users = User::orderBy('name')->paginate(20);
-        return view('admin.index', compact('users'));
+        $currentUserRole = Auth::user()->role ?? '';
+        
+        // Filter users based on current user's role
+        $query = User::query();
+        
+        if ($currentUserRole === 'Admin') {
+            // Admin can see all users except Superadmin
+            $query->where('role', '!=', 'Superadmin')
+                  ->where('role', '!=', 'Super User');
+        } elseif (in_array($currentUserRole, ['Superadmin', 'Super User'])) {
+            // Superadmin can see all users including Admin
+            // No filtering needed - show all users
+        }
+        
+        $users = $query->orderBy('name')->paginate(20);
+        $roles = \App\Models\Role::all();
+        
+        return view('admin.index', compact('users', 'roles'));
     }
 
     public function create()
@@ -35,15 +52,19 @@ class UserAdminController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'role' => 'required|string|max:100',
-            'password' => 'nullable|string|min:6',
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
-        $data['password'] = Hash::make($data['password'] ?? 'password');
+        $data['password'] = Hash::make($data['password']);
 
         User::create($data);
+
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'User created successfully.']);
+        }
 
         return redirect()->route('admin.index')->with('success', 'User created successfully.');
     }

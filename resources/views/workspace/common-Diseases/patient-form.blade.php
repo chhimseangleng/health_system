@@ -209,6 +209,11 @@
                                                 </button>
                                                 <span
                                                     class="text-sm text-green-700 font-medium">{{ trans('lang.select medicine and specify times with remarks') }}</span>
+                                                <div class="text-sm text-gray-600 font-medium ml-2">
+                                                    <span class="inline-block mr-3"><strong>M</strong> = Morning</span>
+                                                    <span class="inline-block mr-3"><strong>A</strong> = Afternoon</span>
+                                                    <span class="inline-block"><strong>E</strong> = Evening</span>
+                                                </div>
                                             </div>
                                         </div>
                                         @error('prescriptions')
@@ -413,6 +418,18 @@
                 const presetTotalMedicine = preset && preset.total_medicine ? preset.total_medicine : '';
                 const presetTotalDay = preset && preset.total_day ? preset.total_day : '';
                 const presetTimes = preset && preset.times ? preset.times : '';
+                // Normalize preset times for M/A/E (support both simple numbers or {qty: N})
+                let presetM = '';
+                let presetA = '';
+                let presetE = '';
+                if (preset && preset.times) {
+                    const t = preset.times;
+                    if (t && typeof t === 'object') {
+                        if (t.M !== undefined) { presetM = (t.M && t.M.qty !== undefined) ? t.M.qty : (t.M || ''); }
+                        if (t.A !== undefined) { presetA = (t.A && t.A.qty !== undefined) ? t.A.qty : (t.A || ''); }
+                        if (t.E !== undefined) { presetE = (t.E && t.E.qty !== undefined) ? t.E.qty : (t.E || ''); }
+                    }
+                }
 
                 const row = document.createElement('div');
                 row.className =
@@ -436,8 +453,12 @@
                             <input type="number" name="prescriptions[${idx}][total_day]" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-200 focus:border-green-400 transition-all duration-300 bg-white hover:bg-gray-50 text-gray-700" min="0" value="${presetTotalDay || ''}" />
                         </div>
                         <div class="w-full lg:w-40">
-                            <label class="block text-sm font-bold text-gray-800 mb-2">{{ trans('lang.remark') }}</label>
-                            <input type="text" name="prescriptions[${idx}][times]" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-200 focus:border-green-400 transition-all duration-300 bg-white hover:bg-gray-50 text-gray-700 placeholder-gray-400" placeholder="{{ trans('lang.e.g. 2x daily') }}" value="${presetTimes || ''}" />
+                            <label class="block text-sm font-bold text-gray-800 mb-2">Times (M / A / E)</label>
+                            <div class="flex items-center gap-2">
+                                <input type="number" name="prescriptions[${idx}][times][M][qty]" class="w-1/3 px-3 py-2 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-200 focus:border-green-400 bg-white text-gray-700" min="0" placeholder="M" value="${presetM || ''}" />
+                                <input type="number" name="prescriptions[${idx}][times][A][qty]" class="w-1/3 px-3 py-2 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-200 focus:border-green-400 bg-white text-gray-700" min="0" placeholder="A" value="${presetA || ''}" />
+                                <input type="number" name="prescriptions[${idx}][times][E][qty]" class="w-1/3 px-3 py-2 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-200 focus:border-green-400 bg-white text-gray-700" min="0" placeholder="E" value="${presetE || ''}" />
+                            </div>
                         </div>
                         <div class="pt-8 lg:pt-0">
                             <button type="button" class="remove-prescription-row text-red-600 hover:text-red-800 p-2 rounded-lg hover:bg-red-50 transition-all duration-300">

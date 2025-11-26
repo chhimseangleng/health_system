@@ -42,6 +42,7 @@
         'khmer' => 'ខ្មែរ',
         'english' => 'អង់គ្លេស',
         'hi' => 'សួស្តី',
+        'user deleted' => 'User Delete',
 
         //assign patients
         'patient information' => 'ព័ត៌មានអ្នកជំងឺ',
@@ -170,10 +171,13 @@
         'edit vaccine category' => 'កែសម្រួលប្រភេទវ៉ាក់សាំង',
         'close' => 'បិទ',
         'are you sure you want to delete this category' => 'តើអ្នកប្រាកដជាចង់លុបចោលប្រភេទវ៉ាក់សាំងនេះទេ',
+        'patient vaccine record' => 'កំណត់ត្រាវ៉ាក់សាំងអ្នកជំងឺ',
+        'prescriptions' => 'វេជ្ជបញ្ជា',
+        'record details' => 'កត់ត្រាព័ត៌មានលម្អិត',
 
         //Sidebar Menu
-        'doctors' => 'គ្រូពេទ្យ',
-        'add user' => 'បន្ថែមអ្នកប្រើ',
+        'admin' => 'អ្នកគ្រប់គ្រង',
+        'user' => 'អ្នកប្រើ',
         'documents' => 'ឯកសារ',
         'settings' => 'ការកំណត់',
         'help' => 'ជំនួយ',
@@ -181,6 +185,7 @@
         'welcome to samaky health center' => 'សូមស្វាគមន៍មកកាន់មជ្ឈមណ្ឌលសុខភាពសាមគ្គី',
         'vaccine records' => 'កំណត់ត្រាវ៉ាក់សាំងបង្ការជំងឺ',
         'manage and track vaccination records' => 'គ្រប់គ្រង និងតាមដានកំណត់ត្រាវ៉ាក់សាំងបង្ការជំងឺ',
+        'add admin' => 'បន្ថែមអ្នកគ្រប់គ្រង',
 
         //Common Diseases
         'common diseases' => 'ជំងឺទូទៅ',
@@ -211,8 +216,10 @@
         'frequent health issues' => 'បញ្ហាសុខភាពដែលកើតមានញឹកញាប់',
         'are you sure you want to dismiss this patient' => 'តើអ្នកប្រាកដជាចង់លុបចោលអ្នកជំងឺនេះទេ',
         'search common diseases by name, address...' => 'ស្វែងរកជំងឺទូទៅតាមឈ្មោះ អាស័យដ្ឋាន...',
+        'diagnosis' => 'ការធ្វើរោគវិនិច្ឆ័យ',
 
         //Medicine Management
+        'add stock' => 'បន្ថែមស្តុក',
         'medicines' => 'ថ្នាំ',
         'patient records' => 'កំណត់ត្រាអ្នកជំងឺ',
         'manage your healthcare data' => 'គ្រប់គ្រងទិន្នន័យសុខភាពរបស់អ្នក',
@@ -269,7 +276,7 @@
         'stock' => 'ស្តុក',
         'minimum stock' => 'ស្តុកអប្បបរមា',
         'batch number' => 'លេខកូដកញ្ចប់',
-        'indication' => 'សញ្ញា',
+        'indications' => 'ការប្រើប្រាស់',
         'fill in the medicine details below to add it to your inventory' => 'បំពេញព័ត៌មានលម្អិតអំពីថ្នាំខាងក្រោមដើម្បីបន្ថែមវាទៅក្នុងសារពើភ័ណ្ឌរបស់អ្នក',
         'cut stock medicines' => 'កាត់ស្តុកថ្នាំ',
         'search medicine by name' => 'ស្វែងរកថ្នាំតាមឈ្មោះ',
@@ -282,6 +289,11 @@
         'search medicines by name, code, or type...' => 'ស្វែងរកថ្នាំតាមឈ្មោះ កូដ ឬប្រភេទ...',
         'edit medicine' => 'កែសម្រួលថ្នាំ',
         'requires prescription' => 'តម្រូវឱ្យមានវេជ្ជបញ្ជា',
+        'quantity to add' => 'បរិមាណដើម្បីបន្ថែម',
+        'add' => 'បន្ថែម',
+        'stock quantity' => 'បរិមាណស្តុក',
+        'expiry date' => 'កាលបរិច្ឆេទកំណត់',
+        'fill in the medicine details below to add it to your inventory' => 'បំពេញព័ត៌មានលម្អិតអំពីថ្នាំខាងក្រោមដើម្បីបន្ថែមវាទៅក្នុងinventoryរបស់អ្នក',
 
 
         'dosage instructions' => 'ការណែនាំអំពីដូស',

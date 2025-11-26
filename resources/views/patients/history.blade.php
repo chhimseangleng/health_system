@@ -2,10 +2,10 @@
 <div id="history-modal-{{ $patient->_id }}" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-gray-900/60 backdrop-blur-md">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[94vh] flex flex-col border border-gray-100 overflow-hidden">
         {{-- Modal Header --}}
-        <div class="flex items-center justify-between px-7 py-5 bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-100 border-b border-gray-100">
+        <div class="flex items-center justify-between px-5 py-5 bg-gradient-to-r border-b border-gray-100">
             <div class="flex items-center gap-4">
-                <span class="inline-flex items-center justify-center w-12 h-12 bg-purple-100 rounded-lg shadow">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <span class="inline-flex items-center justify-center w-12 h-12 rounded-lg shadow">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </span>
@@ -15,7 +15,7 @@
                 </div>
             </div>
             <button data-modal-hide="history-modal-{{ $patient->_id }}"
-                class="w-10 h-10 rounded-lg flex items-center justify-center text-gray-400 hover:bg-purple-100 transition"
+                class="w-10 h-10 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-100 transition"
                 aria-label="Close Modal">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />

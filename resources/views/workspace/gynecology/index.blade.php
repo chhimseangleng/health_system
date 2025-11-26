@@ -8,8 +8,8 @@
                             class="px-6 py-6 border-b border-gray-100 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                             <div class="flex items-center space-x-4">
                                 <span
-                                    class="inline-flex items-center justify-center w-12 h-12 bg-pink-100 rounded-lg shadow-sm">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-pink-600" fill="none"
+                                    class="inline-flex items-center justify-center w-12 h-12 bg-blue-100 rounded-lg shadow-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-blue-600" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 20c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-4v-4m0 0V8m0 4h4m-4 0H8" />
@@ -27,7 +27,7 @@
                                     <label for="default-search" class="sr-only">{{ trans('lang.search') }}</label>
                                     <div class="relative group">
                                         <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                                            <svg class="w-5 h-5 text-gray-400 group-focus-within:text-pink-500 transition-colors"
+                                            <svg class="w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors"
                                                 aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                 viewBox="0 0 20 20">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -38,7 +38,7 @@
                                             id="default-search"
                                             class="block w-full p-3 pl-12 pr-4 text-sm text-gray-700
                                             placeholder-gray-400 bg-white border border-gray-200
-                                            rounded-2xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500
+                                            rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                                             shadow-sm transition-all duration-200 hover:shadow-md"
                                             placeholder="{{ trans('lang.search pregnancy by name, or address...') }}"
                                             oninput="searchTable()" />
@@ -46,7 +46,7 @@
                                     </div>
                                 </form>
                                 <button id="openAddDiseaseModal"
-                                    class="inline-flex items-center px-5 py-2 bg-pink-700 hover:bg-pink-800 text-white text-base font-semibold rounded-lg shadow focus:outline-none transition">
+                                    class="inline-flex items-center px-5 py-2 bg-blue-700 hover:bg-blue-800 text-white text-base font-semibold rounded-lg shadow focus:outline-none transition">
                                     <svg class="w-5 h-5 mr-2 -ml-1" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -60,7 +60,7 @@
                         <div class="p-0 md:p-2">
                             <div class="overflow-x-auto border-b">
                                 <table id="gynecologyTable"
-                                    class="min-w-full  bg-white text-base divide-y divide-pink-300 shadow-sm text-center">
+                                    class="min-w-full  bg-white text-base divide-y divide-blue-300 shadow-sm text-center">
                                     <thead class="font-semibold text-4sm tracking-wider uppercase bg-gray-100 ">
                                         <tr>
                                             <th scope="col" class="px-6 py-3 text-gray-700">
@@ -74,17 +74,17 @@
                                             <th scope="col" class="px-6 py-3 text-gray-700">
                                                 {{ trans('lang.gender') }}</th>
                                             {{-- <th
-                                                class="px-6 py-3 text-xs font-semibold text-pink-700 uppercase tracking-wide">
+                                                class="px-6 py-3 text-xs font-semibold text-blue-700 uppercase tracking-wide">
                                                 {{ trans('lang.drug diagnosis') }}</th> --}}
                                             <th scope="col" class="px-6 py-3 text-gray-700">
                                                 {{ trans('lang.village') }}</th>
                                             <th scope="col" class="px-6 py-3 text-gray-700">
-                                                {{ trans('lang.updated') }}</th>
+                                                {{ trans('lang.date') }}</th>
                                             <th scope="col" class="px-6 py-3 text-gray-700">
                                                 {{ trans('lang.actions') }}</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="diseasesTableBody" class="divide-y divide-pink-100 bg-white">
+                                    <tbody id="diseasesTableBody" class="divide-y divide-blue-100 bg-white">
                                         @forelse($gynecologyRecords as $index => $record)
                                             <tr class="hover:bg-gray-50 transition-all duration-200">
                                                 <td class="px-6 py-4 text-center font-semibold">
@@ -132,10 +132,13 @@
                                                     <div class="flex items-center justify-center space-x-2">
                                                         <!-- Detail -->
                                                         <button
-                                                            class="inline-flex items-center justify-center w-8 h-8 rounded-md text-pink-600 hover:text-pink-900 hover:bg-pink-50 transition"
+                                                            class="inline-flex items-center justify-center w-8 h-8 rounded-md text-green-600 hover:text-green-900 hover:bg-green-50 transition"
                                                             onclick="viewRecord(this)"
                                                             title="{{ trans('lang.view details') }}"
                                                             data-id="{{ $record->_id }}"
+                                                            data-prescriptions='@json($record->prescriptions ?? [])'
+                                                            data-phone="{{ $record->patient ? $record->patient->phone ?? 'N/A' : 'N/A' }}"
+                                                            data-payment="{{ $record->patient ? optional($record->patient->assignments()->latest()->first())->payment_type ?? 'N/A' : 'N/A' }}"
                                                             data-name="{{ $record->patient ? $record->patient->first_name . ' ' . $record->patient->last_name : 'N/A' }}"
                                                             data-staff="{{ $record->staff_name ?? 'N/A' }}"
                                                             data-age="{{ $record->patient ? \Carbon\Carbon::parse($record->patient->date_of_birth)->age : 'N/A' }}"
@@ -154,17 +157,125 @@
                                                             </svg>
                                                         </button>
 
+                                                        <!-- Export PDF -->
+                                                        <a href="{{ route('workspace.gynecology.export.pdf', $record->_id) }}" target="_blank"
+                                                            class="inline-flex items-center justify-center w-8 h-8 rounded-md text-orange-600 hover:text-orange-900 hover:bg-orange-50 transition"
+                                                            title="{{ trans('lang.export') }}">
+                                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v8m0 0l-3-3m3 3l3-3M5 12a7 7 0 1114 0 7 7 0 01-14 0z" />
+                                                            </svg>
+                                                        </a>
+
                                                         <!-- Edit -->
-                                                        <a href="{{ route('workspace.gynecology.edit', $record->_id) }}"
+                                                        <button type="button"
                                                             class="inline-flex items-center justify-center w-8 h-8 rounded-md text-blue-600 hover:text-blue-900 hover:bg-blue-50 transition"
-                                                            title="{{ trans('lang.edit') }}">
+                                                            title="{{ trans('lang.edit') }}"
+                                                            data-modal-target="editModal-{{ $record->_id }}"
+                                                            data-modal-toggle="editModal-{{ $record->_id }}">
                                                             <svg class="w-5 h-5" fill="none" stroke="currentColor"
                                                                 viewBox="0 0 24 24">
                                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                                     stroke-width="2"
                                                                     d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                                             </svg>
-                                                        </a>
+                                                        </button>
+
+                                                        <!-- Edit Modal -->
+                                                        <div id="editModal-{{ $record->_id }}" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-gray-900/50 backdrop-blur-sm">
+                                                            <div class="bg-white p-6 rounded-3xl shadow-2xl w-full max-w-2xl border border-gray-100">
+                                                                <div class="text-left">
+                                                                    <h3 class="text-xl font-bold text-gray-900 mb-4">{{ trans('lang.edit gynecology record') }}</h3>
+                                                                    <form action="{{ route('workspace.gynecology.update', $record->_id) }}" method="POST" class="space-y-4">
+                                                                        @csrf
+                                                                        @method('PUT')
+                                                                        <div class="grid grid-cols-2 gap-4">
+                                                                            <div>
+                                                                                <label class="block text-sm font-medium text-gray-700">{{ trans('lang.name') }}</label>
+                                                                                <input type="text" name="name" value="{{ $record->name ?? ($record->patient ? ($record->patient->first_name . ' ' . $record->patient->last_name) : '') }}" class="mt-1 block w-full border-gray-200 rounded-md shadow-sm" />
+                                                                            </div>
+                                                                            <div>
+                                                                                <label class="block text-sm font-medium text-gray-700">{{ trans('lang.staff name') }}</label>
+                                                                                <input type="text" name="staff_name" value="{{ $record->staff_name ?? '' }}" class="mt-1 block w-full border-gray-200 rounded-md shadow-sm" />
+                                                                            </div>
+                                                                            <div>
+                                                                                <label class="block text-sm font-medium text-gray-700">{{ trans('lang.date') }}</label>
+                                                                                <input type="date" name="date" value="{{ \Carbon\Carbon::parse($record->updated_at)->format('Y-m-d') }}" class="mt-1 block w-full border-gray-200 rounded-md shadow-sm" />
+                                                                            </div>
+                                                                            <div>
+                                                                                <label class="block text-sm font-medium text-gray-700">{{ trans('lang.age') }}</label>
+                                                                                <input type="number" name="age" value="{{ $record->patient ? \Carbon\Carbon::parse($record->patient->date_of_birth)->age : ($record->age ?? '') }}" class="mt-1 block w-full border-gray-200 rounded-md shadow-sm" min="0" />
+                                                                            </div>
+                                                                            <div>
+                                                                                <label class="block text-sm font-medium text-gray-700">{{ trans('lang.gender') }}</label>
+                                                                                <select name="gender" class="mt-1 block w-full border-gray-200 rounded-md shadow-sm">
+                                                                                    @php $g = $record->patient->gender ?? ($record->gender ?? ''); @endphp
+                                                                                    <option value="" {{ $g === '' ? 'selected' : '' }}>{{ trans('lang.select') }}</option>
+                                                                                    <option value="Male" {{ strtolower($g) === 'male' ? 'selected' : '' }}>{{ trans('lang.male') }}</option>
+                                                                                    <option value="Female" {{ strtolower($g) === 'female' ? 'selected' : '' }}>{{ trans('lang.female') }}</option>
+                                                                                    <option value="Other" {{ ($g && !in_array(strtolower($g), ['male','female'])) ? 'selected' : '' }}>{{ trans('lang.other') }}</option>
+                                                                                </select>
+                                                                            </div>
+                                                                            <div>
+                                                                                <label class="block text-sm font-medium text-gray-700">{{ trans('lang.village') }}</label>
+                                                                                <input type="text" name="village" value="{{ $record->patient ? ($record->patient->address ?? '') : ($record->village ?? '') }}" class="mt-1 block w-full border-gray-200 rounded-md shadow-sm" />
+                                                                            </div>
+                                                                            <div class="col-span-2">
+                                                                                <label class="block text-sm font-medium text-gray-700">{{ trans('lang.medication / notes') }}</label>
+                                                                                <textarea name="medication" rows="4" class="mt-1 block w-full border-gray-200 rounded-md shadow-sm">{{ $record->medication ?? '' }}</textarea>
+                                                                            </div>
+                                                                            <div class="col-span-2">
+                                                                                <label class="block text-sm font-medium text-gray-700">{{ trans('lang.prescriptions') }}</label>
+                                                                                @php $existingPrescriptions = $record->prescriptions ?? []; @endphp
+                                                                                <div id="prescription-rows-{{ $record->_id }}" class="space-y-3">
+                                                                                    @foreach($existingPrescriptions as $pi => $p)
+                                                                                        <div class="grid grid-cols-4 gap-3 items-end border p-3 rounded-md bg-gray-50">
+                                                                                            <input type="hidden" name="prescriptions[{{ $pi }}][medicine_id]" value="{{ $p['medicine_id'] ?? '' }}" />
+                                                                                            <div class="col-span-2">
+                                                                                                <label class="text-xs text-gray-600">{{ trans('lang.medicine') }}</label>
+                                                                                                <input type="text" name="prescriptions[{{ $pi }}][medicine_name]" value="{{ $p['medicine_name'] ?? '' }}" class="mt-1 block w-full border-gray-200 rounded-md shadow-sm" />
+                                                                                            </div>
+                                                                                            <div>
+                                                                                                <label class="text-xs text-gray-600">{{ trans('lang.total medicine') }}</label>
+                                                                                                <input type="number" name="prescriptions[{{ $pi }}][total_medicine]" value="{{ $p['total_medicine'] ?? '' }}" class="mt-1 block w-full border-gray-200 rounded-md shadow-sm" min="0" />
+                                                                                            </div>
+                                                                                            <div>
+                                                                                                <label class="text-xs text-gray-600">{{ trans('lang.total day') }}</label>
+                                                                                                <input type="number" name="prescriptions[{{ $pi }}][total_day]" value="{{ $p['total_day'] ?? '' }}" class="mt-1 block w-full border-gray-200 rounded-md shadow-sm" min="0" />
+                                                                                            </div>
+
+                                                                                            <div class="col-span-4 grid grid-cols-3 gap-3 mt-2">
+                                                                                                <div>
+                                                                                                    <label class="text-xs text-gray-600">M</label>
+                                                                                                    <input type="number" name="prescriptions[{{ $pi }}][times][M]" value="{{ is_array($p['times'] ?? null) ? ($p['times']['M'] ?? ($p['times']['M']['qty'] ?? '')) : ($p['times'] ?? '') }}" class="mt-1 block w-full border-gray-200 rounded-md shadow-sm" min="0" />
+                                                                                                </div>
+                                                                                                <div>
+                                                                                                    <label class="text-xs text-gray-600">A</label>
+                                                                                                    <input type="number" name="prescriptions[{{ $pi }}][times][A]" value="{{ is_array($p['times'] ?? null) ? ($p['times']['A'] ?? ($p['times']['A']['qty'] ?? '')) : '' }}" class="mt-1 block w-full border-gray-200 rounded-md shadow-sm" min="0" />
+                                                                                                </div>
+                                                                                                <div>
+                                                                                                    <label class="text-xs text-gray-600">E</label>
+                                                                                                    <input type="number" name="prescriptions[{{ $pi }}][times][E]" value="{{ is_array($p['times'] ?? null) ? ($p['times']['E'] ?? ($p['times']['E']['qty'] ?? '')) : '' }}" class="mt-1 block w-full border-gray-200 rounded-md shadow-sm" min="0" />
+                                                                                                </div>
+                                                                                            </div>
+
+                                                                                        </div>
+                                                                                    @endforeach
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="flex justify-end mt-4 space-x-3">
+                                                                            <button type="button" data-modal-target="editModal-{{ $record->_id }}" data-modal-toggle="editModal-{{ $record->_id }}" class="px-6 py-2 bg-gray-100 text-gray-700 rounded-2xl hover:bg-gray-200">
+                                                                                {{ trans('lang.cancel') }}
+                                                                            </button>
+                                                                            <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-2xl hover:bg-blue-700">
+                                                                                {{ trans('lang.update') }}
+                                                                            </button>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
                                                         <!-- Delete -->
                                                         <!-- Delete Button (Triggers Modal) -->
@@ -266,8 +377,8 @@
                     <div class="fixed z-50 right-8 bottom-8 space-y-3 w-full max-w-xs" style="pointer-events:none;">
                         @if (session('success'))
                             <div id="success-alert"
-                                class="flex items-center border-l-4 border-pink-700 bg-white px-4 py-3 shadow-lg rounded-lg animate-fadeIn pointer-events-auto">
-                                <svg class="w-6 h-6 mr-3 text-pink-600" fill="currentColor" viewBox="0 0 20 20">
+                                class="flex items-center border-l-4 border-green-700 bg-white px-4 py-3 shadow-lg rounded-lg animate-fadeIn pointer-events-auto">
+                                <svg class="w-6 h-6 mr-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd"
                                         d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                                         clip-rule="evenodd"></path>
@@ -277,17 +388,17 @@
                         @endif
                         @if ($errors->any())
                             <div id="error-alert"
-                                class="flex flex-col border-l-4 border-pink-700 bg-white px-4 py-3 shadow-lg rounded-lg animate-fadeIn pointer-events-auto">
+                                class="flex flex-col border-l-4 border-green-700 bg-white px-4 py-3 shadow-lg rounded-lg animate-fadeIn pointer-events-auto">
                                 <div class="flex items-center mb-1.5">
-                                    <svg class="w-6 h-6 mr-2 text-pink-700" fill="currentColor" viewBox="0 0 20 20">
+                                    <svg class="w-6 h-6 mr-2 text-green-700" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
                                             d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
                                             clip-rule="evenodd"></path>
                                     </svg>
                                     <span
-                                        class="font-semibold text-pink-800">{{ trans('lang.please fix the following errors') }}</span>
+                                        class="font-semibold text-green-800">{{ trans('lang.please fix the following errors') }}</span>
                                 </div>
-                                <ul class="list-inside list-disc text-sm text-pink-700 pl-6">
+                                <ul class="list-inside list-disc text-sm text-green-700 pl-6">
                                     @foreach ($errors->all() as $error)
                                         <li class="py-0.5">{{ $error }}</li>
                                     @endforeach
@@ -300,9 +411,9 @@
                     @if (!$incompletePatients->isEmpty())
                         <div class="mt-14">
                             <div
-                                class="bg-gradient-to-r from-pink-50 to-fuchsia-50 rounded-2xl border-2 border-pink-200 px-8 py-8 shadow">
+                                class="bg-gradient-to-r from-blue-50 to-fuchsia-50 rounded-2xl border-2 border-blue-200 px-8 py-8 shadow">
                                 <div class="flex items-center mb-4">
-                                    <svg class="w-7 h-7 text-pink-600 mr-3" fill="none" stroke="currentColor"
+                                    <svg class="w-7 h-7 text-blue-600 mr-3" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
@@ -317,33 +428,33 @@
                                 </div>
                                 <div class="overflow-x-auto">
                                     <table
-                                        class="min-w-full divide-y divide-pink-100 text-center bg-white rounded-2xl shadow">
-                                        <thead class="bg-pink-100">
+                                        class="min-w-full divide-y divide-blue-100 text-center bg-white rounded-2xl shadow">
+                                        <thead class="bg-blue-100">
                                             <tr>
                                                 <th
-                                                    class="px-5 py-4 text-sm font-semibold text-pink-700 uppercase tracking-wide">
+                                                    class="px-5 py-4 text-sm font-semibold text-blue-700 uppercase tracking-wide">
                                                     Nº</th>
                                                 <th
-                                                    class="px-5 py-4 text-sm font-semibold text-pink-700 uppercase tracking-wide">
+                                                    class="px-5 py-4 text-sm font-semibold text-blue-700 uppercase tracking-wide">
                                                     {{ trans('lang.patient name') }}</th>
                                                 <th
-                                                    class="px-5 py-4 text-sm font-semibold text-pink-700 uppercase tracking-wide">
+                                                    class="px-5 py-4 text-sm font-semibold text-blue-700 uppercase tracking-wide">
                                                     {{ trans('lang.dob') }}</th>
                                                 <th
-                                                    class="px-5 py-4 text-sm font-semibold text-pink-700 uppercase tracking-wide">
+                                                    class="px-5 py-4 text-sm font-semibold text-blue-700 uppercase tracking-wide">
                                                     {{ trans('lang.age') }}</th>
                                                 <th
-                                                    class="px-5 py-4 text-sm font-semibold text-pink-700 uppercase tracking-wide">
+                                                    class="px-5 py-4 text-sm font-semibold text-blue-700 uppercase tracking-wide">
                                                     {{ trans('lang.phone number') }}</th>
                                                 <th
-                                                    class="px-5 py-4 text-sm font-semibold text-pink-700 uppercase tracking-wide">
+                                                    class="px-5 py-4 text-sm font-semibold text-blue-700 uppercase tracking-wide">
                                                     {{ trans('lang.actions') }}</th>
                                             </tr>
                                         </thead>
-                                        <tbody class="divide-y divide-pink-50">
+                                        <tbody class="divide-y divide-blue-50">
                                             @foreach ($incompletePatients as $index => $patient)
-                                                <tr class="hover:bg-pink-50 transition duration-150">
-                                                    <td class="px-6 py-1 text-center text-pink-900 font-semibold">
+                                                <tr class="hover:bg-blue-50 transition duration-150">
+                                                    <td class="px-6 py-1 text-center text-blue-900 font-semibold">
                                                 <tr class="hover:bg-gray-50 transition-all duration-200">
                                                     <td class="px-6 py-4 text-center font-semibold">
                                                         {{ $index + 1 }}
@@ -351,7 +462,7 @@
                                                     <td class="px-5 py-4 text-base font-bold text-gray-900">
                                                         {{ $patient->first_name }} {{ $patient->last_name }}
                                                     </td>
-                                                    <td class="px-5 py-4 text-base text-pink-900">
+                                                    <td class="px-5 py-4 text-base text-blue-900">
                                                         {{ \Carbon\Carbon::parse($patient->date_of_birth)->format('M d, Y') }}
                                                     </td>
                                                     <td class="px-5 py-4 text-base">
@@ -361,13 +472,13 @@
                                                             {{ trans('lang.years') }}
                                                         </span>
                                                     </td>
-                                                    <td class="px-5 py-4 text-base text-pink-900">
+                                                    <td class="px-5 py-4 text-base text-blue-900">
                                                         {{ $patient->phone }}
                                                     </td>
                                                     <td class="px-5 py-4 text-base">
                                                         <div class="flex items-center gap-2 justify-center">
                                                             <a href="{{ route('workspace.gynecology.patient.form', $patient->_id) }}"
-                                                                class="inline-flex items-center px-4 py-1.5 text-sm rounded-lg bg-pink-700 text-white font-medium hover:bg-pink-900 transition shadow"
+                                                                class="inline-flex items-center px-4 py-1.5 text-sm rounded-lg bg-blue-700 text-white font-medium hover:bg-blue-900 transition shadow"
                                                                 title="Complete gynecology information">
                                                                 <svg class="w-4 h-4 mr-2" fill="none"
                                                                     stroke="currentColor" viewBox="0 0 24 24">
@@ -379,7 +490,7 @@
                                                             <!-- Dismiss Button (Triggers Modal) -->
                                                             <button data-modal-target="dismissModal-{{ $patient->_id }}"
                                                                 data-modal-toggle="dismissModal-{{ $patient->_id }}"
-                                                                class="inline-flex items-center px-4 py-1.5 text-sm rounded-lg bg-white text-pink-700 border border-pink-300 hover:bg-pink-100 font-medium transition shadow"
+                                                                class="inline-flex items-center px-4 py-1.5 text-sm rounded-lg bg-white text-red-700 border border-red-300 hover:bg-red-100 font-medium transition shadow"
                                                                 title="{{ trans('lang.dismiss from list') }}">
                                                                 <svg class="w-4 h-4 mr-2" fill="none"
                                                                     stroke="currentColor" viewBox="0 0 24 24">
@@ -398,7 +509,7 @@
                                                                         <!-- Icon -->
                                                                         <div
                                                                             class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-pink-50 mb-6">
-                                                                            <svg class="h-8 w-8 text-pink-500"
+                                                                            <svg class="h-8 w-8 text-red-500"
                                                                                 fill="none" viewBox="0 0 24 24"
                                                                                 stroke="currentColor">
                                                                                 <path stroke-linecap="round"
@@ -434,7 +545,7 @@
                                                                                 @csrf
                                                                                 @method('POST')
                                                                                 <button type="submit"
-                                                                                    class="px-6 py-2 bg-pink-600 text-white rounded-2xl hover:bg-pink-700 transition-colors duration-200 font-medium">
+                                                                                    class="px-6 py-2 bg-red-600 text-white rounded-2xl hover:bg-red-700 transition-colors duration-200 font-medium">
                                                                                     {{ trans('lang.dismiss') }}
                                                                                 </button>
                                                                             </form>
@@ -454,25 +565,85 @@
                         </div>
                     @endif
 
-                        <!-- Detail Modal -->
-                        {{-- <div id="recordDetailModal"
-                            class="hidden fixed inset-0 z-50 bg-black bg-opacity-40 min-h-screen min-w-screen flex items-center justify-center transition">
-                            <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg mx-auto p-6">
-                                <div class="flex justify-between items-start border-b border-gray-100 pb-3 mb-4">
-                                    <h3 class="text-lg font-semibold text-gray-900">{{ trans('lang.record details') }}</h3>
-                                    <button type="button" id="closeRecordDetailModal"
-                                        class="w-8 h-8 rounded-lg text-gray-400 hover:bg-gray-200 flex items-center justify-center transition">
-                                        <svg class="w-4 h-4" aria-hidden="true" fill="none" viewBox="0 0 14 14">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    <!-- Detail Modal (styled like vaccine comeback) -->
+                    <div id="recordDetailModal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+                        <div class="bg-white rounded-3xl shadow-2xl max-w-3xl w-full overflow-hidden border border-gray-100">
+
+                            <!-- Header -->
+                            <div class="flex items-center justify-between p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                                        <!-- Pregnancy Record Details Icon (pregnant woman outline) -->
+                                        <svg class="w-7 h-7 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15.5 8A3.5 3.5 0 1 1 8.5 8a3.5 3.5 0 0 1 7 0z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 21c0-3.314-2.686-6-6-6s-6 2.686-6 6" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 17.5a2 2 0 1 0-2 0" />
                                         </svg>
-                                    </button>
+                                    </div>
+                                    <div>
+                                        <h3 id="rmd-title" class="text-2xl font-bold text-gray-800">{{ trans('lang.record details') }}</h3>
+                                        <p id="rmd-subtitle" class="text-sm text-gray-500">Patient record overview</p>
+                                    </div>
                                 </div>
-                                <div id="recordDetailBody" class="space-y-3 text-sm">
-                                    <div class="text-gray-400">{{ trans('lang.loading') }}...</div>
+                                <button type="button" id="closeRecordDetailModal" class="text-gray-500 hover:text-gray-800 bg-white rounded-xl w-10 h-10 flex items-center justify-center">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 14 14">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <!-- Body -->
+                            <div class="px-8 py-8 max-h-[70vh] overflow-y-auto bg-slate-50">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <!-- Patient Card -->
+                                    <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+                                        <div class="flex items-center mb-4">
+                                            <svg class="w-5 h-5 text-blue-600 mr-2" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5s-3 1.343-3 3 1.343 3 3 3zm0 2c-2.761 0-5 2.239-5 5h10c0-2.761-2.239-5-5-5z" />
+                                        </svg>
+                                            <h4 class="font-bold text-lg text-gray-700">{{ trans('lang.patient information') }}</h4>
+                                        </div>
+                                        <div class="space-y-3 text-sm text-gray-700">
+                                            <div><span class="text-gray-500 font-medium">{{ trans('lang.name') }}:</span> <span id="rmd-name" class="font-semibold text-gray-900"></span></div>
+                                            <div><span class="text-gray-500 font-medium">{{ trans('lang.age') }}:</span> <span id="rmd-age" class="text-gray-900"></span></div>
+                                            <div><span class="text-gray-500 font-medium">{{ trans('lang.gender') }}:</span> <span id="rmd-gender" class="text-gray-900"></span></div>
+                                            <div><span class="text-gray-500 font-medium">{{ trans('lang.phone number') }}:</span> <span id="rmd-phone" class="text-gray-900"></span></div>
+                                            <div><span class="text-gray-500 font-medium">{{ trans('lang.payment type') }}:</span> <span id="rmd-payment" class="inline-flex items-center ml-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800"></span></div>
+                                            <div><span class="text-gray-500 font-medium">{{ trans('lang.physician') }}:</span> <span id="rmd-staff" class="text-gray-900"></span></div>
+                                            <div><span class="text-gray-500 font-medium">{{ trans('lang.village') }}:</span> <span id="rmd-address" class="text-gray-900"></span></div>
+                                            <div><span class="text-gray-500 font-medium">{{ trans('lang.updated') }}:</span> <span id="rmd-updated" class="text-gray-900"></span></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Prescriptions Card -->
+                                    <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+                                        <div class="flex items-center justify-between mb-4">
+                                            <div class="flex items-center">
+                                                <!-- Prescription Icon (Clipboard/Medical) -->
+                                                <svg class="w-5 h-5 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <rect x="6" y="3" width="12" height="18" rx="2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    <path d="M9 7h6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    <path d="M9 11h6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    <path d="M9 15h2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
+                                                <h4 class="font-bold text-lg text-gray-700">{{ trans('lang.prescriptions') }}</h4>
+                                            </div>
+                                            <span id="rmd-medcount" class="text-sm text-gray-500"></span>
+                                        </div>
+                                        <div id="rmd-prescriptions" class="space-y-3"></div>
+                                    </div>
                                 </div>
                             </div>
-                        </div> --}}
+
+                            <!-- Footer -->
+                            <div class="flex justify-end px-8 py-6 border-t bg-white">
+                                <button type="button" id="rmd-close-footer" class="px-6 py-2 bg-gray-600 text-white rounded-xl hover:bg-gray-700">{{ trans('lang.close') }}</button>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Add Disease Modal -->
                     <div id="addDiseaseModal" tabindex="-1" aria-hidden="true"
@@ -480,8 +651,8 @@
                         <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg mx-auto p-8">
                             <div class="flex justify-between items-start border-b border-gray-100 pb-4 mb-4">
                                 <div class="flex items-center">
-                                    <div class="w-10 h-10 bg-pink-100 rounded-lg flex items-center justify-center mr-3">
-                                        <svg class="w-6 h-6 text-pink-600" fill="none" stroke="currentColor"
+                                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -509,7 +680,7 @@
                                         {{ trans('lang.disease name') }} <span class="text-red-500">*</span>
                                     </label>
                                     <input type="text" name="name" id="name"
-                                        class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition"
+                                        class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                                         placeholder="{{ trans('lang.enter disease name') }}" required>
                                 </div>
                                 <div class="flex justify-end pt-2 space-x-2 border-t border-gray-100 mt-3">
@@ -518,7 +689,7 @@
                                         {{ trans('lang.cancel') }}
                                     </button>
                                     <button type="submit"
-                                        class="px-6 py-2 bg-pink-700 hover:bg-pink-900 text-white rounded-lg font-semibold transition flex items-center">
+                                        class="px-6 py-2 bg-blue-700 hover:bg-blue-900 text-white rounded-lg font-semibold transition flex items-center">
                                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -536,6 +707,10 @@
         </div>
 
         <script>
+            // translations used in JS
+            const TRANSLATION_TOTAL_DAY = @json(trans('lang.total day'));
+            const TRANSLATION_TOTAL_MEDICINE = @json(trans('lang.total medicine'));
+            const TRANSLATION_PRESCRIPTIONS = @json(trans('lang.prescriptions'));
             // MODAL logic
             const addModal = document.getElementById('addDiseaseModal');
             const openAddBtn = document.getElementById('openAddDiseaseModal');
@@ -594,11 +769,10 @@
                 }
             }, 5000);
 
-            // View record: replace with modal or route if you want
+            // View record: open professional modal and populate fields
             function viewRecord(btnEl) {
                 const modal = document.getElementById('recordDetailModal');
-                const body = document.getElementById('recordDetailBody');
-                if (!modal || !body) return;
+                if (!modal) return;
 
                 const name = btnEl.getAttribute('data-name') || 'N/A';
                 const staff = btnEl.getAttribute('data-staff') || 'N/A';
@@ -607,36 +781,70 @@
                 const address = btnEl.getAttribute('data-address') || 'N/A';
                 const updated = btnEl.getAttribute('data-updated') || 'N/A';
 
-                body.innerHTML = `
-                    <div class="grid grid-cols-1 gap-3">
-                        <div>
-                            <span class="block text-gray-500 text-xs font-medium">{{ trans('lang.patient name') }}</span>
-                            <div class="text-gray-900 font-semibold">${name}</div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <span class="block text-gray-500 text-xs font-medium">{{ trans('lang.age') }}</span>
-                                <div class="text-gray-900">${age}</div>
-                            </div>
-                            <div>
-                                <span class="block text-gray-500 text-xs font-medium">{{ trans('lang.gender') }}</span>
-                                <div class="text-gray-900">${gender}</div>
-                            </div>
-                        </div>
-                        <div>
-                            <span class="block text-gray-500 text-xs font-medium">{{ trans('lang.physician') }}</span>
-                            <div class="text-gray-900">${staff}</div>
-                        </div>
-                        <div>
-                            <span class="block text-gray-500 text-xs font-medium">{{ trans('lang.village') }}</span>
-                            <div class="text-gray-900">${address}</div>
-                        </div>
-                        <div>
-                            <span class="block text-gray-500 text-xs font-medium">{{ trans('lang.updated') }}</span>
-                            <div class="text-gray-900">${updated}</div>
-                        </div>
-                    </div>
-                `;
+                // parse prescriptions from data attribute
+                let prescriptions = [];
+                try {
+                    const p = btnEl.getAttribute('data-prescriptions') || '[]';
+                    prescriptions = JSON.parse(p);
+                } catch (e) {
+                    prescriptions = [];
+                }
+
+                // build prescriptions HTML string
+                let prescriptionsHtml = '';
+                if (Array.isArray(prescriptions) && prescriptions.length) {
+                    prescriptions.forEach(function(pr, idx) {
+                        const mname = pr.medicine_name || pr.medicineName || 'N/A';
+                        const tm = pr.total_medicine || pr.totalMedicine || '';
+                        const td = pr.total_day || pr.totalDay || '';
+                        const times = pr.times || pr.time || pr.times || '';
+
+                        prescriptionsHtml += '<div class="p-4 bg-gray-50 rounded-lg border border-gray-100">';
+                        prescriptionsHtml += '<div class="font-semibold text-gray-900">' + (idx+1) + '. ' + mname + '</div>';
+                        prescriptionsHtml += '<div class="text-sm text-gray-700 mt-1">';
+                        if (td) prescriptionsHtml += '<span class="mr-3">' + TRANSLATION_TOTAL_DAY + ': ' + td + '</span>';
+                        if (tm) prescriptionsHtml += '<span class="mr-3">' + TRANSLATION_TOTAL_MEDICINE + ': ' + tm + '</span>';
+                        prescriptionsHtml += '</div>';
+                        if (times && typeof times === 'object') {
+                            prescriptionsHtml += '<div class="mt-2 flex gap-2">';
+                            ['M','A','E'].forEach(function(k) {
+                                const val = times[k] || '';
+                                prescriptionsHtml += '<span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-800">' + k + (val ? ': ' + val : '') + '</span>';
+                            });
+                            prescriptionsHtml += '</div>';
+                        } else if (times) {
+                            prescriptionsHtml += '<div class="mt-2 text-sm text-gray-700">' + String(times) + '</div>';
+                        }
+                        prescriptionsHtml += '</div>';
+                    });
+                }
+
+                // populate modal elements
+                const nameEl = document.getElementById('rmd-name');
+                const ageEl = document.getElementById('rmd-age');
+                const genderEl = document.getElementById('rmd-gender');
+                const staffEl = document.getElementById('rmd-staff');
+                const addressEl = document.getElementById('rmd-address');
+                const updatedEl = document.getElementById('rmd-updated');
+                const presContainer = document.getElementById('rmd-prescriptions');
+                const medCountEl = document.getElementById('rmd-medcount');
+                const phoneEl = document.getElementById('rmd-phone');
+                const paymentEl = document.getElementById('rmd-payment');
+
+                if (nameEl) nameEl.textContent = name;
+                if (ageEl) ageEl.textContent = age ? (age + ' year') : 'N/A';
+                if (genderEl) genderEl.textContent = gender || 'N/A';
+                // phone and payment from button attributes
+                const phone = btnEl.getAttribute('data-phone') || 'N/A';
+                const payment = btnEl.getAttribute('data-payment') || 'N/A';
+                if (phoneEl) phoneEl.textContent = phone;
+                if (paymentEl) paymentEl.textContent = payment;
+                if (staffEl) staffEl.textContent = staff || 'N/A';
+                if (addressEl) addressEl.textContent = address || 'N/A';
+                if (updatedEl) updatedEl.textContent = updated || 'N/A';
+
+                if (presContainer) presContainer.innerHTML = prescriptionsHtml || '<div class="text-gray-500">N/A</div>';
+                if (medCountEl) medCountEl.textContent = (Array.isArray(prescriptions) ? prescriptions.length : 0) + ' items';
 
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
@@ -648,6 +856,14 @@
                 const closeBtn = document.getElementById('closeRecordDetailModal');
                 if (closeBtn && modal) {
                     closeBtn.addEventListener('click', function() {
+                        modal.classList.add('hidden');
+                        modal.classList.remove('flex');
+                    });
+                }
+                // footer close button
+                const footerClose = document.getElementById('rmd-close-footer');
+                if (footerClose && modal) {
+                    footerClose.addEventListener('click', function() {
                         modal.classList.add('hidden');
                         modal.classList.remove('flex');
                     });
