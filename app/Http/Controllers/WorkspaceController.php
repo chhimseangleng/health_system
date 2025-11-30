@@ -47,7 +47,7 @@ class WorkspaceController extends Controller
         })->where(function($query) {
             $query->where('vaccine_info_complete', '!=', true)
                   ->orWhereNull('vaccine_info_complete');
-        })->latest()->paginate(10);
+        })->notDeleted()->latest()->paginate(10);
 
         return view('workspace.vaccine.vaccineList', compact('categories', 'incompletePatients'));
     }
@@ -81,7 +81,7 @@ class WorkspaceController extends Controller
 
     public function showVaccinePatientForm($patientId)
     {
-        $patient = Patient::with('assignments')->findOrFail($patientId);
+        $patient = Patient::with('assignments')->where('_id', $patientId)->notDeleted()->firstOrFail();
         $categories = VaccineCategory::all();
 
         // Get the PatientAssign record for this patient and vaccine assignment
@@ -95,23 +95,22 @@ class WorkspaceController extends Controller
 
     public function storeVaccinePatientInfo(Request $request, $patientId)
     {
-        $patient = Patient::findOrFail($patientId);
+        $patient = Patient::where('_id', $patientId)->notDeleted()->firstOrFail();
 
         $validated = $request->validate([
-            'father_name' => 'required|string|max:255',
-            'father_phone' => 'required|string|max:20',
-            'mother_name' => 'required|string|max:255',
-            'mother_phone' => 'required|string|max:20',
+            'father_name' => 'nullable|string|max:255',
+            'father_phone' => 'nullable|string|max:20',
+            'mother_name' => 'nullable|string|max:255',
+            'mother_phone' => 'nullable|string|max:20',
             // 'carer' => 'nullable|string|max:255',
             // 'carer_phone' => 'nullable|string|max:20',
-            'birth_location' => 'required|string|max:255',
+            'birth_location' => 'nullable|string|max:255',
             'current_location' => 'required|string|max:255',
             'vaccine_category_id' => 'required|string',
-            'description' => 'required|string',
+            'description' => 'nullable|string',
             'vaccination_date' => 'required|date',
             'comeback' => 'nullable|string',
         ]);
-
         // Store additional vaccine data
         $additionalData = [
             'father_name' => $validated['father_name'],
@@ -205,7 +204,7 @@ class WorkspaceController extends Controller
 
     public function dismissVaccinePatient($patientId)
     {
-        $patient = Patient::findOrFail($patientId);
+        $patient = Patient::where('_id', $patientId)->notDeleted()->firstOrFail();
         $patient->update(['vaccine_info_complete' => true]);
 
         // Update PatientAssign status to completed when dismissing
@@ -297,16 +296,16 @@ class WorkspaceController extends Controller
             'name' => 'required|string|max:255',
             'bod' => 'required|date|before_or_equal:today',
             'age' => 'required|integer|min:0',
-            'father_name' => 'required|string|max:255',
-            'father_phone' => 'required|string|max:20',
-            'mother_name' => 'required|string|max:255',
-            'mother_phone' => 'required|string|max:20',
+            'father_name' => 'nullable|string|max:255',
+            'father_phone' => 'nullable|string|max:20',
+            'mother_name' => 'nullable|string|max:255',
+            'mother_phone' => 'nullable|string|max:20',
             // 'carer' => 'nullable|string|max:255',
             // 'carer_phone' => 'nullable|string|max:20',
-            'birth_location' => 'required|string|max:255',
+            'birth_location' => 'nullable|string|max:255',
             'current_location' => 'required|string|max:255',
             'vaccine_category_id' => 'required|string',
-            'description' => 'required|string',
+            'description' => 'nullable|string',
             'currentDate' => 'required|date',
             'comeback' => 'nullable|string', // checkbox - 'on' or null
         ]);
@@ -373,7 +372,7 @@ class WorkspaceController extends Controller
                     })->where(function($query) {
                         $query->where('vaccine_info_complete', '!=', true)
                               ->orWhereNull('vaccine_info_complete');
-                    })->count();
+                    })->notDeleted()->count();
                 } elseif ($roleKey === 'common diseases') {
                     $incompleteCounts['common diseases'] = Patient::whereHas('assignments', function($query) use ($patientRole) {
                         $query->where('assigned_to', $patientRole)
@@ -381,7 +380,7 @@ class WorkspaceController extends Controller
                     })->where(function($query) {
                         $query->where('common_disease_info_complete', '!=', true)
                               ->orWhereNull('common_disease_info_complete');
-                    })->count();
+                    })->notDeleted()->count();
                 } elseif ($roleKey === 'gynecology') {
                     $incompleteCounts['gynecology'] = Patient::whereHas('assignments', function($query) use ($patientRole) {
                         $query->where('assigned_to', $patientRole)
@@ -389,7 +388,7 @@ class WorkspaceController extends Controller
                     })->where(function($query) {
                         $query->where('gynecology_info_complete', '!=', true)
                               ->orWhereNull('gynecology_info_complete');
-                    })->count();
+                    })->notDeleted()->count();
                 }
             }
         }
@@ -427,7 +426,7 @@ class WorkspaceController extends Controller
         ->where(function($query) {
             $query->where('vaccine_info_complete', '!=', true)
                   ->orWhereNull('vaccine_info_complete');
-        })
+        })->notDeleted()
         ->with(['assignments' => function($query) {
             $query->where('assigned_to', 'vaccine')
                   ->where('status', 'pending')
@@ -551,7 +550,7 @@ class WorkspaceController extends Controller
     public function exportGynecologyPdf($id)
     {
         $record = Gynecology::with('patient')->findOrFail($id);
-        $patient = $record->patient ?? Patient::find($record->patient_id);
+        $patient = $record->patient ?? Patient::where('_id', $record->patient_id)->notDeleted()->first();
         $latestAssignment = $patient ? $patient->assignments()->latest()->first() : null;
         $paymentType = $latestAssignment->payment_type ?? 'N/A';
 
@@ -609,6 +608,7 @@ class WorkspaceController extends Controller
             'address' => $address,
             'updatedAt' => $updatedAt,
             'symptoms' => $symptoms,
+            'treatment_plan' => $record->treatment_plan ?? '',
             'medicationText' => $medicationText,
             'notes' => $notes,
         ];
@@ -672,19 +672,112 @@ class WorkspaceController extends Controller
     {
         $disease = CommonDisease::findOrFail($id);
 
-        $data = $request->validate([
+        // validate base fields and optional prescriptions structure
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'category' => 'required|string|max:255',
+            'category' => 'nullable|string|max:255',
             'physician' => 'nullable|string|max:255',
             'age' => 'nullable|integer|min:0|max:150',
             'gender' => 'nullable|string|in:M,F',
-            'drug_diagnosis' => 'nullable|string|max:255',
+            'drug_diagnosis' => 'nullable|string|max:1000',
             'village' => 'nullable|string|max:255',
             'commune' => 'nullable|string|max:255',
             'staff_name' => 'nullable|string|max:255',
+            'prescriptions' => 'nullable|array',
+            'prescriptions.*.medicine_id' => 'nullable|string',
+            'prescriptions.*.medicine_name' => 'nullable|string',
+            'prescriptions.*.total_medicine' => 'nullable|integer|min:0',
+            'prescriptions.*.total_day' => 'nullable|integer|min:0',
+            'prescriptions.*.times' => 'nullable|array',
+            'prescriptions.*.times.M.qty' => 'nullable|integer|min:0',
+            'prescriptions.*.times.A.qty' => 'nullable|integer|min:0',
+            'prescriptions.*.times.E.qty' => 'nullable|integer|min:0',
         ]);
 
-        $disease->update($data);
+        // Update scalar fields
+        // Do not require category in update since edit modal no longer includes it
+        $fields = ['name','physician','age','gender','drug_diagnosis','village','commune','staff_name'];
+        $updateData = [];
+        foreach ($fields as $f) {
+            if (array_key_exists($f, $validated)) {
+                $updateData[$f] = $validated[$f];
+            }
+        }
+
+        if (!empty($updateData)) {
+            $disease->update($updateData);
+        }
+
+        // Attach prescriptions structurally if provided
+        if (isset($validated['prescriptions']) && is_array($validated['prescriptions'])) {
+            // Normalize prescriptions and build a human-readable medication summary
+            $prescriptions = [];
+            $medicationSummary = '';
+            foreach ($validated['prescriptions'] as $prescription) {
+                // support both medicine_id or free-text medicine_name
+                $medicineId = $prescription['medicine_id'] ?? ($prescription['medicine_id'] ?? null);
+                $medicine = null;
+                $medicineName = $prescription['medicine_name'] ?? '';
+                if (!empty($medicineId)) {
+                    $medicine = \App\Models\Medicine::find($medicineId);
+                    if ($medicine) {
+                        $medicineName = $medicine->name;
+                    }
+                }
+
+                // Normalize times structure like storeCommonDiseasePatientInfo does
+                $times = [];
+                if (!empty($prescription['times']) && is_array($prescription['times'])) {
+                    foreach (['M','A','E'] as $slot) {
+                        if (isset($prescription['times'][$slot])) {
+                            $val = $prescription['times'][$slot];
+                            if (is_array($val)) {
+                                $qty = $val['qty'] ?? null;
+                            } else {
+                                $qty = $val;
+                            }
+                            if ($qty !== null && $qty !== '') {
+                                $times[$slot] = ['qty' => (int) $qty];
+                            }
+                        }
+                    }
+                }
+
+                $prescriptions[] = [
+                    'medicine_id' => $medicineId ?? null,
+                    'medicine_name' => $medicineName,
+                    'total_medicine' => $prescription['total_medicine'] ?? null,
+                    'total_day' => $prescription['total_day'] ?? null,
+                    'times' => $times,
+                ];
+
+                // Build medication summary string
+                $medicationSummary .= $medicineName;
+                if (!empty($prescription['total_day'])) {
+                    $medicationSummary .= " (Total Day: {$prescription['total_day']})";
+                }
+                if (!empty($prescription['total_medicine'])) {
+                    $medicationSummary .= " (Total Medicine: {$prescription['total_medicine']})";
+                }
+                if (!empty($times)) {
+                    $parts = [];
+                    foreach (['M','A','E'] as $k) {
+                        $q = $times[$k]['qty'] ?? null;
+                        if ($q !== null && $q !== '') { $parts[] = "{$k}:{$q}"; }
+                    }
+                    if (!empty($parts)) {
+                        $medicationSummary .= " (" . implode(' ', $parts) . ")";
+                    }
+                }
+                $medicationSummary .= "; ";
+            }
+            $medicationSummary = rtrim($medicationSummary, '; ');
+
+            $disease->prescriptions = $prescriptions;
+            // update drug_diagnosis/medication summary to reflect changes
+            $disease->drug_diagnosis = $medicationSummary;
+            $disease->save();
+        }
 
         return redirect()->route('workspace.common-diseases.index')->with('success', 'Disease updated successfully!');
     }
@@ -700,7 +793,12 @@ class WorkspaceController extends Controller
     public function gynecologyIndex()
     {
         // Fetch gynecology records with patient information
-        $gynecologyRecords = Gynecology::with('patient')->orderBy('updated_at', 'desc')->paginate(8);
+        $gynecologyRecords = Gynecology::with('patient')
+            ->where(function ($q) {
+                $q->where('delete', '!=', true)->orWhereNull('delete');
+            })
+            ->orderBy('updated_at', 'desc')
+            ->paginate(8);
 
         // Fetch patients with pending gynecology assignments using PatientAssign
         $incompletePatients = Patient::whereHas('assignments', function ($query) {
@@ -713,6 +811,7 @@ class WorkspaceController extends Controller
                   ->orWhere('gynecology_info_complete', 'false')
                   ->orWhereNull('gynecology_info_complete');
         })
+        ->notDeleted()
         ->with(['assignments' => function ($query) {
             $query->where('assigned_to', 'gynecology')
                   ->where('status', 'pending');
@@ -751,6 +850,7 @@ class WorkspaceController extends Controller
         $validated = $request->validate([
             'disease_id' => 'required|string',
             'symptoms' => 'required|string',
+            'treatment_plan' => 'nullable|string',
             'notes' => 'nullable|string',
             'prescriptions' => 'nullable|array',
             'prescriptions.*.medicine_id' => 'required_with:prescriptions|string',
@@ -810,6 +910,7 @@ class WorkspaceController extends Controller
             'disease_id' => $validated['disease_id'],
             'disease_name' => $diseaseName,
             'symptoms' => $validated['symptoms'],
+            'treatment_plan' => $validated['treatment_plan'] ?? null,
             'medication' => $medicationSummary,
             'prescriptions' => $prescriptions,
             'notes' => $validated['notes'] ?? null,
@@ -828,9 +929,22 @@ class WorkspaceController extends Controller
         return redirect()->route('workspace.gynecology.index')->with('success', 'Gynecology record deleted successfully!');
     }
 
+    /**
+     * Soft-delete a gynecology record by setting a delete flag.
+     */
+    public function gynecologySoftDelete(Request $request, $id)
+    {
+        $gynecologyRecord = Gynecology::findOrFail($id);
+        // ensure the 'delete' flag is set even if not in $fillable
+        $gynecologyRecord->delete = true;
+        $gynecologyRecord->save();
+
+        return redirect()->route('workspace.gynecology.index')->with('success', 'Gynecology record marked deleted.');
+    }
+
     public function showGynecologyPatientForm($patientId)
     {
-        $patient = Patient::with('assignments')->findOrFail($patientId);
+        $patient = Patient::with('assignments')->where('_id', $patientId)->notDeleted()->firstOrFail();
 
         // Get the PatientAssign record for this patient and gynecology assignment
         $patientAssign = PatientAssign::where('patient_id', $patientId)
@@ -849,12 +963,13 @@ class WorkspaceController extends Controller
 
     public function storeGynecologyPatientInfo(Request $request, $patientId)
     {
-        $patient = Patient::findOrFail($patientId);
+        $patient = Patient::where('_id', $patientId)->notDeleted()->firstOrFail();
 
         $validated = $request->validate([
             'disease_id' => 'required|string',
             'symptoms' => 'required|string',
             'notes' => 'nullable|string',
+            'treatment_plan' => 'nullable|string',
             'prescriptions' => 'nullable|array',
             'prescriptions.*.medicine_id' => 'required_with:prescriptions|string',
             'prescriptions.*.total_medicine' => 'nullable|integer|min:0',
@@ -983,6 +1098,7 @@ class WorkspaceController extends Controller
             'disease_id' => $validated['disease_id'],
             'disease_name' => $diseaseName,
             'symptoms' => $validated['symptoms'],
+            'treatment_plan' => $validated['treatment_plan'] ?? null,
             'medication' => $medicationSummary,
             'prescriptions' => $prescriptions,
             'notes' => $validated['notes'],
@@ -1015,6 +1131,7 @@ class WorkspaceController extends Controller
 
     public function dismissGynecologyPatient($patientId)
     {
+        $patient = Patient::where('_id', $patientId)->notDeleted()->firstOrFail();
         // Update PatientAssign status to dismissed
         $patientAssign = PatientAssign::where('patient_id', $patientId)
             ->where('assigned_to', 'gynecology')
@@ -1038,7 +1155,7 @@ class WorkspaceController extends Controller
 
     public function showCommonDiseasePatientForm($patientId)
     {
-        $patient = Patient::with('assignments')->findOrFail($patientId);
+        $patient = Patient::with('assignments')->where('_id', $patientId)->notDeleted()->firstOrFail();
 
         // Get the PatientAssign record for this patient and common disease assignment
         $patientAssign = PatientAssign::where('patient_id', $patientId)
@@ -1054,7 +1171,7 @@ class WorkspaceController extends Controller
 
     public function storeCommonDiseasePatientInfo(Request $request, $patientId)
     {
-        $patient = Patient::findOrFail($patientId);
+        $patient = Patient::where('_id', $patientId)->notDeleted()->firstOrFail();
 
         $validated = $request->validate([
             'symptoms' => 'required|string|max:1000',
@@ -1266,7 +1383,7 @@ class WorkspaceController extends Controller
 
     public function dismissCommonDiseasePatient($patientId)
     {
-        $patient = Patient::findOrFail($patientId);
+        $patient = Patient::where('_id', $patientId)->notDeleted()->firstOrFail();
         $patient->update(['common_disease_info_complete' => true]);
 
         // Update PatientAssign status to completed when dismissing
@@ -1302,7 +1419,7 @@ class WorkspaceController extends Controller
             ->where(function($query) use ($q) {
                 $query->where('first_name', 'like', '%' . $q . '%')
                       ->orWhere('last_name', 'like', '%' . $q . '%');
-            })
+            })->notDeleted()
             ->latest()
             ->limit($limit)
             ->get(['_id', 'first_name', 'last_name']);

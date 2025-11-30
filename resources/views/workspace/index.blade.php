@@ -4,10 +4,10 @@
         <div class="bg-white rounded-2xl shadow-sm p-8">
             <div class="text-center">
                 <h1 class="text-4xl font-bold text-gray-900 mb-4">
-                    Welcome to <span class="text-purple-600">WorkSpace</span>
+                    {{ trans('lang.welcome to') }} <span class="text-purple-600">{{ trans('lang.disease department') }}</span>
                 </h1>
                 <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                    Access your specialized healthcare modules and manage patient care with precision and efficiency.
+                    {{ trans('lang.please select any desease below') }}
                 </p>
                 <div class="mt-6 flex items-center justify-center space-x-6 text-sm text-gray-500">
                     <div class="flex items-center">

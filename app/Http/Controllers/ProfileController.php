@@ -54,8 +54,33 @@ class ProfileController extends Controller
         $user = $request->user();
 
         Auth::logout();
+        // Soft-delete instead of permanent delete to avoid accidental data loss.
+        // Set delete flag and save (bypass fillable).
+        $user->delete = true;
+        $user->save();
 
-        $user->delete();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return Redirect::to('/');
+    }
+
+    /**
+     * Soft-delete the authenticated user's account by setting a delete flag.
+     */
+    public function softDelete(Request $request): RedirectResponse
+    {
+        $request->validateWithBag('userDeletion', [
+            'password' => ['required', 'current_password'],
+        ]);
+
+        $user = $request->user();
+
+        // set soft-delete flag (not mass-assigned)
+        $user->delete = true;
+        $user->save();
+
+        Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();

@@ -226,9 +226,11 @@ class MedicineController extends Controller
     public function destroy($id)
     {
         $medicine = Medicine::findOrFail($id);
-        $medicine->delete();
+        // Soft-delete: mark record as deleted instead of removing from DB
+        $medicine->delete = true;
+        $medicine->save();
 
-        return redirect()->route('workspace.medicine.index')->with('success', 'Medicine deleted successfully!');
+        return redirect()->route('workspace.medicine.index')->with('success', 'Medicine removed (soft-deleted).');
     }
 
     public function update(Request $request, $id)

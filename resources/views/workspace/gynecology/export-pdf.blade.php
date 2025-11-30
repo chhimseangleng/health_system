@@ -76,6 +76,7 @@
         $symptoms = $meta['symptoms'] ?? ($record->symptoms ?? 'N/A');
         $medicationText = $meta['medicationText'] ?? ($record->medication ?? 'N/A');
         $notes = $meta['notes'] ?? ($record->notes ?? '');
+        $treatmentPlan = $meta['treatmentPlan'] ?? ($record->treatment_plan ?? ($record->treatmentPlan ?? 'N/A'));
     @endphp
     <div class="container">
         <div class="header">
@@ -122,19 +123,20 @@
         <div>{{ $medicationText }}</div>
 
         @php
-            $formatDose = function($value) {
-                if (is_array($value)) {
-                    $parts = [];
-                    if (isset($value['qty']) && $value['qty'] !== '') {
-                        $parts[] = 'Qty: ' . $value['qty'];
-                    }
-                    if (!empty($value['remark'])) {
-                        $parts[] = $value['remark'];
-                    }
-                    return implode(' • ', $parts);
+        $formatDose = function($value) {
+            // Return concise dose text for table columns (e.g. "1", "1 tablet", or "1 note")
+            if (is_array($value)) {
+                $parts = [];
+                if (isset($value['qty']) && $value['qty'] !== '') {
+                    $parts[] = (string)$value['qty'];
                 }
-                return $value;
-            };
+                if (!empty($value['remark'])) {
+                    $parts[] = (string)$value['remark'];
+                }
+                return trim(implode(' ', $parts));
+            }
+            return trim((string)$value);
+        };
         @endphp
         @if(!empty($prescriptions) && is_array($prescriptions))
             <div class="section-title">Prescriptions</div>
@@ -152,21 +154,43 @@
                 <tbody>
                     @foreach($prescriptions as $p)
                         @php
-                            $mid = (string)($p['medicine_id'] ?? '');
-                            $mname = $p['medicine_name'] ?? ($medicineMap[$mid] ?? $mid);
-                            $times = $p['times'] ?? [];
+                            // Support multiple shapes of prescription entries (string, array, object)
+                            $mid = (string)($p['medicine_id'] ?? ($p->medicine_id ?? ''));
+                            $rawName = $p['medicine_name'] ?? ($p->medicine_name ?? ($medicineMap[$mid] ?? ($p['name'] ?? ($p->name ?? ''))));
+                            // Sanitize names that include appended raw metadata like "(Total Day: 5)"
+                            if (is_string($rawName)) {
+                                $mname = preg_replace('/\s*\\([^)]*(?:Total|M:|A:|E:)[^)]*\\)\\s*$/i', '', $rawName);
+                                $mname = trim($mname);
+                                if ($mname === '') {
+                                    $mname = $rawName;
+                                }
+                            } else {
+                                $mname = (string)$rawName;
+                            }
+
+                            $totalMedicine = $p['total_medicine'] ?? ($p->total_medicine ?? '');
+                            $totalDay = $p['total_day'] ?? ($p->total_day ?? '');
+                            $times = $p['times'] ?? ($p->time ?? ($p->times ?? []));
+                            // Ensure times keys exist as simple values for display
+                            $mVal = $formatDose($times['M'] ?? ($times['morning'] ?? ''));
+                            $aVal = $formatDose($times['A'] ?? ($times['afternoon'] ?? ''));
+                            $eVal = $formatDose($times['E'] ?? ($times['evening'] ?? ''));
                         @endphp
                         <tr>
                             <td>{{ $mname }}</td>
-                            <td>{{ $p['total_medicine'] ?? '' }}</td>
-                            <td>{{ $p['total_day'] ?? '' }}</td>
-                            <td>{{ $formatDose($times['M'] ?? '') }}</td>
-                            <td>{{ $formatDose($times['A'] ?? '') }}</td>
-                            <td>{{ $formatDose($times['E'] ?? '') }}</td>
+                            <td>{{ $totalMedicine }}</td>
+                            <td>{{ $totalDay }}</td>
+                            <td>{{ $mVal }}</td>
+                            <td>{{ $aVal }}</td>
+                            <td>{{ $eVal }}</td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
+        @endif
+        @if(!empty($treatmentPlan) && $treatmentPlan !== 'N/A')
+            <div class="section-title">Treatment Plan</div>
+            <div>{!! nl2br(e($treatmentPlan)) !!}</div>
         @endif
 
         @if(!empty($notes))

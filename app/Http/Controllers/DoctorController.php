@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Role;
+use Illuminate\Support\Facades\Hash;
 
 class DoctorController extends Controller
 {
@@ -71,6 +72,7 @@ class DoctorController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $id . ',_id',
             'role' => 'required',
+            'password' => 'nullable|string|min:8|confirmed',
         ]);
 
         $doctor->update([
@@ -78,6 +80,12 @@ class DoctorController extends Controller
             'email' => $validated['email'],
             'role' => $validated['role'],
         ]);
+
+        // Update password only if provided
+        if (!empty($validated['password'])) {
+            $doctor->password = Hash::make($validated['password']);
+            $doctor->save();
+        }
 
         return redirect()->route('doctors.index')->with('success', 'Doctor updated successfully!');
     }
@@ -94,7 +102,26 @@ class DoctorController extends Controller
             return redirect()->route('doctors.index')->withErrors(trans('lang.cannot_delete_self') ?: 'You cannot delete your own account.');
         }
 
-        $doctor->delete();
+        // Soft-delete by default: set delete flag
+        $doctor->delete = true;
+        $doctor->save();
+
+        return redirect()->route('doctors.index')->with('success', trans('lang.user deleted') ?: 'user deleted successfully!');
+    }
+
+    /**
+     * Soft-delete a doctor (set delete flag).
+     */
+    public function softDelete(Request $request, string $id)
+    {
+        $doctor = User::findOrFail($id);
+
+        if (auth()->check() && (string) auth()->id() === (string) $doctor->_id) {
+            return redirect()->route('doctors.index')->withErrors(trans('lang.cannot_delete_self') ?: 'You cannot delete your own account.');
+        }
+
+        $doctor->delete = true;
+        $doctor->save();
 
         return redirect()->route('doctors.index')->with('success', trans('lang.user deleted') ?: 'user deleted successfully!');
     }

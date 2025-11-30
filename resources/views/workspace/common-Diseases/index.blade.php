@@ -73,29 +73,234 @@
                             </div>
                         </div>
 
-                        <!-- Common Disease Detail Modal -->
-                        <div id="commonDiseaseDetailModal"
-                           class="fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-all duration-300">
-                            <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full overflow-hidden relative">
-                                <div class="flex justify-between items-start border-b border-gray-100 pb-3 mb-4">
-                                    <h3 class="text-lg font-semibold text-gray-900">{{ trans('lang.record details') }}
-                                    </h3>
-                                    <button type="button" id="closeCommonDiseaseDetailModal"
-                                        class="w-8 h-8 rounded-lg text-gray-400 hover:bg-gray-200 flex items-center justify-center transition">
-                                        <svg class="w-4 h-4" aria-hidden="true" fill="none" viewBox="0 0 14 14">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                                        </svg>
-                                    </button>
+                        <div class="overflow-x-auto">
+                            <table id="CommonDiseasesTable"
+                                class="min-w-full  bg-white text-base divide-y divide-blue-300 shadow-sm text-center">
+                                <thead class="font-semibold text-4sm tracking-wider uppercase bg-gray-100 ">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-gray-700">Nº</th>
+                                        <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.name') }}
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-gray-700">
+                                            {{ trans('lang.physician') }}
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.age') }}</th>
+                                        <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.gender') }}
+                                        </th>
+                                        {{-- <th scope="col" class="px-6 py-3 text-gray-700">
+                                            {{ trans('lang.drug diagnosis') }}</th> --}}
+                                        <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.village') }}
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.date') }}
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-gray-700">
+                                            {{ trans('lang.actions') }}
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="diseasesTableBody" class="divide-y divide-blue-100 bg-white">
+                                    @forelse($diseases as $i => $d)
+                                        <tr class="hover:bg-gray-50 transition-all duration-200">
+                                            <td class="px-6 py-4 text-center font-semibold">
+                                                {{ $diseases->total() - $diseases->firstItem() - $i + 1 }}</td>
+                                            <td class="px-5 py-4 text-base font-bold text-gray-900">
+                                                {{ $d->name }}
+                                            </td>
+                                            <td class="px-6 py-4 text-base text-gray-800">
+                                                <span
+                                                    class="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 text-blue-700 font-bold text-sm shadow">
+                                                    {{ $d->physician ?? 'N/A' }}
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 text-base text-gray-800">{{ $d->age }}</td>
+                                            <td class="px-6 py-4 text-center">
+                                                @if (!empty($d->gender))
+                                                    <span
+                                                        class="inline-flex items-center px-3 py-1 rounded-full truncate font-medium{{ strtolower($d->gender) === 'male' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-pink-50 text-pink-700 border border-pink-200' }}">
+                                                        {{ trans('lang.' . strtolower($d->gender)) }}
+                                                    </span>
+                                                @else
+                                                    <span class="text-gray-400 italic">—</span>
+                                                @endif
+                                            </td>
+                                            <td class="px-6 py-4 text-base text-gray-800">{{ $d->village }}</td>
+                                            <td class="px-6 py-4 text-base text-gray-800">
+                                                {{ optional($d->updated_at)->format('d-m-Y') }}</td>
+                                            <td class="px-6 py-4 text-base">
+                                                <div class="flex justify-center gap-2">
+                                                    <a href="{{ route('workspace.common-diseases.export.pdf', $d->_id) }}"
+                                                        title="Export PDF"
+                                                        class="inline-flex items-center p-2.5 text-orange-600 hover:text-orange-700 bg-orange-50 hover:bg-orange-100 rounded-xl transition-all duration-200 group">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                            stroke="currentColor" viewBox="0 0 24 24"
+                                                            stroke-width="1.5"
+                                                            class="w-5 h-5 group-hover:scale-110 transition-transform">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                d="M12 8v8m0 0l-3-3m3 3l3-3M5 12a7 7 0 1114 0 7 7 0 01-14 0z" />
+                                                        </svg>
+                                                    </a>
+
+
+                                                    <button type="button" onclick="viewDisease(this)"
+                                                        title="{{ trans('lang.view details') }}"
+                                                        data-name="{{ $d->name }}"
+                                                        data-physician="{{ $d->physician ?? 'N/A' }}"
+                                                        data-age="{{ $d->age }}"
+                                                        data-gender="{{ $d->gender ?? 'N/A' }}"
+                                                        data-village="{{ $d->village ?? 'N/A' }}"
+                                                        data-updated="{{ optional($d->updated_at)->format('Y-m-d') }}"
+                                                        data-drug-diagnosis="{{ base64_encode(json_encode($d->drug_diagnosis ?? null)) }}"
+                                                        class="inline-flex items-center p-2.5 text-green-600 hover:text-green-700 bg-green-50 hover:bg-green-100 rounded-xl transition-all duration-200 group">
+                                                        <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                            viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z">
+                                                            </path>
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                                            </path>
+                                                        </svg>
+                                                    </button>
+                                                    <button type="button"
+                                                        onclick="openEditModal(@js($d), '{{ route('workspace.common-diseases.update', $d->_id) }}')"
+                                                        title="Edit"
+                                                        class="inline-flex items-center p-2.5 text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-xl transition-all duration-200 group">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                            viewBox="0 0 24 24" stroke-width="1.5"
+                                                            stroke="currentColor"
+                                                            class="w-5 h-5 mr-1 group-hover:scale-110 transition-transform">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                                                        </svg>
+                                                    </button>
+
+                                                    <button
+                                                        onclick="openDeleteModal('{{ route('workspace.common-diseases.destroy', $d->_id) }}', '{{ $d->name ?? 'this record' }}')"
+                                                        class="inline-flex items-center p-2.5 text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 rounded-xl transition-all duration-200 group">
+                                                        <svg class="w-5 h-5 group-hover:scale-110 transition-transform"
+                                                            fill="none" stroke="currentColor" stroke-width="1.5"
+                                                            viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="11"
+                                                class="px-6 py-8 text-center text-blue-400 text-lg font-semibold">
+                                                {{ trans('lang.no record yet') }}</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="mt-8">
+                            {{ $diseases->links() }}
+                        </div>
+
+                        {{-- Single shared Edit modal for common diseases --}}
+                        @include('workspace.common-Diseases.edit-modal')
+
+
+                        {{-- Delete Modal --}}
+                        <div id="deleteModal"
+                            class="hidden fixed inset-0 bg-gray-900 bg-opacity-70 z-50 backdrop-blur-sm">
+                            <div
+                                class="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 relative border border-gray-200 mx-auto my-48">
+
+                                <!-- Close Button -->
+                                <button onclick="closeDeleteModal()"
+                                    class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+
+                                <!-- Icon -->
+                                <div
+                                    class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-50 mb-6">
+                                    <svg class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667
+                                        1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732
+                                        0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                                    </svg>
                                 </div>
-                                <div id="commonDiseaseDetailBody" class="space-y-3 text-sm">
+
+                                <!-- Text -->
+                                <h2 class="text-2xl font-bold text-gray-900 mb-3 text-center">
+                                    {{ trans('lang.confirm delete') }}</h2>
+                                <p class="text-gray-600 text-center mb-8">
+                                    {{ trans('lang.are you sure you want to delete') }}
+                                    <span id="deleteItemName" class="font-semibold text-red-700"></span>?<br>
+                                    {{ trans('lang.this action cannot be undone') }}.
+                                </p>
+
+                                <!-- Buttons -->
+                                <div class="flex justify-center space-x-4">
+                                    <button onclick="closeDeleteModal()"
+                                        class="px-6 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 font-medium transition">
+                                        {{ trans('lang.cancel') }}
+                                    </button>
+
+                                    <form id="deleteForm" method="POST" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="px-6 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700 font-medium transition">
+                                            {{ trans('lang.delete') }}
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Common Disease Detail Modal (styled like medicine detail) -->
+                        <div id="commonDiseaseDetailModal"
+                            class="fixed inset-0 bg-gray-900 bg-opacity-70 hidden flex items-center justify-center z-50 backdrop-blur-sm">
+                            <div
+                                class="bg-white rounded-3xl shadow-2xl w-full max-w-3xl p-6 relative border border-gray-200 overflow-y-auto max-h-[90vh]">
+
+                                <!-- Close Button -->
+                                <button type="button" id="closeCommonDiseaseDetailModal"
+                                    onclick="closeCommonDiseaseDetailModal()"
+                                    class="absolute top-5 right-7 mt-2 text-gray-500 hover:text-gray-800 transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+
+                                <!-- Header -->
+                                <div class="mb-6 flex items-center gap-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-green-600"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M9 12h6m2 8H7a2 2 0 01-2-2V6a2 2 0 012-2h8l6 6v8a2 2 0 01-2 2z" />
+                                    </svg>
+
+                                    <h3 class="text-3xl font-bold text-gray-600">{{ trans('lang.record details') }}
+                                    </h3>
+                                </div>
+
+                                <!-- Body -->
+                                <div id="commonDiseaseDetailBody" class="space-y-6 text-gray-700 text-lg">
                                     <div class="text-gray-400">{{ trans('lang.loading') }}...</div>
                                 </div>
 
-                                <!-- Footer actions -->
-                                <div class="mt-4 flex justify-end space-x-2">
+                                <!-- Footer -->
+                                <div class="mt-6 text-right border-t border-gray-200 pt-4">
                                     <button type="button" onclick="closeCommonDiseaseDetailModal()"
-                                        class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
+                                        class="px-6 py-2 bg-gray-700 text-white rounded-xl font-semibold hover:bg-gray-800 transition">
                                         {{ trans('lang.close') }}
                                     </button>
                                 </div>
@@ -187,19 +392,10 @@
                                                         <div class="block font-normal rounded-md mt-1 bg-gray-100 text-gray-800 border border-gray-200 px-2 py-2">${drugDiagnosis}</div>
                                                     </div>
                                                     <div>
-                                                        <span class="text-gray-500 font-medium">{{ trans('lang.updated') }}:</span>
+                                                        <span class="text-gray-500 font-medium">{{ trans('lang.date') }}:</span>
                                                         <span class="font-semibold text-gray-900 ml-2">${updated}</span>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Additional details section -->
-                                        <div class="mt-4">
-                                            <h4 class="text-md font-semibold text-gray-700 mb-2">{{ trans('lang.additional details') }}</h4>
-                                            <div class="bg-white rounded-xl p-4 border border-gray-100 text-sm text-gray-800">
-                                                <!-- Placeholder: you can add more fields here -->
-                                                {{ trans('lang.no additional details') }}
                                             </div>
                                         </div>
                                     </div>
@@ -236,254 +432,6 @@
                                 modal.classList.remove('flex');
                             }
                         </script>
-
-                        <div class="overflow-x-auto">
-                            <table id="CommonDiseasesTable"
-                                class="min-w-full  bg-white text-base divide-y divide-blue-300 shadow-sm text-center">
-                                <thead class="font-semibold text-4sm tracking-wider uppercase bg-gray-100 ">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3 text-gray-700">Nº</th>
-                                        <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.name') }}
-                                        </th>
-                                        <th scope="col" class="px-6 py-3 text-gray-700">
-                                            {{ trans('lang.physician') }}
-                                        </th>
-                                        <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.age') }}</th>
-                                        <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.gender') }}
-                                        </th>
-                                        {{-- <th scope="col" class="px-6 py-3 text-gray-700">
-                                            {{ trans('lang.drug diagnosis') }}</th> --}}
-                                        <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.village') }}
-                                        </th>
-                                        <th scope="col" class="px-6 py-3 text-gray-700">{{ trans('lang.updated') }}
-                                        </th>
-                                        <th scope="col" class="px-6 py-3 text-gray-700">
-                                            {{ trans('lang.actions') }}
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody id="diseasesTableBody" class="divide-y divide-blue-100 bg-white">
-                                    @forelse($diseases as $i => $d)
-                                        <tr class="hover:bg-gray-50 transition-all duration-200">
-                                            <td class="px-6 py-4 text-center font-semibold">
-                                                {{ $diseases->total() - $diseases->firstItem() - $i + 1 }}</td>
-                                            <td class="px-5 py-4 text-base font-bold text-gray-900">
-                                                {{ $d->name }}
-                                            </td>
-                                            <td class="px-6 py-4 text-base text-gray-800">
-                                                <span
-                                                    class="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 text-blue-700 font-bold text-sm shadow">
-                                                    {{ $d->physician ?? 'N/A' }}
-                                                </span>
-                                            </td>
-                                            <td class="px-6 py-4 text-base text-gray-800">{{ $d->age }}</td>
-                                            <td class="px-6 py-4 text-center">
-                                                @if (!empty($d->gender))
-                                                    <span
-                                                        class="inline-flex items-center px-3 py-1 rounded-full truncate font-medium{{ strtolower($d->gender) === 'male' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-pink-50 text-pink-700 border border-pink-200' }}">
-                                                        {{ trans('lang.' . strtolower($d->gender)) }}
-                                                    </span>
-                                                @else
-                                                    <span class="text-gray-400 italic">—</span>
-                                                @endif
-                                            </td>
-
-                                            {{-- <td class="px-6 py-4 text-base text-gray-800">
-                                                @php
-                                                    $prescriptions = $d->prescriptions ?? null;
-                                                @endphp
-                                                @if (!empty($prescriptions) && is_array($prescriptions))
-                                                    <div class="space-y-2">
-                                                        @foreach ($prescriptions as $p)
-                                                            @php
-                                                                $mid = (string) ($p['medicine_id'] ?? '');
-                                                                $mname = $medicineMap[$mid] ?? '';
-                                                                $tm = $p['total_medicine'] ?? null;
-                                                                $td = $p['total_day'] ?? null;
-                                                                $times = $p['times'] ?? [];
-                                                            @endphp
-                                                            <div>
-                                                                <div class="text-gray-900">
-                                                                    <span
-                                                                        class="font-semibold">{{ $mname }}</span>
-                                                                    @if (!is_null($td) || !is_null($tm))
-                                                                        <span class="text-gray-700 text-xs">-
-                                                                            @if (!is_null($td))
-                                                                                Total Day: {{ $td }}
-                                                                            @endif
-                                                                            @if (!is_null($td) && !is_null($tm))
-                                                                                ,
-                                                                            @endif
-                                                                            @if (!is_null($tm))
-                                                                                Total Medicine: {{ $tm }}
-                                                                            @endif
-                                                                        </span>
-                                                                    @endif
-                                                                </div>
-                                                                <div class="mt-1 text-xs text-gray-700">
-                                                                    @foreach (['M' => 'Morning', 'A' => 'Afternoon', 'E' => 'Evening'] as $k => $label)
-                                                                        @php $t = $times[$k] ?? null; @endphp
-                                                                        @if ($t && (isset($t['qty']) || !empty($t['remark'])))
-                                                                            <div>
-                                                                                <span
-                                                                                    class="inline-block w-20 text-blue-500">{{ $label }}
-                                                                                    ({{ $k }})
-                                                                                </span>
-                                                                                @if (isset($t['qty']))
-                                                                                    <span
-                                                                                        class="font-medium">x{{ $t['qty'] }}</span>
-                                                                                @endif
-                                                                                @if (!empty($t['remark']))
-                                                                                    <span class="text-blue-400">-
-                                                                                        {{ $t['remark'] }}</span>
-                                                                                @endif
-                                                                            </div>
-                                                                        @endif
-                                                                    @endforeach
-                                                                </div>
-                                                            </div>
-                                                        @endforeach
-                                                    </div>
-                                                @else
-                                                    {{ $d->drug_diagnosis }}
-                                                @endif
-                                            </td> --}}
-                                            <td class="px-6 py-4 text-base text-gray-800">{{ $d->village }}</td>
-                                            {{-- <td class="px-6 py-4 text-base text-blue-800">{{ $d->commune }}</td> --}}
-                                            <td class="px-6 py-4 text-base text-gray-800">
-                                                {{ optional($d->updated_at)->format('Y-m-d') }}</td>
-                                            <td class="px-6 py-4 text-base">
-                                                <div class="flex justify-center gap-2">
-                                                    <a href="{{ route('workspace.common-diseases.export.pdf', $d->_id) }}"
-                                                        title="Export PDF"
-                                                        class="inline-flex items-center p-2.5 text-orange-600 hover:text-orange-700 bg-orange-50 hover:bg-orange-100 rounded-xl transition-all duration-200 group">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                            stroke="currentColor" viewBox="0 0 24 24"
-                                                            stroke-width="1.5"
-                                                            class="w-5 h-5 group-hover:scale-110 transition-transform">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                d="M12 8v8m0 0l-3-3m3 3l3-3M5 12a7 7 0 1114 0 7 7 0 01-14 0z" />
-                                                        </svg>
-                                                    </a>
-
-
-                                                    <button type="button" onclick="viewDisease(this)"
-                                                        title="{{ trans('lang.view details') }}"
-                                                        data-name="{{ $d->name }}"
-                                                        data-physician="{{ $d->physician ?? 'N/A' }}"
-                                                        data-age="{{ $d->age }}"
-                                                        data-gender="{{ $d->gender ?? 'N/A' }}"
-                                                        data-village="{{ $d->village ?? 'N/A' }}"
-                                                        data-updated="{{ optional($d->updated_at)->format('Y-m-d') }}"
-                                                        data-drug-diagnosis="{{ base64_encode(json_encode($d->drug_diagnosis ?? null)) }}"
-                                                        class="inline-flex items-center p-2.5 text-green-600 hover:text-green-700 bg-green-50 hover:bg-green-100 rounded-xl transition-all duration-200 group">
-                                                        <svg class="w-5 h-5" fill="none" stroke="currentColor"
-                                                            viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z">
-                                                            </path>
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                                            </path>
-                                                        </svg>
-                                                    </button>
-                                                    <button type="button" onclick="openEditModal(@js($d))"
-                                                        title="Edit"
-                                                        class="inline-flex items-center p-2.5 text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-xl transition-all duration-200 group">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                            viewBox="0 0 24 24" stroke-width="1.5"
-                                                            stroke="currentColor"
-                                                            class="w-5 h-5 mr-1 group-hover:scale-110 transition-transform">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                                                        </svg>
-                                                    </button>
-                                                    @include('workspace.common-Diseases.edit-modal')
-
-                                                    <button
-                                                    onclick="openDeleteModal('{{ route('workspace.common-diseases.destroy', $d->_id) }}', '{{ $d->name ?? 'this record' }}')"
-                                                    class="inline-flex items-center p-2.5 text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 rounded-xl transition-all duration-200 group">
-                                                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform"
-                                                        fill="none" stroke="currentColor" stroke-width="1.5"
-                                                        viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                                                    </svg>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="11"
-                                                class="px-6 py-8 text-center text-blue-400 text-lg font-semibold">
-                                                {{ trans('lang.no record yet') }}</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="mt-8">
-                            {{ $diseases->links() }}
-                        </div>
-
-
-                        {{-- Delete Modal --}}
-                        <div id="deleteModal"
-                            class="hidden fixed inset-0 bg-gray-900 bg-opacity-70 z-50 backdrop-blur-sm">
-                            <div
-                                class="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 relative border border-gray-200 mx-auto my-48">
-
-                                <!-- Close Button -->
-                                <button onclick="closeDeleteModal()"
-                                    class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-
-                                <!-- Icon -->
-                                <div
-                                    class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-50 mb-6">
-                                    <svg class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667
-                                        1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732
-                                        0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                                    </svg>
-                                </div>
-
-                                <!-- Text -->
-                                <h2 class="text-2xl font-bold text-gray-900 mb-3 text-center">
-                                    {{ trans('lang.confirm delete') }}</h2>
-                                <p class="text-gray-600 text-center mb-8">
-                                    {{ trans('lang.are you sure you want to delete') }}
-                                    <span id="deleteItemName" class="font-semibold text-red-700"></span>?<br>
-                                    {{ trans('lang.this action cannot be undone') }}.
-                                </p>
-
-                                <!-- Buttons -->
-                                <div class="flex justify-center space-x-4">
-                                    <button onclick="closeDeleteModal()"
-                                        class="px-6 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 font-medium transition">
-                                        {{ trans('lang.cancel') }}
-                                    </button>
-
-                                    <form id="deleteForm" method="POST" class="inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="px-6 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700 font-medium transition">
-                                            {{ trans('lang.delete') }}
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
 
                         <div class="mb-8">
                             @if (session('success'))
@@ -781,15 +729,6 @@
                                         <span class="font-semibold text-gray-900 ml-2">${updated}</span>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-
-                        <!-- Additional details section -->
-                        <div class="mt-4">
-                            <h4 class="text-md font-semibold text-gray-700 mb-2">{{ trans('lang.additional details') }}</h4>
-                            <div class="bg-white rounded-xl p-4 border border-gray-100 text-sm text-gray-800">
-                                <!-- Placeholder: you can add more fields here -->
-                                {{ trans('lang.no additional details') }}
                             </div>
                         </div>
                     </div>

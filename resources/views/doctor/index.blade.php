@@ -73,7 +73,7 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <span class="text-sm text-gray-600">
-                                                {{ \Carbon\Carbon::parse($doctor->created_at)->format('M d, Y') }}
+                                                {{ \Carbon\Carbon::parse($doctor->created_at)->format('d M, Y') }}
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
@@ -85,7 +85,7 @@
                                                     </svg>
                                                     {{ trans('lang.edit') }}
                                                 </a>
-                                                <button type="button" onclick="openDeleteModal({{ json_encode($doctor->name ?? 'N/A') }}, {{ json_encode(route('doctors.destroy', $doctor->_id)) }})"
+                                                <button type="button" onclick="openDeleteModal({{ json_encode($doctor->name ?? 'N/A') }}, {{ json_encode(route('doctors.softDelete', $doctor->_id)) }})"
                                                     class="inline-flex items-center px-3 py-1.5 text-xs font-semibold rounded-lg text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1 shadow-sm transition-all duration-200 transform hover:scale-105">
                                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
@@ -152,7 +152,8 @@
 
                                 <form id="deleteForm" method="POST" class="inline">
                                     @csrf
-                                    @method('DELETE')
+                                    @method('PATCH')
+                                    <input type="hidden" name="delete" value="1" />
                                     <button type="submit"
                                         class="px-6 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 font-semibold transition-all duration-200 shadow-sm">
                                         {{ trans('lang.delete') }}

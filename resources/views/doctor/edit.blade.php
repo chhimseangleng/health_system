@@ -34,7 +34,7 @@
                             <!-- Name Field -->
                             <div>
                                 <label for="name" class="block text-base font-semibold text-blue-800 mb-2">
-                                    <span class="inline-block mr-2">{{ trans('lang.name') }}</span>
+                                    <span class="inline-block">{{ trans('lang.name') }}</span>
                                     <span class="text-red-500">*</span>
                                 </label>
                                 <input type="text" id="name" name="name"
@@ -49,7 +49,7 @@
                             <!-- Email Field -->
                             <div>
                                 <label for="email" class="block text-base font-semibold text-blue-800 mb-2">
-                                    <span class="inline-block mr-2">{{ trans('lang.email') }}</span>
+                                    <span class="inline-block">{{ trans('lang.email') }}</span>
                                     <span class="text-red-500">*</span>
                                 </label>
                                 <input type="email" id="email" name="email"
@@ -64,7 +64,7 @@
                             <!-- Role Field -->
                             <div>
                                 <label for="role" class="block text-base font-semibold text-blue-800 mb-2">
-                                    <span class="inline-block mr-2">{{ trans('lang.medical specialization') }}</span>
+                                    <span class="inline-block">{{ trans('lang.medical specialization') }}</span>
                                     <span class="text-red-500">*</span>
                                 </label>
                                 <select id="role" name="role"
@@ -87,6 +87,33 @@
                                 </select>
 
                                 @error('role')
+                                    <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Password Reset Fields -->
+                            <div>
+                                <label for="password" class="block text-base font-semibold text-blue-800 mb-2">
+                                    <span class="inline-block">{{ trans('lang.new password') }}</span>
+                                    <span class="text-red-500">*</span>
+                                </label>
+                                <input type="password" id="password" name="password"
+                                    class="w-full px-4 py-3 border @error('password') border-red-400 @else border-blue-200 @enderror rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 placeholder-gray-400 text-gray-800"
+                                    placeholder="{{ trans('lang.enter new password') }}">
+                                @error('password')
+                                    <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="password_confirmation" class="block text-base font-semibold text-blue-800 mb-2">
+                                    <span class="inline-block">{{ trans('lang.confirm password') }}</span>
+                                    <span class="text-red-500">*</span>
+                                </label>
+                                <input type="password" id="password_confirmation" name="password_confirmation"
+                                    class="w-full px-4 py-3 border @error('password_confirmation') border-red-400 @else border-blue-200 @enderror rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 placeholder-gray-400 text-gray-800"
+                                    placeholder="{{ trans('lang.confirm new password') }}">
+                                @error('password_confirmation')
                                     <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p>
                                 @enderror
                             </div>

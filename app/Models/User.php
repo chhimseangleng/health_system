@@ -5,6 +5,8 @@ namespace App\Models;
 use MongoDB\Laravel\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class User extends Authenticatable
 {
@@ -69,4 +71,16 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Global scope to exclude soft-deleted users (where `delete` is true).
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope('not_deleted', function (Builder $builder) {
+            $builder->where(function ($q) {
+                $q->where('delete', '!=', true)->orWhereNull('delete');
+            });
+        });
+    }
 }

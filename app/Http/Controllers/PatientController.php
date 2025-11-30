@@ -15,7 +15,7 @@ class PatientController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Patient::with('assignments');
+        $query = Patient::with('assignments')->notDeleted();
 
         // Search by name
         if ($request->has('search') && !empty($request->search)) {
@@ -108,7 +108,7 @@ class PatientController extends Controller
             'role' => 'required|in:vaccine,common disease,gynecology,medicine',
         ]);
 
-        $patient = Patient::findOrFail($validated['patient_id']);
+        $patient = Patient::where('_id', $validated['patient_id'])->notDeleted()->firstOrFail();
         $patient->update(['role' => $validated['role']]);
 
         return redirect()->back()->with('success', 'Patient ' . $patient->first_name . ' ' . $patient->last_name . ' has been assigned to ' . $validated['role'] . ' service!');
@@ -121,19 +121,19 @@ class PatientController extends Controller
 
     public function edit($id)
     {
-        $patient = Patient::findOrFail($id);
+        $patient = Patient::where('_id', $id)->notDeleted()->firstOrFail();
         return view('patients.edit', compact('patient'));
     }
 
     public function update(Request $request, $id)
     {
-        $patient = Patient::findOrFail($id);
-
+        $patient = Patient::where('_id', $id)->notDeleted()->firstOrFail();
+        // dd($request->all());
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
-            'address' => 'required|string|max:255',
+            'address' => 'nullable|string|max:255',
             'date_of_birth' => 'required|date',
             'gender' => 'required|in:male,female,other',
         ]);
@@ -154,9 +154,11 @@ class PatientController extends Controller
 
     public function destroy($id)
     {
-        $patient = Patient::findOrFail($id);
-        $patient->delete();
-        return redirect()->route('patients.index')->with('success', 'Patient deleted successfully!');
+        $patient = Patient::where('_id', $id)->notDeleted()->firstOrFail();
+        // Mark patient as deleted using the custom 'delete' field instead of removing the document
+        $patient->delete = true;
+        $patient->save();
+        return redirect()->route('patients.index')->with('success', 'Patient marked as deleted successfully!');
     }
 
     public function storeService(Request $request)
@@ -287,8 +289,11 @@ class PatientController extends Controller
     {
         $userId = (string) Auth::user()->_id;
 
-        // Get paginated assignments for the current user with patient information
+        // Get paginated assignments for the current user with patient information (exclude assignments whose patient is marked deleted)
         $assignments = PatientAssign::where('assigned_user_id', $userId)
+            ->whereHas('patient', function($q) {
+                $q->whereNull('delete')->orWhere('delete', '!=', true);
+            })
             ->with(['patient'])
             ->orderBy('assigned_date', 'desc')
             ->paginate(10); // You can adjust the per-page value as needed
@@ -304,7 +309,7 @@ class PatientController extends Controller
         });
 
         if ($invalidAssignments->count() > 0) {
-            \Log::warning('Found assignments with invalid patients (paginated)', [
+            Log::warning('Found assignments with invalid patients (paginated)', [
                 'invalid_count' => $invalidAssignments->count(),
                 'invalid_ids' => $invalidAssignments->pluck('_id')->toArray()
             ]);
@@ -320,7 +325,9 @@ class PatientController extends Controller
 
         // Get counts for each status (for all assignments, not just current page)
         $allValidAssignments = PatientAssign::where('assigned_user_id', $userId)
-            ->whereHas('patient')
+            ->whereHas('patient', function($q) {
+                $q->whereNull('delete')->orWhere('delete', '!=', true);
+            })
             ->get();
 
         $statusCounts = [

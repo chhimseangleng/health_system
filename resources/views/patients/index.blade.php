@@ -98,9 +98,18 @@
                                             <td class="px-6 py-4 truncate">{{ $patient->phone }}</td>
                                             <td class="px-6 py-4 truncate">{{ $patient->address }}</td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <span
-                                                    class="inline-flex items-center px-3 py-1 rounded-full truncate font-medium {{ $patient->gender === 'Male' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-pink-50 text-pink-700 border border-pink-200' }}">
-                                                    {{ trans('lang.' . strtolower($patient->gender)) }}
+                                                @php
+                                                    $gender = strtolower($patient->gender);
+                                                    if ($gender === 'male') {
+                                                        $colorClass = 'bg-blue-50 text-blue-700 border border-blue-200';
+                                                    } elseif ($gender === 'female') {
+                                                        $colorClass = 'bg-pink-50 text-pink-700 border border-pink-200';
+                                                    } else {
+                                                        $colorClass = 'bg-gray-50 text-gray-700 border border-gray-200';
+                                                    }
+                                                @endphp
+                                                <span class="inline-flex items-center px-3 py-1 rounded-full truncate font-medium {{ $colorClass }}">
+                                                    {{ trans('lang.' . $gender) }}
                                                 </span>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -151,6 +160,7 @@
 
                                                     @include('patients.history', ['patient' => $patient])
 
+                                                    {{-- Delete Button --}}
                                                     <button type="button"
                                                         data-modal-target="deleteModal-{{ $patient->_id }}"
                                                         data-modal-toggle="deleteModal-{{ $patient->_id }}"

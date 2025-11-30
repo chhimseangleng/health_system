@@ -78,7 +78,7 @@
 
                             @include('workspace.medicine.add-modal')
 
-                            {{-- <button type="button" onclick="openBulkDispenseModal()"
+                            <button type="button" onclick="openBulkDispenseModal()"
                                 class="gap-3 px-6 py-4 bg-white text-blue-600 rounded-2xl text-sm font-medium hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200 shadow-lg hover:shadow-xl">
                                 <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -87,11 +87,11 @@
                                         d="M7 7h.01" />
                                 </svg>
                                 {{ trans('lang.cut stock') }}
-                            </button> --}}
+                            </button>
                         </div>
                     </div>
                 </div>
-                
+
                 {{-- Medicines Table --}}
                 <div class="p-0 md:p-1">
                     <div class="overflow-x-auto">
@@ -316,7 +316,12 @@
 
                 <!-- Close Button -->
                 <button type="button" onclick="closeEditMedicineModal()"
-                    class="absolute top-5 right-5 text-gray-500 hover:text-gray-700 transition">✕</button>
+                    class="absolute top-5 right-5 text-gray-500 hover:text-gray-800 transition mt-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
 
                 <h3 class="text-2xl font-bold text-blue-800 mb-6">{{ trans('lang.edit medicine') }}</h3>
 

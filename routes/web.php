@@ -109,6 +109,10 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
 
+    Route::get('/help', function () {
+        return view('help');
+    })->name('help');
+
     // Register
     Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
     Route::post('register', [RegisteredUserController::class, 'store'])->name('register.store');
@@ -177,6 +181,7 @@ Route::middleware('auth')->group(function () {
     Route::get('workspace/gynecology/{id}/edit', [WorkspaceController::class, 'gynecologyEdit'])->name('workspace.gynecology.edit');
     Route::get('workspace/gynecology/{id}/export/pdf', [WorkspaceController::class, 'exportGynecologyPdf'])->name('workspace.gynecology.export.pdf');
     Route::put('workspace/gynecology/{id}', [WorkspaceController::class, 'gynecologyUpdate'])->name('workspace.gynecology.update');
+    Route::patch('workspace/gynecology/{id}/soft-delete', [WorkspaceController::class, 'gynecologySoftDelete'])->name('workspace.gynecology.softDelete');
     Route::delete('workspace/gynecology/{id}', [WorkspaceController::class, 'gynecologyDestroy'])->name('workspace.gynecology.destroy');
 
     // Gynecology patient info
@@ -203,6 +208,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // Doctors
+    Route::patch('doctors/{id}/soft-delete', [DoctorController::class, 'softDelete'])->name('doctors.softDelete');
     Route::resource('doctors', DoctorController::class);
 
     // Super User admin CRUD for users
@@ -214,6 +220,7 @@ Route::middleware('auth')->group(function () {
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('/profile/soft-delete', [ProfileController::class, 'softDelete'])->name('profile.softDelete');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::post('/locale', App\Http\Controllers\LocaleController::class)->name('locale.change');

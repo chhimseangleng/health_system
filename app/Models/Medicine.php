@@ -28,8 +28,10 @@ class Medicine extends Model
         'stock_quantity',
         'minimum_stock',
         'is_active',
-        'requires_prescription'
+        'requires_prescription',
+        'delete'
     ];
+
 
     protected $casts = [
         'expiry_date' => 'date',
@@ -37,13 +39,27 @@ class Medicine extends Model
         'stock_quantity' => 'integer',
         'minimum_stock' => 'integer',
         'is_active' => 'boolean',
-        'requires_prescription' => 'boolean'
+        'requires_prescription' => 'boolean',
+        'delete' => 'boolean'
     ];
 
     // Scopes
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
+    }
+
+    /**
+     * Global scope to exclude soft-deleted documents where `delete` == true.
+     * Keeps records that don't have the `delete` field or have it set to false.
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope('not_deleted', function ($query) {
+            $query->where(function ($q) {
+                $q->whereNull('delete')->orWhere('delete', false);
+            });
+        });
     }
 
     public function scopeLowStock($query)

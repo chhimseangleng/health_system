@@ -42,7 +42,7 @@
                             <div>
                                 <span class="font-semibold text-gray-700">{{ trans('lang.date of birth') }}:</span>
                                 <p class="text-gray-900">
-                                    {{ \Carbon\Carbon::parse($patient->date_of_birth)->format('M d, Y') }}</p>
+                                    {{ \Carbon\Carbon::parse($patient->date_of_birth)->format('d M, Y') }}</p>
                             </div>
                             <div>
                                 <span class="font-semibold text-gray-700">{{ trans('lang.age') }}:</span>
@@ -113,13 +113,13 @@
                                         <div>
                                             <label for="father_name"
                                                 class="block text-sm font-medium text-gray-700 mb-2">{{ trans('lang.full name') }}</label>
-                                            <input type="text" id="father_name" name="father_name" required
+                                            <input type="text" id="father_name" name="father_name"
                                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                                         </div>
                                         <div>
                                             <label for="father_phone"
                                                 class="block text-sm font-medium text-gray-700 mb-2">{{ trans('lang.phone number') }}</label>
-                                            <input type="tel" id="father_phone" name="father_phone" required
+                                            <input type="tel" id="father_phone" name="father_phone"
                                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                                         </div>
                                     </div>
@@ -131,13 +131,13 @@
                                         <div>
                                             <label for="mother_name"
                                                 class="block text-sm font-medium text-gray-700 mb-2">{{ trans('lang.full name') }}</label>
-                                            <input type="text" id="mother_name" name="mother_name" required
+                                            <input type="text" id="mother_name" name="mother_name"
                                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                                         </div>
                                         <div>
                                             <label for="mother_phone"
                                                 class="block text-sm font-medium text-gray-700 mb-2">{{ trans('lang.phone number') }}</label>
-                                            <input type="tel" id="mother_phone" name="mother_phone" required
+                                            <input type="tel" id="mother_phone" name="mother_phone"
                                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                                         </div>
                                     </div>
@@ -171,7 +171,7 @@
                                     <div>
                                         <label for="birth_location"
                                             class="block text-sm font-medium text-gray-700 mb-2">{{ trans('lang.birth location') }}</label>
-                                        <input type="text" id="birth_location" name="birth_location" required
+                                        <input type="text" id="birth_location" name="birth_location"
                                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors">
                                     </div>
                                     <div>
@@ -215,7 +215,7 @@
                                 <div class="mt-4">
                                     <label for="description"
                                         class="block text-sm font-medium text-gray-700 mb-2">{{ trans('lang.description/notes') }}</label>
-                                    <textarea id="description" name="description" rows="4" required
+                                    <textarea id="description" name="description" rows="4"
                                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
                                         placeholder="   {{ trans('lang.enter any additional notes or observations...') }}"></textarea>
                                 </div>

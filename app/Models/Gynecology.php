@@ -17,6 +17,7 @@ class Gynecology extends Model
         'medication',
         'prescriptions',
         'notes',
+        'treatment_plan',
         'treatment_date',
         'staff_name',
     ];

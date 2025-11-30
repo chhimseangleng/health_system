@@ -21,6 +21,7 @@ class Patient extends Model
         'vaccine_additional_data',
         'common_disease_additional_data',
         'history',
+        'delete',
     ];
 
     // Role constants for consistency (moved to PatientAssign)
@@ -49,6 +50,7 @@ class Patient extends Model
             ->where('last_name', $lastName)
             ->where('phone', $phone)
             ->where('date_of_birth', $dateOfBirth)
+            ->notDeleted()
             ->first();
     }
 
@@ -61,7 +63,7 @@ class Patient extends Model
             $query->where('first_name', 'like', "%{$searchTerm}%")
                   ->orWhere('last_name', 'like', "%{$searchTerm}%")
                   ->orWhere('phone', 'like', "%{$searchTerm}%");
-        })->get();
+        })->notDeleted()->get();
     }
 
     /**
@@ -70,7 +72,7 @@ class Patient extends Model
     public static function debugPatient($id)
     {
         try {
-            $patient = self::find($id);
+            $patient = self::notDeleted()->find($id);
 
             if (!$patient) {
                 return [
@@ -107,6 +109,17 @@ class Patient extends Model
     public function assignments()
     {
         return $this->hasMany(PatientAssign::class);
+    }
+
+    /**
+     * Scope to exclude soft-deleted patients (where 'delete' is true).
+     * Includes documents where 'delete' is not set or is not true.
+     */
+    public function scopeNotDeleted($query)
+    {
+        return $query->where(function($q) {
+            $q->whereNull('delete')->orWhere('delete', '!=', true);
+        });
     }
 
     /**

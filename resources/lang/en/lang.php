@@ -45,6 +45,7 @@
         'english' => 'English',
         'hi' => 'Hi',
         'user deleted' => 'User Deleted',
+        'log out' => 'Log out',
 
         //assign patients
         'assign patient to service' => 'Assign Patient to Service',
@@ -223,6 +224,7 @@
         'patient vaccine record' => 'patient vaccine record',
         'prescriptions' => 'Prescriptions',
         'record details' => 'Record Details',
+        'add user' => 'Add User',
 
 
         //Common Diseases
@@ -252,9 +254,12 @@
         'are you sure you want to dismiss this patient' => 'Are you sure you want to dismiss this patient',
         'search common diseases by name, address...' => 'Search common diseases by name, address...',
         'diagnosis' => 'Diagnosis',
+        'record' => 'Record',
+        'edit pregnancy record' => 'Edit Pregnancy Record',
 
 
         //Medicine Management
+        'update medicine' => 'Update Medicine',
         'update user' => 'Update User',
         'manage your healthcare data' => 'Manage your healthcare data',
         'manage your health center\'s medicines.' => 'Manage your health center\'s medicines.',
@@ -275,13 +280,13 @@
         'and' => 'And',
         'export' => 'Export',
         'records' => 'Records',
-        'category' => 'CATEGORY',
-        'physician' => 'PHYSICIAN',
+        'category' => 'Category',
+        'physician' => 'Physician',
         'gender' => 'Gender',
         'drug diagnosis' => 'DRUG DIAGNOSIS',
-        'village' => 'VILLAGE',
-        'commune' => 'COMMUNE',
-        'updated' => 'UPDATED',
+        'village' => 'Village',
+        'commune' => 'Commune',
+        'updated' => 'Updated',
         'actions' => 'ACTIONS',
         'no record yet' => 'No record yet',
         'all status' => 'All Status',
@@ -332,6 +337,20 @@
         'indications' => 'Indications',
         'expiry date' => 'Expiry Date',
         'fill in the medicine details below to add it to your inventory' => 'Fill in the medicine details below to add it to your inventory',
+        'disease department' => 'Disease Department',
+        'welcome to' => 'Welcome to',
+        'please select any desease below' => 'Please select any desease below',
+        'select category' => 'Select Category',
+        'select form' => 'Select Form',
+        'select unit' => 'Select Unit',
+        'medicine details' => 'Medicine Details',
+        'new password' => 'New Password',
+        'confirm password' => 'Confirm Password',
+        'enter new password' => 'enter new password',
+        'confirm new password' => 'confirm new password',
+        'treatment plan' => 'Treatment Plan',
+        'describe the treatment plan...' => 'Describe the treatment plan...',
+
 
 
         'what this medicine is used for' => 'What this medicine is used for',

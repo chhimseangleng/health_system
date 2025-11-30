@@ -7,9 +7,11 @@
                         <!-- Header -->
                         <div class="flex flex-col sm:flex-row items-center justify-between mb-10 gap-4">
                             <div class="flex items-center gap-3">
-                                <span class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 shadow">
+                                <span
+                                    class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 shadow">
                                     <!-- Pregnancy icon (FontAwesome baby icon) -->
-                                    <svg class="w-7 h-7 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-7 h-7 text-blue-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.492-1.026 3.365.847 2.339 2.338a1.724 1.724 0 001.066 2.574c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c1.026 1.492-.847 3.365-2.338 2.339a1.724 1.724 0 00-2.574 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.492 1.026-3.365-.847-2.339-2.338a1.724 1.724 0 00-1.066-2.574c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-1.026-1.492.847-3.365 2.338-2.339a1.724 1.724 0 002.574-1.066z" />
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -20,27 +22,29 @@
                                     <h1 class="text-4xl font-bold text-gray-700 tracking-tight">
                                         {{ trans('lang.complete pregnancy information') }}
                                     </h1>
-                                    <p class="text-base text-gray-600 mt-2">{{ trans('lang.fill in the patient\'s pregnancy details')}}</p>
+                                    <p class="text-base text-gray-600 mt-2">
+                                        {{ trans('lang.fill in the patient\'s pregnancy details') }}</p>
                                 </div>
                             </div>
                             <a href="{{ route('workspace.gynecology.index') }}"
-                               class="flex items-center px-6 py-2 bg-blue-200 text-blue-800 font-semibold rounded-lg shadow hover:bg-blue-300 transition">
+                                class="flex items-center px-6 py-2 bg-blue-200 text-blue-800 font-semibold rounded-lg shadow hover:bg-blue-300 transition">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                                        d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                                 </svg>
                                 {{ trans('lang.back') }}
                             </a>
                         </div>
 
                         <!-- Patient Info Card -->
-                        <div class="bg-gradient-to-r from-blue-50 via-blue-100 to-blue-200 rounded-2xl p-7 mb-12 border border-blue-200 shadow-inner">
+                        <div
+                            class="bg-gradient-to-r from-blue-50 via-blue-100 to-blue-200 rounded-2xl p-7 mb-12 border border-blue-200 shadow-inner">
                             <div class="flex items-center gap-6">
                                 <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center shadow">
                                     <svg class="w-10 h-10 text-blue-500" fill="none" stroke="currentColor"
-                                         viewBox="0 0 24 24">
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zm-4 7a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zm-4 7a7 7 0 00-7 7h14a7 7 0 00-7-7z">
                                         </path>
                                     </svg>
                                 </div>
@@ -48,15 +52,17 @@
                                     <h3 class="text-2xl font-semibold text-blue-900">
                                         {{ $patient->first_name }} {{ $patient->last_name }}
                                     </h3>
-                                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 mt-2 text-blue-800 text-[15px] font-medium">
+                                    <div
+                                        class="flex flex-col sm:flex-row sm:items-center gap-2 mt-2 text-blue-800 text-[15px] font-medium">
                                         <span>
                                             <span class="font-semibold">{{ trans('lang.age') }}:</span>
-                                            {{ \Carbon\Carbon::parse($patient->date_of_birth)->age }} {{ trans('lang.years') }}
+                                            {{ \Carbon\Carbon::parse($patient->date_of_birth)->age }}
+                                            {{ trans('lang.years') }}
                                         </span>
                                         <span>-</span>
                                         <span>
                                             <span class="font-semibold">{{ trans('lang.gender') }}:</span>
-                                           {{ trans('lang.' . strtolower($patient->gender)) }}</p>
+                                            {{ trans('lang.' . strtolower($patient->gender)) }}</p>
                                         </span>
                                         <span>-</span>
                                         <span>
@@ -64,13 +70,12 @@
                                             {{ $patient->phone }}
                                         </span>
                                     </div>
-                                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 mt-2 text-blue-700 text-sm">
+                                    <div
+                                        class="flex flex-col sm:flex-row sm:items-center gap-2 mt-2 text-blue-700 text-sm">
                                         <span class="font-semibold">{{ trans('lang.payment type') }}:</span>
                                         @php
                                             $currentAssignment = $patient->assignments()->latest()->first();
-                                            $paymentType = $currentAssignment
-                                                ? $currentAssignment->payment_type
-                                                : null;
+                                            $paymentType = $currentAssignment ? $currentAssignment->payment_type : null;
                                             $paymentColors = [
                                                 'nssf' => 'bg-blue-100 text-blue-800',
                                                 'cash' => 'bg-green-100 text-green-800',
@@ -78,7 +83,8 @@
                                             ];
                                         @endphp
                                         @if ($paymentType)
-                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium {{ $paymentColors[$paymentType] ?? 'bg-blue-200 text-blue-800' }}">
+                                            <span
+                                                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium {{ $paymentColors[$paymentType] ?? 'bg-blue-200 text-blue-800' }}">
                                                 {{ $paymentType === 'nssf' ? trans('lang.nssf member') : trans('lang.' . strtolower($paymentType)) }}
                                             </span>
                                         @else
@@ -99,10 +105,11 @@
                         @php
                             $isEdit = isset($gynecologyRecord);
                         @endphp
-                        <form action="{{ $isEdit ? route('workspace.gynecology.update', $gynecologyRecord->_id ?? '') : route('workspace.gynecology.patient.store', $patient->_id) }}" method="POST"
-                              class="space-y-10">
+                        <form
+                            action="{{ $isEdit ? route('workspace.gynecology.update', $gynecologyRecord->_id ?? '') : route('workspace.gynecology.patient.store', $patient->_id) }}"
+                            method="POST" class="space-y-10">
                             @csrf
-                            @if($isEdit)
+                            @if ($isEdit)
                                 @method('PUT')
                             @endif
 
@@ -110,9 +117,9 @@
                             <div class="bg-white rounded-2xl p-7 border border-blue-100 shadow">
                                 <h3 class="text-xl font-bold text-blue-800 mb-8 flex items-center gap-2">
                                     <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor"
-                                         viewBox="0 0 24 24">
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                              d="M9 12h6m2 0a2 2 0 100-4H7a2 2 0 100 4h10z"></path>
+                                            d="M9 12h6m2 0a2 2 0 100-4H7a2 2 0 100 4h10z"></path>
                                     </svg>
                                     {{ trans('lang.disease information') }}
                                 </h3>
@@ -123,12 +130,13 @@
                                             {{ trans('lang.disease name') }} <span class="text-red-400">*</span>
                                         </label>
                                         <select name="disease_id" id="disease_id" required
-                                                class="w-full px-4 py-3 border border-blue-300 rounded-lg bg-blue-50 focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition-all duration-200">
-                                            <option value="" disabled selected>{{ trans('lang.select a disease') }}
+                                            class="w-full px-4 py-3 border border-blue-300 rounded-lg bg-blue-50 focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition-all duration-200">
+                                            <option value="" disabled selected>
+                                                {{ trans('lang.select a disease') }}
                                             </option>
                                             @foreach ($gynecologyDiseases as $disease)
                                                 <option value="{{ $disease->_id }}"
-                                                        {{ old('disease_id', $isEdit ? ($gynecologyRecord->disease_id ?? null) : null) == $disease->_id ? 'selected' : '' }}>
+                                                    {{ old('disease_id', $isEdit ? $gynecologyRecord->disease_id ?? null : null) == $disease->_id ? 'selected' : '' }}>
                                                     {{ $disease->name }}
                                                 </option>
                                             @endforeach
@@ -143,8 +151,8 @@
                                             {{ trans('lang.patient symptoms') }} <span class="text-red-400">*</span>
                                         </label>
                                         <textarea name="symptoms" id="symptoms" rows="3" required
-                                                  class="w-full px-4 py-3 border border-blue-300 rounded-lg bg-blue-50 focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition-all duration-200"
-                                                  placeholder="{{ trans('lang.describe patient symptoms') }}">{{ old('symptoms', $isEdit ? ($gynecologyRecord->symptoms ?? '') : '') }}</textarea>
+                                            class="w-full px-4 py-3 border border-blue-300 rounded-lg bg-blue-50 focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition-all duration-200"
+                                            placeholder="{{ trans('lang.describe patient symptoms') }}">{{ old('symptoms', $isEdit ? $gynecologyRecord->symptoms ?? '' : '') }}</textarea>
                                         @error('symptoms')
                                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                                         @enderror
@@ -156,9 +164,9 @@
                             <div class="bg-white rounded-2xl border border-blue-100 p-7 shadow">
                                 <h3 class="text-xl font-bold text-blue-800 mb-8 flex items-center gap-2">
                                     <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor"
-                                         viewBox="0 0 24 24">
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                                     </svg>
                                     {{ trans('lang.medication prescribed') }}
                                 </h3>
@@ -167,15 +175,15 @@
                                         <label class="block text-sm font-bold text-blue-700 mb-3">
                                             {{ trans('lang.medication prescribed') }}
                                         </label>
-                            <div class="space-y-4">
+                                        <div class="space-y-4">
                                             <div id="prescription-rows" class="space-y-4"></div>
                                             <div class="flex items-center gap-4">
                                                 <button type="button" id="add-prescription-row"
-                                                        class="flex items-center px-4 py-2 bg-blue-400 hover:bg-blue-500 text-white text-sm font-semibold rounded-full shadow transition">
+                                                    class="flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-500 text-white text-sm font-semibold rounded-full shadow transition">
                                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
-                                                         viewBox="0 0 24 24">
+                                                        viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
-                                                              stroke-width="2" d="M12 4v16m8-8H4" />
+                                                            stroke-width="2" d="M12 4v16m8-8H4" />
                                                     </svg>
                                                     {{ trans('lang.add medicine') }}
                                                 </button>
@@ -190,13 +198,36 @@
                                 </div>
                             </div>
 
+                            <!-- Treatment Plan -->
+                            <div class="bg-white rounded-2xl border border-blue-100 p-7 shadow">
+                                <h3 class="text-xl font-bold text-blue-700 mb-4 flex items-center gap-2">
+                                    <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
+                                    {{ trans('lang.treatment plan') }}
+                                </h3>
+                                <div>
+                                    <label class="block text-sm font-bold text-blue-700 mb-2">
+                                        {{ trans('lang.treatment plan') }}
+                                    </label>
+                                    <textarea name="treatment_plan" rows="3"
+                                        class="w-full px-4 py-3 border border-blue-200 rounded-lg bg-blue-50 focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition"
+                                        placeholder="{{ trans('lang.describe the treatment plan...') }}">{{ old('treatment_plan', $isEdit ? $gynecologyRecord->treatment_plan ?? '' : '') }}</textarea>
+                                    @error('treatment_plan')
+                                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+
                             <!-- Additional Information -->
                             <div class="bg-white rounded-2xl border border-blue-100 p-7 shadow">
                                 <h3 class="text-xl font-bold text-blue-700 mb-8 flex items-center gap-2">
                                     <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor"
-                                         viewBox="0 0 24 24">
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                     </svg>
                                     {{ trans('lang.additional information') }}
                                 </h3>
@@ -205,8 +236,8 @@
                                         {{ trans('notes') }}
                                     </label>
                                     <textarea name="notes" rows="3"
-                                              class="w-full px-4 py-3 border border-blue-200 rounded-lg bg-blue-50 focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition"
-                                              placeholder="{{ trans('lang.additional notes or observations...') }}"></textarea>
+                                        class="w-full px-4 py-3 border border-blue-200 rounded-lg bg-blue-50 focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition"
+                                        placeholder="{{ trans('lang.additional notes or observations...') }}"></textarea>
                                     @error('notes')
                                         <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                                     @enderror
@@ -216,15 +247,14 @@
                             <!-- Submit Buttons -->
                             <div class="flex justify-end gap-6 pt-8 border-t border-blue-100 mt-6">
                                 <a href="{{ route('workspace.gynecology.index') }}"
-                                   class="px-8 py-3 text-blue-700 bg-blue-100 hover:bg-blue-200 font-bold rounded-full shadow transition">
+                                    class="px-8 py-3 text-blue-700 bg-blue-100 hover:bg-blue-200 font-bold rounded-2xl shadow-lg transition">
                                     {{ trans('lang.cancel') }}
                                 </a>
                                 <button type="submit"
-                                class="flex items-center gap-3 px-6 py-4 bg-blue-600 text-white rounded-2xl text-sm font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200 shadow-lg hover:shadow-xl">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor"
-                                         viewBox="0 0 24 24">
+                                    class="flex items-center gap-3 px-6 py-4 bg-blue-600 text-white rounded-2xl text-sm font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200 shadow-lg hover:shadow-xl">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                              d="M5 13l4 4L19 7"></path>
+                                            d="M5 13l4 4L19 7"></path>
                                     </svg>
                                     {{ trans('lang.complete information') }}
                                 </button>
@@ -238,16 +268,16 @@
 
     @if (session('success'))
         <div id="success-alert"
-             class="fixed bottom-6 right-6 z-50 border-green-400 bg-green-50 text-green-700 px-5 py-4 rounded-lg mb-4 shadow-xl min-w-[260px] max-w-sm"
-             role="alert">
+            class="fixed bottom-6 right-6 z-50 border-green-400 bg-green-50 text-green-700 px-5 py-4 rounded-lg mb-4 shadow-xl min-w-[260px] max-w-sm"
+            role="alert">
             <span class="font-semibold block">{{ session('success') }}</span>
         </div>
     @endif
 
     @if ($errors->any())
         <div id="error-alert"
-             class="fixed bottom-6 right-6 z-50 bg-red-50 border border-red-400 text-red-700 px-5 py-4 rounded-lg mb-4 shadow-xl min-w-[260px] max-w-sm"
-             role="alert">
+            class="fixed bottom-6 right-6 z-50 bg-red-50 border border-red-400 text-red-700 px-5 py-4 rounded-lg mb-4 shadow-xl min-w-[260px] max-w-sm"
+            role="alert">
             <ul class="pl-5 space-y-1 list-disc">
                 @foreach ($errors->all() as $error)
                     <li class="font-medium">{{ $error }}</li>
@@ -299,7 +329,7 @@
             }).filter(function(med) {
                 return med && (med.id !== '' || med.name !== '');
             });
-            const oldPrescriptions = @json(old('prescriptions', $isEdit ? ($gynecologyRecord->prescriptions ?? []) : []));
+            const oldPrescriptions = @json(old('prescriptions', $isEdit ? $gynecologyRecord->prescriptions ?? [] : []));
 
             const rowsContainer = document.getElementById('prescription-rows');
             const addButton = document.getElementById('add-prescription-row');
@@ -480,13 +510,15 @@
                         }
                         if (!idVal && nameVal) {
                             // try exact match first
-                            const exact = medicinesData.find(m => (m.name || '').toLowerCase() === nameVal.toLowerCase());
+                            const exact = medicinesData.find(m => (m.name || '').toLowerCase() === nameVal
+                                .toLowerCase());
                             if (exact && (exact.id || exact._id)) {
                                 hiddenId.value = exact.id || exact._id;
                                 continue;
                             }
                             // try partial match
-                            const partial = medicinesData.find(m => (m.name || '').toLowerCase().includes(nameVal.toLowerCase()));
+                            const partial = medicinesData.find(m => (m.name || '').toLowerCase().includes(
+                                nameVal.toLowerCase()));
                             if (partial && (partial.id || partial._id)) {
                                 hiddenId.value = partial.id || partial._id;
                                 // normalize displayed name
@@ -500,9 +532,13 @@
                             if (existing) existing.remove();
                             const err = document.createElement('div');
                             err.className = 'medicine-error text-sm text-red-600 mt-2';
-                            err.textContent = '{{ trans("lang.please select a valid medicine from suggestions or clear this field") }}';
+                            err.textContent =
+                                '{{ trans('lang.please select a valid medicine from suggestions or clear this field') }}';
                             row.appendChild(err);
-                            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            row.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'center'
+                            });
                             return;
                         }
                     }

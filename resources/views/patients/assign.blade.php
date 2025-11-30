@@ -7,9 +7,11 @@
                         <h2 class="text-3xl font-extrabold text-purple-700 tracking-tight">
                             {{ trans('lang.assign patient to service') }}
                         </h2>
-                        <a href="{{ route('patients.index') }}" class="text-gray-400 hover:text-purple-600 transition-colors duration-200 p-2 rounded-full hover:bg-purple-50">
+                        <a href="{{ route('patients.index') }}"
+                            class="text-gray-400 hover:text-purple-600 transition-colors duration-200 p-2 rounded-full hover:bg-purple-50">
                             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
                         </a>
                     </div>
@@ -19,15 +21,19 @@
                         <h3 class="text-lg font-bold text-purple-700 mb-5">{{ trans('lang.patient information') }}</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label class="block uppercase tracking-wider text-purple-700 font-semibold mb-1">{{ trans('lang.name') }}</label>
-                                <p class="text-gray-900 text-lg font-semibold">{{ $patient->first_name }} {{ $patient->last_name }}</p>
+                                <label
+                                    class="block uppercase tracking-wider text-purple-700 font-semibold mb-1">{{ trans('lang.name') }}</label>
+                                <p class="text-gray-900 text-lg font-semibold">{{ $patient->first_name }}
+                                    {{ $patient->last_name }}</p>
                             </div>
                             <div>
-                                <label class="block uppercase tracking-wider text-purple-700 font-semibold mb-1">{{ trans('lang.phone number') }}</label>
+                                <label
+                                    class="block uppercase tracking-wider text-purple-700 font-semibold mb-1">{{ trans('lang.phone number') }}</label>
                                 <p class="text-gray-900 text-lg font-semibold">{{ $patient->phone }}</p>
                             </div>
                             <div>
-                                <label class="block uppercase tracking-wider text-purple-700 font-semibold mb-1">{{ trans('lang.date of birth') }}</label>
+                                <label
+                                    class="block uppercase tracking-wider text-purple-700 font-semibold mb-1">{{ trans('lang.date of birth') }}</label>
                                 <p class="text-gray-900">{{ $patient->date_of_birth }}</p>
                             </div>
                             <div>
@@ -40,7 +46,8 @@
                             </div>
 
                             <div class="md:col-span-2">
-                                <label class="block uppercase tracking-wider text-purple-700 font-semibold mb-1">{{ trans('lang.address') }}</label>
+                                <label
+                                    class="block uppercase tracking-wider text-purple-700 font-semibold mb-1">{{ trans('lang.address') }}</label>
                                 <p class="text-gray-900">{{ $patient->address }}</p>
                             </div>
                         </div>
@@ -50,7 +57,7 @@
                     <div class="bg-white border border-gray-100 rounded-2xl p-8 shadow-inner">
                         <h3 class="text-lg font-bold text-purple-700 mb-6">{{ trans('lang.select service') }}</h3>
 
-                        <form action="{{ route('patients.assign', $patient->_id) }}" method="POST" class="space-y-7">
+                        <form action="{{ route('patients.assign.store', $patient->_id) }}" method="POST" class="space-y-7">
                             @csrf
 
                             <div>
@@ -60,14 +67,23 @@
                                 <select id="assigned_to" name="assigned_to"
                                     class="w-full px-4 py-3 border border-purple-200 rounded-xl focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all duration-200 bg-purple-50"
                                     required>
-                                    <option value="" disabled selected>{{ trans('lang.select a service') }}</option>
-                                    @foreach($assignmentTypes as $type)
-                                    <option value="{{ $type }}">
-                                        {{ trans('lang.' . strtolower($type)) !== 'lang.' . strtolower($type)
-                                            ? trans('lang.' . strtolower($type))
-                                            : ucfirst($type) }}
+                                    <option value="" disabled selected>{{ trans('lang.select a service') }}
                                     </option>
-                                @endforeach
+                                    @foreach ($assignmentTypes as $type)
+                                        {{-- Skip Gynecology for male patients --}}
+                                        @if (strtolower($type) === 'gynecology' && strtolower($patient->gender) === 'male')
+                                            @continue
+                                        @endif
+                                        {{-- Always skip Medicine assignment --}}
+                                        @if (strtolower($type) === 'medicine')
+                                            @continue
+                                        @endif
+                                        <option value="{{ $type }}">
+                                            {{ trans('lang.' . strtolower($type)) !== 'lang.' . strtolower($type)
+                                                ? trans('lang.' . strtolower($type))
+                                                : ucfirst($type) }}
+                                        </option>
+                                    @endforeach
 
                                 </select>
                                 @error('assigned_to')
@@ -83,9 +99,16 @@
                                     class="w-full px-4 py-3 border border-purple-200 rounded-xl focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all duration-200 bg-purple-50"
                                     required>
                                     <option value="" disabled selected>{{ trans('lang.select a user') }}</option>
-                                    @if(isset($users) && count($users) > 0)
-                                        @foreach($users as $user)
-                                            <option value="{{ $user->_id }}">{{ $user->name }} ({{ $user->role }})</option>
+                                    @if (isset($users) && count($users) > 0)
+                                        @foreach ($users as $user)
+                                            {{-- Skip superadmin, admin, and receptionist users --}}
+                                            @if (in_array(strtolower($user->role), ['superadmin', 'admin', 'receptionist']))
+                                                @continue
+                                            @endif
+                                            {{-- add data-role for client-side filtering --}}
+                                            <option value="{{ $user->_id }}"
+                                                data-role="{{ strtolower($user->role) }}">
+                                                {{ $user->name }} ({{ $user->role }})</option>
                                         @endforeach
                                     @else
                                         <option value="" disabled>{{ trans('lang.no users available') }}</option>
@@ -103,8 +126,9 @@
                                 <select id="payment_type" name="payment_type"
                                     class="w-full px-4 py-3 border border-purple-200 rounded-xl focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all duration-200 bg-purple-50"
                                     required>
-                                    <option value="" disabled selected>{{ trans('lang.select payment type') }}</option>
-                                    @foreach($paymentTypes as $key => $value)
+                                    <option value="" disabled selected>{{ trans('lang.select payment type') }}
+                                    </option>
+                                    @foreach ($paymentTypes as $key => $value)
                                         {{-- <option value="{{ $key }}">{{ $value }}</option> --}}
                                         <option value="{{ $key }}">
                                             {{ trans('lang.' . strtolower($key)) !== 'lang.' . strtolower($key)
@@ -124,8 +148,9 @@
                                     {{ trans('lang.cancel') }}
                                 </a>
                                 <button type="submit"
-                                class="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-medium transition-colors duration-200 flex items-center">
-                                    <svg aria-hidden="true" class="w-5 h-5 mr-2 -ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    class="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-medium transition-colors duration-200 flex items-center">
+                                    <svg aria-hidden="true" class="w-5 h-5 mr-2 -ml-1" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 4v16m8-8H4" />
                                     </svg>
@@ -139,3 +164,94 @@
         </div>
     </div>
 </x-app-layout>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const serviceSelect = document.getElementById('assigned_to');
+        const userSelect = document.getElementById('assigned_user_id');
+        if (!serviceSelect || !userSelect) return;
+
+        const noUsersText = @json(trans('lang.no users available'));
+
+        function normalize(s) {
+            return (s || '').toString().toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '');
+        }
+
+        function resetUsers() {
+            Array.from(userSelect.options).forEach(opt => {
+                opt.hidden = false;
+                opt.disabled = opt.value === '';
+            });
+            userSelect.selectedIndex = 0;
+        }
+
+        function filterUsersByService() {
+            const svc = serviceSelect.value;
+            if (!svc) {
+                resetUsers();
+                return;
+            }
+        const svcNorm = normalize(svc);
+        let anyShown = false;
+
+        // map service to acceptable role keywords (normalized)
+        const serviceRoleMap = {
+            'vaccine': ['vaccine', 'nurse', 'vaccinator'],
+            'common disease': ['doctor', 'physician', 'common', 'clinician', 'common disease'],
+            'gynecology': ['gynecology', 'gynecologist', 'doctor'],
+            'medicine': ['medicine', 'pharmacist', 'pharmacy']
+        };
+
+        Array.from(userSelect.options).forEach(opt => {
+            if (!opt.value) { // placeholder
+                opt.hidden = false;
+                opt.disabled = true;
+                return;
+            }
+            const role = opt.dataset.role || '';
+            const roleNorm = normalize(role);
+
+            // Allow match if the role normalized equals service normalized or if role contains/relates to service
+            let show = false;
+            if (roleNorm === svcNorm || svcNorm.includes(roleNorm) || roleNorm.includes(svcNorm)) {
+                show = true;
+            } else {
+                // check mapping keywords
+                const allowed = serviceRoleMap[svcNorm] || serviceRoleMap[svc] || [];
+                for (const keyword of allowed) {
+                    if (roleNorm.includes(normalize(keyword))) {
+                        show = true;
+                        break;
+                    }
+                }
+            }
+
+            if (show) {
+                opt.hidden = false;
+                opt.disabled = false;
+                anyShown = true;
+            } else {
+                opt.hidden = true;
+                opt.disabled = true;
+            }
+        });
+
+            let noUserOption = userSelect.querySelector('option[data-no-users]');
+            if (!anyShown) {
+                if (!noUserOption) {
+                    noUserOption = document.createElement('option');
+                    noUserOption.setAttribute('data-no-users', '1');
+                    noUserOption.value = '';
+                    noUserOption.disabled = true;
+                    noUserOption.textContent = noUsersText;
+                    userSelect.appendChild(noUserOption);
+                }
+                userSelect.selectedIndex = 0;
+            } else {
+                if (noUserOption) noUserOption.remove();
+            }
+        }
+
+        serviceSelect.addEventListener('change', filterUsersByService);
+    });
+</script>

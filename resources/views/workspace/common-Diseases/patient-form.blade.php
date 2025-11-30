@@ -113,7 +113,7 @@
                                         <label
                                             class="block text-sm font-semibold text-blue-800 mb-1">{{ trans('lang.assigned date') }}</label>
                                         <p class="text-blue-900 font-semibold">
-                                            {{ $patientAssign->assigned_date->format('M d, Y H:i') }}</p>
+                                            {{ $patientAssign->assigned_date->format('d M, Y H:i') }}</p>
                                     </div>
                                 </div>
                             </div>

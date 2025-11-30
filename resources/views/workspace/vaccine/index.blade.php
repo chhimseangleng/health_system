@@ -162,7 +162,7 @@
                                                     <td class="px-5 py-4 text-base font-bold text-gray-900">
                                                         {{ $vaccine->name }}</td>
                                                     <td class="px-5 py-4 text-base text-gray-900">
-                                                        {{ \Carbon\Carbon::parse($vaccine->bod)->format('Y-m-d') }}
+                                                        {{ \Carbon\Carbon::parse($vaccine->bod)->format('d-m-Y') }}
                                                     </td>
                                                     <td class="px-5 py-4 text-base text-gray-900">
                                                         <span
@@ -216,7 +216,7 @@
                                                         </span>
                                                     </td>
                                                     <td class="px-5 py-4 text-base text-gray-900">
-                                                        {{ \Carbon\Carbon::parse($vaccine->currentDate)->format('Y-m-d') }}
+                                                        {{ \Carbon\Carbon::parse($vaccine->currentDate)->format('d-m-Y') }}
                                                     </td>
                                                     <td class="px-5 py-4 text-base text-gray-900">
                                                         @php
@@ -481,7 +481,7 @@
                                                             </td>
                                                             <td
                                                                 class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                                                {{ \Carbon\Carbon::parse($patient->date_of_birth)->format('M d, Y') }}
+                                                                {{ \Carbon\Carbon::parse($patient->date_of_birth)->format('d M, Y') }}
                                                             </td>
                                                             <td
                                                                 class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">

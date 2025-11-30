@@ -43,6 +43,7 @@
         'english' => 'អង់គ្លេស',
         'hi' => 'សួស្តី',
         'user deleted' => 'User Delete',
+        'log out' => 'ចាកចេញ',
 
         //assign patients
         'patient information' => 'ព័ត៌មានអ្នកជំងឺ',
@@ -54,7 +55,7 @@
         'select service' => 'ជ្រើសរើសសេវាកម្ម',
         'select a service' => 'ជ្រើសរើសសេវាកម្មមួយ',
         'vaccine' => 'វ៉ាក់សាំង',
-        'medicine' => 'ថ្នាំ',
+        'medicine' => 'ឪសថ',
         'assign to service' => 'ចុះឈ្មោះប្រើសេវាកម្ម',
         'assign to user' => 'ចុះឈ្មោះអ្នកប្រើប្រាស់',
         'health equity fund' => 'ប័ណ្ណសមធម៌',
@@ -174,6 +175,7 @@
         'patient vaccine record' => 'កំណត់ត្រាវ៉ាក់សាំងអ្នកជំងឺ',
         'prescriptions' => 'វេជ្ជបញ្ជា',
         'record details' => 'កត់ត្រាព័ត៌មានលម្អិត',
+        'add user' => 'បន្ថែមអ្នកប្រើ',
 
         //Sidebar Menu
         'admin' => 'អ្នកគ្រប់គ្រង',
@@ -217,10 +219,19 @@
         'are you sure you want to dismiss this patient' => 'តើអ្នកប្រាកដជាចង់លុបចោលអ្នកជំងឺនេះទេ',
         'search common diseases by name, address...' => 'ស្វែងរកជំងឺទូទៅតាមឈ្មោះ អាស័យដ្ឋាន...',
         'diagnosis' => 'ការធ្វើរោគវិនិច្ឆ័យ',
+        'record' => 'កំណត់ត្រា',
+        'edit pregnancy record' => 'កែសម្រួលកំណត់ត្រាស្រ្តីមានផ្ទៃពោះ',
+        'new password' => 'បញ្ចូលពាក្យសម្ងាត់',
+        'confirm password' => 'បញ្ជាក់ពាក្យសម្ងាត់',
+        'confirm new password' => 'បញ្ជាក់ពាក្យសម្ងាត់ថ្មី',
+        'enter new password' => 'បញ្ចូលពាក្យសម្ងាត់ថ្មី',
+        'treatment plan' => 'ផែនការព្យាបាល',
+        'describe the treatment plan...' => 'រៀបរាប់ពីផែនការព្យាបាល...',
+
 
         //Medicine Management
         'add stock' => 'បន្ថែមស្តុក',
-        'medicines' => 'ថ្នាំ',
+        'medicines' => 'ឪសថ',
         'patient records' => 'កំណត់ត្រាអ្នកជំងឺ',
         'manage your healthcare data' => 'គ្រប់គ្រងទិន្នន័យសុខភាពរបស់អ្នក',
         'patient assigns' => 'ការចុះឈ្មោះអ្នកជំងឺ',
@@ -294,6 +305,14 @@
         'stock quantity' => 'បរិមាណស្តុក',
         'expiry date' => 'កាលបរិច្ឆេទកំណត់',
         'fill in the medicine details below to add it to your inventory' => 'បំពេញព័ត៌មានលម្អិតអំពីថ្នាំខាងក្រោមដើម្បីបន្ថែមវាទៅក្នុងinventoryរបស់អ្នក',
+        'disease department'=> 'ដេប៉ាតឺម៉ង់ជំងឺ',
+        'welcome to' => 'សូមស្វាគមន៍មកកាន់',
+        'please select any desease below' => 'សូមជ្រើសរើសផ្នែកជំងឺខាងក្រោម',
+        'select category' => 'ជ្រើសរើសប្រភេទ',
+        'select form' => 'ជ្រើសរើសទម្រង់',
+        'select unit' => 'ជ្រើសរើសឯកតា',
+        'medicine details' => 'ព័ត៌មានលម្អិតអំពីឪសថ',
+        'update medicine' => 'កែសម្រួលថ្នាំ',
 
 
         'dosage instructions' => 'ការណែនាំអំពីដូស',
